@@ -1,0 +1,71 @@
+// ...existing code...
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+out/
+*.tgz
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.test
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyd
+env/
+venv/
+.venv/
+ENV/
+pip-wheel-metadata/
+*.egg-info/
+
+# Logs and coverage
+logs/
+*.log
+coverage/
+coverage/*
+jest-coverage/
+
+# Editor/IDE
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# OneDrive / temp
+~$*
+*.lnk
+.TemporaryItems
+*.stackdump
+
+# Build artifacts
+build/
+dist/
+release/
+*.exe
+*.dll
+
+# Misc
+*.swp
+*.swo
+*.lock
