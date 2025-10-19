@@ -1,0 +1,126 @@
+/* Base container */
+.su-container {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #eef2f3, #cfd9df);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Banner image */
+.su-container .su-logo-img {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+/* The white form box */
+.su-container .su-box {
+  background: #fff;
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 35px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Headings inside form */
+.su-container .su-box h1,
+.su-container .su-box h2 {
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+}
+
+/* Role dropdown */
+.su-container .su-role-select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Form group container */
+.su-container .su-form-group {
+  margin-bottom: 15px;
+}
+
+/* Labels */
+.su-container .su-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Inputs and selects */
+.su-container .su-form-group input,
+.su-container .su-box select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.su-container .su-form-group input:focus,
+.su-container .su-box select:focus {
+  border-color: #2a9d8f;
+  outline: none;
+  box-shadow: 0 0 6px rgba(42, 157, 143, 0.5);
+}
+
+/* Submit button */
+.su-container .su-submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #2a9d8f; /* teal-ish green */
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.su-container .su-submit-btn:hover {
+  background-color: #21867a;
+}
+
+/* Error and success messages */
+.su-container .su-error {
+  color: #e63946; /* red */
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.su-container .su-success {
+  color: #2a9d8f; /* teal */
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* Responsive for small screens */
+@media (max-width: 480px) {
+  .su-container .su-box {
+    padding: 25px 15px;
+    margin: 0 15px;
+  }
+
+  .su-container .su-logo-img {
+    width: 120px;
+    margin-bottom: 15px;
+  }
+}

@@ -1,0 +1,157 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="truckGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <filter id="roadGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="#667eea" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#roadGradient)" opacity="0.1"/>
+  
+  <!-- Abstract background elements -->
+  <circle cx="120" cy="100" r="70" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="680" cy="150" r="90" fill="rgba(255,255,255,0.04)"/>
+  <circle cx="200" cy="480" r="110" fill="rgba(255,255,255,0.05)"/>
+  
+  <!-- Road/Highway -->
+  <g>
+    <!-- Main road surface -->
+    <path d="M0 300 Q200 280 400 300 Q600 320 800 300 L800 380 Q600 400 400 380 Q200 360 0 380 Z" 
+          fill="#5A6B7D" opacity="0.3"/>
+    
+    <!-- Road markings/lanes -->
+    <g opacity="0.6">
+      <!-- Center line -->
+      <rect x="50" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="130" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="210" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="290" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="370" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="450" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="530" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="610" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      <rect x="690" y="338" width="40" height="4" fill="#FFD700" rx="2"/>
+      
+      <!-- Side lines -->
+      <rect x="0" y="305" width="800" height="2" fill="rgba(255,255,255,0.3)"/>
+      <rect x="0" y="375" width="800" height="2" fill="rgba(255,255,255,0.3)"/>
+    </g>
+  </g>
+  
+  <!-- Main delivery truck -->
+  <g transform="translate(200, 200)" filter="url(#roadGlow)">
+    <!-- Truck cab -->
+    <rect x="0" y="40" width="80" height="60" fill="url(#truckGradient)" rx="8"/>
+    
+    <!-- Windshield -->
+    <rect x="10" y="50" width="60" height="25" fill="rgba(255,255,255,0.4)" rx="4"/>
+    
+    <!-- Grille -->
+    <rect x="0" y="60" width="8" height="30" fill="rgba(255,255,255,0.3)" rx="2"/>
+    <rect x="3" y="65" width="2" height="5" fill="rgba(255,255,255,0.6)"/>
+    <rect x="3" y="75" width="2" height="5" fill="rgba(255,255,255,0.6)"/>
+    <rect x="3" y="85" width="2" height="5" fill="rgba(255,255,255,0.6)"/>
+    
+    <!-- Cargo container -->
+    <rect x="80" y="30" width="140" height="80" fill="rgba(255,255,255,0.2)" rx="5"/>
+    
+    <!-- Container details -->
+    <rect x="90" y="40" width="120" height="20" fill="rgba(255,255,255,0.15)" rx="3"/>
+    <rect x="95" y="45" width="30" height="3" fill="rgba(255,255,255,0.3)"/>
+    <rect x="95" y="52" width="25" height="2" fill="rgba(255,255,255,0.3)"/>
+    
+    <!-- Side panels -->
+    <rect x="90" y="70" width="25" height="25" fill="rgba(255,255,255,0.1)" rx="2"/>
+    <rect x="125" y="70" width="25" height="25" fill="rgba(255,255,255,0.1)" rx="2"/>
+    <rect x="160" y="70" width="25" height="25" fill="rgba(255,255,255,0.1)" rx="2"/>
+    <rect x="195" y="70" width="25" height="25" fill="rgba(255,255,255,0.1)" rx="2"/>
+    
+    <!-- Wheels -->
+    <circle cx="25" cy="120" r="20" fill="#2C3E50" opacity="0.8"/>
+    <circle cx="25" cy="120" r="14" fill="#34495E" opacity="0.6"/>
+    <circle cx="25" cy="120" r="8" fill="#5D6D7E" opacity="0.4"/>
+    
+    <circle cx="100" cy="120" r="20" fill="#2C3E50" opacity="0.8"/>
+    <circle cx="100" cy="120" r="14" fill="#34495E" opacity="0.6"/>
+    <circle cx="100" cy="120" r="8" fill="#5D6D7E" opacity="0.4"/>
+    
+    <circle cx="180" cy="120" r="20" fill="#2C3E50" opacity="0.8"/>
+    <circle cx="180" cy="120" r="14" fill="#34495E" opacity="0.6"/>
+    <circle cx="180" cy="120" r="8" fill="#5D6D7E" opacity="0.4"/>
+    
+    <!-- Headlights -->
+    <circle cx="8" cy="70" r="8" fill="#FFD700" opacity="0.8"/>
+    <circle cx="8" cy="85" r="8" fill="#FFD700" opacity="0.8"/>
+    
+    <!-- Side mirror -->
+    <rect x="75" y="50" width="8" height="4" fill="rgba(255,255,255,0.4)" rx="2"/>
+  </g>
+  
+  <!-- Additional vehicles -->
+  <g transform="translate(500, 220)" opacity="0.6">
+    <!-- Smaller delivery van -->
+    <rect x="0" y="30" width="50" height="40" fill="rgba(255,255,255,0.15)" rx="5"/>
+    <rect x="50" y="25" width="80" height="50" fill="rgba(255,255,255,0.12)" rx="4"/>
+    
+    <!-- Windows -->
+    <rect x="5" y="35" width="15" height="12" fill="rgba(255,255,255,0.3)" rx="2"/>
+    <rect x="25" y="35" width="15" height="12" fill="rgba(255,255,255,0.3)" rx="2"/>
+    
+    <!-- Wheels -->
+    <circle cx="15" cy="80" r="12" fill="#2C3E50" opacity="0.6"/>
+    <circle cx="55" cy="80" r="12" fill="#2C3E50" opacity="0.6"/>
+    <circle cx="105" cy="80" r="12" fill="#2C3E50" opacity="0.6"/>
+  </g>
+  
+  <!-- Supply chain network elements -->
+  <g opacity="0.3">
+    <!-- Distribution centers -->
+    <rect x="50" y="120" width="40" height="30" fill="rgba(255,255,255,0.3)" rx="3"/>
+    <rect x="55" y="125" width="30" height="4" fill="rgba(255,255,255,0.5)"/>
+    <rect x="55" y="132" width="25" height="3" fill="rgba(255,255,255,0.4)"/>
+    <rect x="55" y="138" width="28" height="3" fill="rgba(255,255,255,0.4)"/>
+    
+    <rect x="650" y="450" width="40" height="30" fill="rgba(255,255,255,0.3)" rx="3"/>
+    <rect x="655" y="455" width="30" height="4" fill="rgba(255,255,255,0.5)"/>
+    <rect x="655" y="462" width="25" height="3" fill="rgba(255,255,255,0.4)"/>
+    <rect x="655" y="468" width="28" height="3" fill="rgba(255,255,255,0.4)"/>
+    
+    <!-- Packages -->
+    <rect x="120" y="420" width="20" height="15" fill="rgba(255,255,255,0.4)" rx="2"/>
+    <rect x="150" y="430" width="15" height="12" fill="rgba(255,255,255,0.35)" rx="2"/>
+    <rect x="175" y="425" width="18" height="14" fill="rgba(255,255,255,0.3)" rx="2"/>
+  </g>
+  
+  <!-- Route connections -->
+  <g opacity="0.2" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-dasharray="5,5">
+    <path d="M100,150 Q300,120 500,180"/>
+    <path d="M200,400 Q400,380 600,420"/>
+    <path d="M150,180 Q350,200 550,160"/>
+    
+    <!-- Connection points -->
+    <circle cx="100" cy="150" r="5" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="500" cy="180" r="5" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="200" cy="400" r="5" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="600" cy="420" r="5" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="550" cy="160" r="5" fill="rgba(255,255,255,0.6)"/>
+  </g>
+  
+  <!-- Speed/movement indicators -->
+  <g opacity="0.4">
+    <rect x="340" y="180" width="30" height="3" fill="rgba(255,255,255,0.5)" rx="1"/>
+    <rect x="360" y="190" width="25" height="2" fill="rgba(255,255,255,0.4)" rx="1"/>
+    <rect x="380" y="200" width="35" height="2" fill="rgba(255,255,255,0.3)" rx="1"/>
+    
+    <rect x="620" y="240" width="25" height="2" fill="rgba(255,255,255,0.4)" rx="1"/>
+    <rect x="640" y="250" width="20" height="2" fill="rgba(255,255,255,0.35)" rx="1"/>
+    <rect x="655" y="260" width="30" height="2" fill="rgba(255,255,255,0.3)" rx="1"/>
+  </g>
+</svg>

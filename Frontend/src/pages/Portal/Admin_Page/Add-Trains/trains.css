@@ -1,0 +1,247 @@
+/* ===========================
+   trains.css (full file)
+   Main rounded panel + header search on right
+   =========================== */
+
+/* ---- Theme tokens ---- */
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#6b7280;
+
+  --line:#e5e7eb;
+  --line-2:#eef2f7;
+  --table-head-bg:#f6f8fa;
+  --table-head-text:#0f172a;
+  --row-hover:rgba(15,23,42,0.04);
+  --map-placeholder:#e6edf5;
+  --button-surface:#ffffff;
+
+  --primary-1:#8e44ad;
+  --primary-2:#7d3c98;
+
+  --radius:20px;
+  --r-sm:12px;
+
+  --s-2:8px;
+  --s-3:10px;
+  --s-4:12px;
+  --s-5:14px;
+  --s-6:16px;
+  --s-7:24px;
+  --s-8:32px;
+
+  --shadow:0 12px 28px rgba(0,0,0,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1220;
+    --card:#0f172a;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --line:#23314a;
+    --line-2:#1e293b;
+    --table-head-bg:#1f2937;
+    --table-head-text:#f8fafc;
+    --row-hover:rgba(148,163,184,0.22);
+    --map-placeholder:#1e293b;
+    --button-surface:rgba(30,41,59,0.88);
+    --shadow:0 12px 28px rgba(0,0,0,.45);
+  }
+}
+
+/* ===========================
+   OUTER MAIN PANEL
+   =========================== */
+.trains{
+  color: var(--text);
+  background: var(--card);
+  border-radius: 28px;
+  padding: clamp(16px, 2.5vw, 36px);
+  box-shadow: var(--shadow);
+  margin: 36px;
+  display: grid;
+  gap: var(--s-7);
+}
+
+/* Header row: title left, search right */
+.trains .page-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.trains > .page-header > h2{
+  margin:0;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing:.2px;
+  color:var(--text);
+}
+.trains .header-tools{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:nowrap;
+}
+.trains .header-tools .toolbar-input{
+  width: clamp(220px, 28vw, 420px);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+}
+.trains .header-tools .muted{ color: var(--muted); }
+
+/* Stack header on small screens */
+@media (max-width: 640px){
+  .trains .page-header{ flex-direction:column; align-items:stretch; gap:12px; }
+  .trains .header-tools{ justify-content:space-between; }
+}
+
+/* ===========================
+   INNER PANELS LAYOUT
+   =========================== */
+.trains .panels{
+  display:grid;
+  grid-template-columns:1fr; /* full-width form */
+  gap: var(--s-6);
+}
+.trains .panel{
+  background: var(--card);
+  border-radius: 18px;
+  padding: clamp(16px, 2vw, 28px);
+  box-shadow: var(--shadow);
+}
+
+/* Panel headings (container names bigger) */
+.trains h3{
+  margin: 0 0 var(--s-4);
+  font-size: clamp(18px, 2.2vw, 10px);
+  color: var(--text);
+}
+
+/* ===========================
+   FORM GRID
+   =========================== */
+.trains .grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap: var(--s-4);
+}
+.trains .grid .full{ grid-column:1 / -1; }
+@media (max-width: 720px){ .trains .grid{ grid-template-columns:1fr; } }
+
+.trains label{ display:flex; flex-direction:column; gap: var(--s-2); }
+
+/* Label text size tweak */
+.trains .panel label > span{ font-size:16px; line-height:1.2; font-weight:600; }
+
+.trains input,
+.trains textarea,
+.trains select{
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+}
+.trains input::placeholder,
+.trains textarea::placeholder{ color: var(--muted); }
+
+/* Focus ring */
+.trains input:focus,
+.trains textarea:focus,
+.trains select:focus{
+  border-color: color-mix(in srgb, var(--primary-1) 70%, white);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-1) 25%, transparent);
+}
+
+/* Buttons */
+.trains .actions{
+  display:flex; justify-content:flex-start; gap: var(--s-4); flex-wrap:wrap;
+  margin-top: var(--s-3);
+}
+.trains .btn{
+  padding: var(--s-4) var(--s-6);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--button-surface);
+  color: var(--text);
+  cursor:pointer;
+  transition: transform .06s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.trains .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+.trains .btn:active{ transform: translateY(0); }
+.trains .btn:disabled{ opacity:.6; cursor:not-allowed; box-shadow:none; transform:none; }
+.trains .btn.primary{
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  color:#fff; border:none;
+}
+.trains .btn.danger{
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color:#fff; border:none;
+}
+
+/* ===========================
+   TABLE
+   =========================== */
+.trains .table-wrap{
+  overflow:auto;
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+.trains table{
+  width:100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+.trains thead th{
+  position: sticky; top: 0; z-index: 1;
+  background: var(--table-head-bg);
+  text-align:left;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: var(--table-head-text);
+}
+.trains th, .trains td{
+  padding: var(--s-4);
+  border-bottom: 1px solid var(--line-2);
+}
+.trains tbody tr:hover{ background: var(--row-hover); }
+.trains .mono{
+  font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+.trains td.right,
+.trains td:last-child {
+  text-align: right;
+}
+.trains td.right > .row-actions,
+.trains td:last-child > .row-actions{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap: var(--s-3);
+  margin-left:auto;
+}
+
+/* Optional placeholders if you visualize routes later */
+.trains .map-and-stations{ display:grid; grid-template-columns:3fr 2fr; gap: var(--s-4); }
+@media (max-width: 900px){ .trains .map-and-stations{ grid-template-columns:1fr; } }
+.trains .map{ width:100%; height:380px; border-radius:12px; background:var(--map-placeholder); border:1px solid var(--line); box-shadow:var(--shadow); }
+.trains .stations{ background:var(--card); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding: var(--s-3); max-height:380px; overflow:auto; }
+.trains .stations-head{ font-weight:600; margin-bottom: var(--s-2); }
+.trains .station-row{ display:flex; align-items:center; gap:8px; padding:6px 4px; border-bottom:1px dashed var(--line-2); }
+.trains .station-row:last-child{ border-bottom:0; }
+
+/* Accessibility */
+.trains :focus-visible{
+  outline:3px solid color-mix(in srgb, var(--primary-1) 70%, white);
+  outline-offset:2px; border-radius:8px;
+}

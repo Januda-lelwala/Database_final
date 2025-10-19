@@ -1,0 +1,119 @@
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+// Employee Portal Components
+import Admin from './Admin_Page/Admin.js';
+import DriverDashboard from './DriverDashboard';
+import AssistantDashboard from './AssistantDashboard';
+import EmployeeProfile from './EmployeeProfile';
+import EmployeeSettings from './EmployeeSettings';
+import PasswordChangeModal from '../../components/PasswordChangeModal';
+
+
+const EmployeePortalRouter = () => {
+  const { user, isEmployee, isAdmin, isDriver, isAssistant, loading, changePassword } = useAuth();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordChangeError, setPasswordChangeError] = useState(null);
+
+  // Check if user needs to change password on mount and when user changes
+  useEffect(() => {
+    if (!loading && user && (isDriver || isAssistant)) {
+      // Show modal if must_change_password is true
+      if (user.must_change_password === true) {
+        setShowPasswordModal(true);
+      }
+    }
+  }, [user, loading, isDriver, isAssistant]);
+
+  const handlePasswordChange = async (passwordData) => {
+    try {
+      setPasswordChangeError(null);
+      await changePassword(passwordData);
+      setShowPasswordModal(false);
+      alert('Password changed successfully! You can now access the system.');
+    } catch (error) {
+      setPasswordChangeError(error.message || 'Failed to change password');
+      throw error; // Re-throw so modal can show error
+    }
+  };
+
+  // Show loading screen while authentication state is being restored
+  if (loading) {
+    return (
+      <div className="loading-screen" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.2rem',
+        color: '#667eea'
+      }}>
+        <div className="loading-spinner">Loading...</div>
+      </div>
+    );
+  }
+
+  // Redirect non-employees to the employee login to avoid redirect loops
+  if (!isEmployee) {
+    return <Navigate to="/login/employee" replace />;
+  }
+
+  const getDashboardComponent = () => {
+    if (isAdmin) return <Admin />;
+    if (isDriver) return <DriverDashboard />;
+    if (isAssistant) return <AssistantDashboard />;
+    return <Navigate to="/login" replace />;
+  };
+
+  return (
+      <>
+        <div className="employee-portal">
+          <Routes>
+            <Route path="/" element={getDashboardComponent()} />
+            <Route path="/profile" element={<EmployeeProfile />} />
+            <Route path="/settings" element={<EmployeeSettings />} />
+          
+            {/* Admin-specific routes */}
+            {isAdmin && (
+              <>
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/*" element={<Admin />} />
+              </>
+            )}
+          
+            {/* Driver-specific routes */}
+            {isDriver && (
+              <>
+                <Route path="/driver" element={<DriverDashboard />} />
+                <Route path="/driver/routes" element={<DriverDashboard />} />
+              </>
+            )}
+          
+            {/* Assistant-specific routes */}
+            {isAssistant && (
+              <>
+                <Route path="/assistant" element={<AssistantDashboard />} />
+                <Route path="/assistant/support" element={<AssistantDashboard />} />
+              </>
+            )}
+          
+            <Route path="*" element={<Navigate to="/employee" replace />} />
+          </Routes>
+        </div>
+
+        {/* Password Change Modal - Only for drivers/assistants on first login */}
+        {(isDriver || isAssistant) && (
+          <PasswordChangeModal
+            isOpen={showPasswordModal}
+            onClose={() => {}} // Cannot close - must change password
+            onSubmit={handlePasswordChange}
+            userRole={user?.role}
+            userName={user?.user_name}
+          />
+        )}
+      </>
+  );
+};
+
+export default EmployeePortalRouter;

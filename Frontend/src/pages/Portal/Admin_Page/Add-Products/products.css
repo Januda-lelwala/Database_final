@@ -1,0 +1,301 @@
+/* ===========================
+   products.css (for Products.js)
+   =========================== */
+
+/* Theme tokens */
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --muted: #485063;
+  --line: #e5e7eb;
+  --line-2: #eef2f7;
+  --text: #0f172a;
+  --text-strong: #0f172a;
+  --table-head-bg: #f1f2f4;
+  --table-head-hover: #e9edf2;
+  --table-head-text: #0f172a;
+  --row-hover: #f8fafc;
+  --icon: #64748b;
+  --button-surface: #ffffff;
+  --button-border: color-mix(in srgb, var(--line) 80%, transparent);
+  --button-text: var(--text);
+
+  --primary-1: #3498db;
+  --primary-2: #2980b9;
+  --danger: #e74c3c;
+
+  --radius: 16px;
+  --r-sm: 10px;
+
+  --s-1: 6px;
+  --s-2: 8px;
+  --s-3: 10px;
+  --s-4: 12px;
+  --s-5: 14px;
+  --s-6: 16px;
+  --s-7: 24px;
+
+  --shadow: 0 8px 24px rgba(0,0,0,.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,.22);
+}
+
+/* Optional dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --card: #0f172a;
+    --muted: #7f90a8;
+    --line: #23314a;
+    --line-2: #1e293b;
+    --text: #e2e8f0;
+    --text-strong: #f8fafc;
+    --table-head-bg: #1f2937;
+    --table-head-hover: #243047;
+    --table-head-text: #f1f5f9;
+    --row-hover: rgba(148, 163, 184, 0.22);
+    --icon: #cbd5f5;
+    --button-surface: color-mix(in srgb, var(--card) 55%, white 45%);
+    --button-border: rgba(148, 163, 184, 0.45);
+    --button-text: #f5f7ff;
+
+    --shadow: 0 8px 24px rgba(0,0,0,.45);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,.6);
+  }
+}
+
+/* Layout wrapper */
+.products {
+  color: var(--text);
+  background: var(--bg);
+  padding: var(--s-7);
+  border-radius: var(--radius);
+  max-width: 1100px;
+  margin: 24px auto;
+}
+
+/* Headings used in your JSX */
+.products h2 { margin: 0 0 var(--s-6); }
+.products h3 { margin: 0 0 var(--s-4); font-size: 16px; font-weight: 600; }
+
+/* Panels (Add product card etc.) */
+.products .panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-6);
+  margin-bottom: var(--s-5);
+}
+@media (min-width: 820px) {
+  .products .panels { grid-template-columns: 1fr 1fr; }
+}
+.products .panel {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: var(--s-7);
+  box-shadow: var(--shadow);
+}
+
+/* Form grid */
+.products .grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: var(--s-3);
+}
+.products .grid .full { grid-column: 1/-1; }
+@media (max-width: 640px) {
+  .products .grid { grid-template-columns: 1fr; }
+}
+
+/* Labels & controls */
+.products label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  font-size: 14px;
+}
+
+/* Fields (readable in light & dark) */
+.products input,
+.products textarea,
+.products select {
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--text); /* force visible text */
+  outline: none;
+  box-shadow: none;
+}
+.products input::placeholder,
+.products textarea::placeholder { color: var(--muted); }
+
+/* Focus ring */
+.products input:focus,
+.products textarea:focus,
+.products select:focus {
+  border-color: color-mix(in srgb, var(--primary-1) 70%, white);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-1) 25%, transparent);
+}
+
+/* Inline helpers & action area */
+.products .inline { display: flex; gap: var(--s-2); align-items: center; }
+.products .actions {
+  display: flex; gap: var(--s-2);
+  justify-content: flex-start;
+  margin-top: var(--s-2);
+}
+
+/* Buttons */
+.products .btn {
+  padding: var(--s-3) var(--s-5);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--button-border);
+  background: var(--button-surface);
+  color: var(--button-text);
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .12s ease, opacity .12s ease, background .12s ease;
+  will-change: transform;
+}
+.products .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.products .btn:active { transform: translateY(0); }
+.products .btn:disabled { opacity: .6; cursor: not-allowed; }
+.products .btn.primary {
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  color: #fff; border: none;
+}
+.products .btn.danger {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+}
+
+/* Toolbar (search area) */
+.toolbar {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.toolbar-input {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  min-width: 260px;
+  background: var(--card);
+  color: var(--text);
+}
+.muted { color: var(--muted); }
+
+/* Table */
+.products .table-wrap {
+  overflow: auto;
+  border-radius: var(--r-sm);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  max-height: 520px; /* sticky header becomes useful */
+}
+.products table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px; /* room for all columns */
+}
+.products thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--table-head-bg);
+  color: var(--table-head-text);
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+@media (prefers-color-scheme: dark) {
+  .products thead th { background: var(--table-head-bg); color: var(--table-head-text); }
+}
+.products th, .products td {
+  padding: var(--s-3);
+  border-bottom: 1px solid var(--line-2);
+  vertical-align: middle;
+}
+.products tbody tr:hover { background: var(--row-hover); }
+.products td.right { text-align: right; }
+.products .row-actions { display: inline-flex; gap: var(--s-2); }
+
+.products .empty {
+  text-align: center;
+  color: var(--muted);
+  padding: var(--s-6);
+}
+
+/* Monospace cells (IDs, numbers) */
+.products .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Inline editing inputs in table cells */
+.products td input[type="text"],
+.products td input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+/* Sortable headers + arrows */
+.products thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+}
+.products thead th.sortable::after {
+  content: "↕";
+  font-size: 12px;
+  margin-left: 6px;
+  opacity: .45;
+}
+.products thead th.sorted-asc::after  { content: "▲"; opacity: .9; }
+.products thead th.sorted-desc::after { content: "▼"; opacity: .9; }
+.products thead th.sortable:hover { background: var(--table-head-hover); }
+@media (prefers-color-scheme: dark) {
+  .products thead th.sortable:hover { background: var(--table-head-hover); }
+}
+
+/* Modal (future use) */
+.products .modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  display: grid; place-items: center;
+  z-index: 1000; padding: var(--s-6);
+}
+.products .modal {
+  background: var(--card);
+  width: 100%; max-width: 720px;
+  border-radius: 14px; box-shadow: var(--shadow-lg);
+}
+.products .modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--line);
+}
+.products .modal-header h3 { margin: 0; font-size: 18px; }
+.products .modal-body { padding: var(--s-5); }
+.products .modal-actions {
+  padding: var(--s-4) var(--s-5); border-top: 1px solid var(--line);
+  display: flex; justify-content: flex-end; gap: var(--s-2);
+}
+.products .icon-btn {
+  background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--icon);
+}
+.products .modal .grid { grid-template-columns: repeat(2,1fr); }
+.products .modal .grid .full { grid-column: 1/-1; }
+
+/* Accessibility & motion */
+.products :focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary-1) 70%, white);
+  outline-offset: 2px; border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .products * { transition: none !important; animation: none !important; }
+}

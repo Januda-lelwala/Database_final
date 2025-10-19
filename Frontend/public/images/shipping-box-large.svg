@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="boxLargeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shadowGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.3" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <dropShadow dx="5" dy="10" stdDeviation="5" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="#faf5ff" stroke="#ddd6fe" stroke-width="2"/>
+  
+  <!-- Shadow -->
+  <rect x="65" y="180" width="180" height="120" rx="8" fill="url(#shadowGradient3)" opacity="0.3"/>
+  
+  <!-- Main box -->
+  <rect x="60" y="170" width="180" height="120" rx="8" fill="url(#boxLargeGradient)" filter="url(#shadow)"/>
+  
+  <!-- Box details -->
+  <rect x="70" y="180" width="160" height="100" rx="4" fill="none" stroke="#6d28d9" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Tape strips -->
+  <rect x="55" y="210" width="190" height="8" fill="#dc2626" opacity="0.8"/>
+  <rect x="55" y="230" width="190" height="8" fill="#dc2626" opacity="0.8"/>
+  <rect x="55" y="250" width="190" height="8" fill="#dc2626" opacity="0.8"/>
+  
+  <!-- KandyPack label -->
+  <rect x="80" y="190" width="120" height="40" rx="4" fill="#ffffff"/>
+  <text x="140" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#374151">KandyPack</text>
+  <text x="140" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">LARGE STORAGE</text>
+  
+  <!-- Handle cutouts -->
+  <ellipse cx="40" cy="230" rx="8" ry="15" fill="#faf5ff"/>
+  <ellipse cx="260" cy="230" rx="8" ry="15" fill="#faf5ff"/>
+  
+  <!-- Corner highlights -->
+  <circle cx="75" cy="185" r="4" fill="#a78bfa" opacity="0.8"/>
+  <circle cx="225" cy="185" r="4" fill="#a78bfa" opacity="0.8"/>
+  <circle cx="75" cy="275" r="4" fill="#a78bfa" opacity="0.8"/>
+  <circle cx="225" cy="275" r="4" fill="#a78bfa" opacity="0.8"/>
+  
+  <!-- Decorative elements -->
+  <path d="M 50 90 Q 100 70 150 90 T 250 90 T 350 90" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.4"/>
+  <circle cx="300" cy="110" r="12" fill="#10b981" opacity="0.4"/>
+  <circle cx="100" cy="330" r="16" fill="#3b82f6" opacity="0.4"/>
+  <circle cx="320" cy="320" r="8" fill="#ef4444" opacity="0.4"/>
+  
+  <!-- Size indicator -->
+  <circle cx="200" cy="340" r="30" fill="#8b5cf6" opacity="0.2"/>
+  <text x="200" y="347" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#7c3aed">L</text>
+  
+  <!-- Strength bars -->
+  <rect x="300" y="180" width="4" height="20" fill="#10b981" opacity="0.6"/>
+  <rect x="305" y="175" width="4" height="30" fill="#10b981" opacity="0.6"/>
+  <rect x="310" y="170" width="4" height="40" fill="#10b981" opacity="0.6"/>
+</svg>

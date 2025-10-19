@@ -1,0 +1,249 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dashboardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.06" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:0.04" />
+      <stop offset="100%" style="stop-color:#4facfe;stop-opacity:0.06" />
+    </linearGradient>
+    <linearGradient id="cardGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:0.8" />
+    </linearGradient>
+    <linearGradient id="cardGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.8" />
+    </linearGradient>
+    <linearGradient id="cardGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#44A08D;stop-opacity:0.8" />
+    </linearGradient>
+    <filter id="dashShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="15" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#dashboardBg)"/>
+  
+  <!-- Dashboard grid pattern -->
+  <defs>
+    <pattern id="dashGrid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="120" height="120" fill="none" stroke="rgba(102,126,234,0.03)" stroke-width="1"/>
+      <circle cx="60" cy="60" r="2" fill="rgba(102,126,234,0.05)"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#dashGrid)"/>
+  
+  <!-- Dashboard cards mockup -->
+  <g transform="translate(100, 80)">
+    <!-- Orders card -->
+    <g filter="url(#dashShadow)">
+      <rect x="0" y="0" width="200" height="120" fill="url(#cardGradient1)" rx="15"/>
+      <text x="20" y="30" fill="white" font-family="Arial" font-size="14" font-weight="bold">MY ORDERS</text>
+      <text x="20" y="55" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Active Orders: 3</text>
+      <text x="20" y="75" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Completed: 47</text>
+      
+      <!-- Order icon -->
+      <g transform="translate(150, 20)">
+        <rect x="0" y="0" width="30" height="25" fill="rgba(255,255,255,0.3)" rx="4"/>
+        <rect x="10" y="-3" width="8" height="31" fill="rgba(255,255,255,0.5)" rx="2"/>
+      </g>
+      
+      <!-- Status indicator -->
+      <circle cx="170" cy="95" r="8" fill="#00C851"/>
+      <text x="170" y="99" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">✓</text>
+    </g>
+  </g>
+  
+  <g transform="translate(350, 80)">
+    <!-- Tracking card -->
+    <g filter="url(#dashShadow)">
+      <rect x="0" y="0" width="200" height="120" fill="url(#cardGradient2)" rx="15"/>
+      <text x="20" y="30" fill="white" font-family="Arial" font-size="14" font-weight="bold">TRACKING</text>
+      <text x="20" y="55" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">In Transit: 2</text>
+      <text x="20" y="75" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Delivered: 45</text>
+      
+      <!-- Truck icon -->
+      <g transform="translate(140, 25)">
+        <rect x="10" y="10" width="35" height="20" fill="rgba(255,255,255,0.4)" rx="3"/>
+        <rect x="0" y="15" width="15" height="15" fill="rgba(255,255,255,0.4)" rx="2"/>
+        <circle cx="15" cy="35" r="6" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="35" cy="35" r="6" fill="rgba(255,255,255,0.6)"/>
+      </g>
+      
+      <!-- Progress indicator -->
+      <rect x="150" y="90" width="30" height="4" fill="rgba(255,255,255,0.3)" rx="2"/>
+      <rect x="150" y="90" width="20" height="4" fill="rgba(255,255,255,0.8)" rx="2"/>
+    </g>
+  </g>
+  
+  <g transform="translate(600, 80)">
+    <!-- Account card -->
+    <g filter="url(#dashShadow)">
+      <rect x="0" y="0" width="200" height="120" fill="url(#cardGradient3)" rx="15"/>
+      <text x="20" y="30" fill="white" font-family="Arial" font-size="14" font-weight="bold">ACCOUNT</text>
+      <text x="20" y="55" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Profile: Complete</text>
+      <text x="20" y="75" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Member Since: 2024</text>
+      
+      <!-- User icon -->
+      <g transform="translate(150, 30)">
+        <circle cx="15" cy="15" r="20" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="15" cy="10" r="6" fill="rgba(255,255,255,0.6)"/>
+        <path d="M 5,25 Q 15,20 25,25" fill="rgba(255,255,255,0.6)"/>
+      </g>
+      
+      <!-- Verification badge -->
+      <circle cx="170" cy="95" r="8" fill="#FFD700"/>
+      <text x="170" y="99" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">✓</text>
+    </g>
+  </g>
+  
+  <!-- Order history timeline -->
+  <g transform="translate(150, 250)">
+    <rect x="0" y="0" width="500" height="200" fill="rgba(255,255,255,0.08)" rx="15" filter="url(#dashShadow)"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="16" font-weight="bold">ORDER HISTORY</text>
+    
+    <!-- Timeline entries -->
+    <g transform="translate(30, 50)">
+      <!-- Entry 1 -->
+      <circle cx="0" cy="0" r="6" fill="rgba(78,205,196,0.8)"/>
+      <line x1="0" y1="6" x2="0" y2="30" stroke="rgba(102,126,234,0.3)" stroke-width="2"/>
+      <text x="15" y="5" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="12" font-weight="bold">Order #KP-2024-103</text>
+      <text x="15" y="20" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">Delivered - Premium Packaging Set</text>
+      
+      <!-- Entry 2 -->
+      <circle cx="0" cy="40" r="6" fill="rgba(240,147,251,0.8)"/>
+      <line x1="0" y1="46" x2="0" y2="70" stroke="rgba(102,126,234,0.3)" stroke-width="2"/>
+      <text x="15" y="45" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="12" font-weight="bold">Order #KP-2024-102</text>
+      <text x="15" y="60" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">In Transit - Logistics Supplies</text>
+      
+      <!-- Entry 3 -->
+      <circle cx="0" cy="80" r="6" fill="rgba(79,172,254,0.8)"/>
+      <line x1="0" y1="86" x2="0" y2="110" stroke="rgba(102,126,234,0.3)" stroke-width="2"/>
+      <text x="15" y="85" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="12" font-weight="bold">Order #KP-2024-101</text>
+      <text x="15" y="100" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">Processing - Bubble Wrap & Tape</text>
+      
+      <!-- Entry 4 -->
+      <circle cx="0" cy="120" r="6" fill="rgba(255,215,0,0.8)"/>
+      <text x="15" y="125" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="12" font-weight="bold">Order #KP-2024-100</text>
+      <text x="15" y="140" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">Delivered - Standard Shipping Labels</text>
+    </g>
+    
+    <!-- View all button mockup -->
+    <rect x="350" y="160" width="120" height="25" fill="rgba(102,126,234,0.3)" rx="12"/>
+    <text x="410" y="177" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="11" font-weight="bold">View All Orders</text>
+  </g>
+  
+  <!-- Quick actions panel -->
+  <g transform="translate(700, 250)">
+    <rect x="0" y="0" width="250" height="200" fill="rgba(255,255,255,0.06)" rx="15" filter="url(#dashShadow)"/>
+    
+    <text x="125" y="30" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="16" font-weight="bold">QUICK ACTIONS</text>
+    
+    <!-- Action buttons -->
+    <g transform="translate(25, 50)">
+      <!-- New order -->
+      <rect x="0" y="0" width="200" height="35" fill="url(#cardGradient1)" rx="8"/>
+      <text x="20" y="15" fill="white" font-family="Arial" font-size="12">🛍️</text>
+      <text x="45" y="23" fill="white" font-family="Arial" font-size="12" font-weight="bold">Place New Order</text>
+      
+      <!-- Track order -->
+      <rect x="0" y="45" width="200" height="35" fill="url(#cardGradient2)" rx="8"/>
+      <text x="20" y="60" fill="white" font-family="Arial" font-size="12">📍</text>
+      <text x="45" y="68" fill="white" font-family="Arial" font-size="12" font-weight="bold">Track My Orders</text>
+      
+      <!-- Support -->
+      <rect x="0" y="90" width="200" height="35" fill="url(#cardGradient3)" rx="8"/>
+      <text x="20" y="105" fill="white" font-family="Arial" font-size="12">💬</text>
+      <text x="45" y="113" fill="white" font-family="Arial" font-size="12" font-weight="bold">Contact Support</text>
+      
+      <!-- Account settings -->
+      <rect x="0" y="135" width="200" height="35" fill="rgba(102,126,234,0.6)" rx="8"/>
+      <text x="20" y="150" fill="white" font-family="Arial" font-size="12">⚙️</text>
+      <text x="45" y="158" fill="white" font-family="Arial" font-size="12" font-weight="bold">Account Settings</text>
+    </g>
+  </g>
+  
+  <!-- Statistics widgets -->
+  <g transform="translate(100, 500)">
+    <!-- Total spent -->
+    <rect x="0" y="0" width="150" height="80" fill="rgba(255,255,255,0.1)" rx="10" filter="url(#dashShadow)"/>
+    <text x="75" y="20" text-anchor="middle" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">TOTAL SPENT</text>
+    <text x="75" y="45" text-anchor="middle" fill="rgba(102,126,234,0.8)" font-family="Arial" font-size="20" font-weight="bold">$2,847</text>
+    <text x="75" y="65" text-anchor="middle" fill="rgba(78,205,196,0.6)" font-family="Arial" font-size="10">↗ +12% this month</text>
+  </g>
+  
+  <g transform="translate(280, 500)">
+    <!-- Orders count -->
+    <rect x="0" y="0" width="150" height="80" fill="rgba(255,255,255,0.1)" rx="10" filter="url(#dashShadow)"/>
+    <text x="75" y="20" text-anchor="middle" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">TOTAL ORDERS</text>
+    <text x="75" y="45" text-anchor="middle" fill="rgba(102,126,234,0.8)" font-family="Arial" font-size="20" font-weight="bold">47</text>
+    <text x="75" y="65" text-anchor="middle" fill="rgba(240,147,251,0.6)" font-family="Arial" font-size="10">3 active orders</text>
+  </g>
+  
+  <g transform="translate(460, 500)">
+    <!-- Savings -->
+    <rect x="0" y="0" width="150" height="80" fill="rgba(255,255,255,0.1)" rx="10" filter="url(#dashShadow)"/>
+    <text x="75" y="20" text-anchor="middle" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">SAVINGS</text>
+    <text x="75" y="45" text-anchor="middle" fill="rgba(102,126,234,0.8)" font-family="Arial" font-size="20" font-weight="bold">$394</text>
+    <text x="75" y="65" text-anchor="middle" fill="rgba(255,215,0,0.6)" font-family="Arial" font-size="10">Bulk discounts</text>
+  </g>
+  
+  <!-- Recent activity -->
+  <g transform="translate(650, 500)">
+    <rect x="0" y="0" width="300" height="150" fill="rgba(255,255,255,0.08)" rx="12" filter="url(#dashShadow)"/>
+    
+    <text x="150" y="20" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="14" font-weight="bold">RECENT ACTIVITY</text>
+    
+    <!-- Activity items -->
+    <g transform="translate(20, 35)">
+      <circle cx="5" cy="5" r="3" fill="rgba(78,205,196,0.8)"/>
+      <text x="15" y="9" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">Order KP-103 delivered successfully</text>
+      
+      <circle cx="5" cy="25" r="3" fill="rgba(240,147,251,0.8)"/>
+      <text x="15" y="29" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">Payment processed for order KP-102</text>
+      
+      <circle cx="5" cy="45" r="3" fill="rgba(79,172,254,0.8)"/>
+      <text x="15" y="49" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">Order KP-101 shipped from warehouse</text>
+      
+      <circle cx="5" cy="65" r="3" fill="rgba(255,215,0,0.8)"/>
+      <text x="15" y="69" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">Profile updated successfully</text>
+      
+      <circle cx="5" cy="85" r="3" fill="rgba(102,126,234,0.6)"/>
+      <text x="15" y="89" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">Welcome to KandyPack!</text>
+    </g>
+    
+    <!-- View all activity -->
+    <rect x="200" y="120" width="80" height="20" fill="rgba(102,126,234,0.3)" rx="10"/>
+    <text x="240" y="133" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="9" font-weight="bold">View All</text>
+  </g>
+  
+  <!-- Floating dashboard elements -->
+  <g opacity="0.3">
+    <g transform="translate(50, 350)">
+      <circle cx="0" cy="0" r="20" fill="rgba(102,126,234,0.3)"/>
+      <text x="0" y="5" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="16">📊</text>
+    </g>
+    
+    <g transform="translate(1100, 200)">
+      <circle cx="0" cy="0" r="25" fill="rgba(240,147,251,0.3)"/>
+      <text x="0" y="6" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="18">📈</text>
+    </g>
+    
+    <g transform="translate(1050, 550)">
+      <circle cx="0" cy="0" r="18" fill="rgba(79,172,254,0.3)"/>
+      <text x="0" y="4" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="14">⭐</text>
+    </g>
+  </g>
+  
+  <!-- Background decoration -->
+  <g opacity="0.1">
+    <circle cx="200" cy="700" r="60" fill="rgba(102,126,234,0.4)"/>
+    <circle cx="1000" cy="100" r="80" fill="rgba(240,147,251,0.4)"/>
+    <circle cx="100" cy="100" r="40" fill="rgba(79,172,254,0.4)"/>
+  </g>
+</svg>

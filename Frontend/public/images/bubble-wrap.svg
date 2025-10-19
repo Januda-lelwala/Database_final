@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bubbleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f9ff;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#e0f2fe;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#bae6fd;stop-opacity:0.5" />
+    </linearGradient>
+    <radialGradient id="bubbleHighlight" cx="30%" cy="30%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.2" />
+    </radialGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <dropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="#f0f9ff" stroke="#bae6fd" stroke-width="2"/>
+  
+  <!-- Bubble wrap sheet -->
+  <rect x="80" y="120" width="240" height="160" rx="10" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Bubble pattern -->
+  <g opacity="0.8">
+    <!-- Row 1 -->
+    <circle cx="120" cy="150" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="150" cy="150" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="180" cy="150" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="210" cy="150" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="240" cy="150" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="270" cy="150" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    
+    <!-- Row 2 -->
+    <circle cx="135" cy="180" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="165" cy="180" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="195" cy="180" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="225" cy="180" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="255" cy="180" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    
+    <!-- Row 3 -->
+    <circle cx="120" cy="210" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="150" cy="210" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="180" cy="210" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="210" cy="210" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="240" cy="210" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="270" cy="210" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    
+    <!-- Row 4 -->
+    <circle cx="135" cy="240" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="165" cy="240" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="195" cy="240" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="225" cy="240" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+    <circle cx="255" cy="240" r="12" fill="url(#bubbleGradient)" stroke="#0ea5e9" stroke-width="1"/>
+  </g>
+  
+  <!-- Highlights on bubbles -->
+  <g opacity="0.6">
+    <circle cx="116" cy="146" r="4" fill="url(#bubbleHighlight)"/>
+    <circle cx="146" cy="146" r="4" fill="url(#bubbleHighlight)"/>
+    <circle cx="176" cy="146" r="4" fill="url(#bubbleHighlight)"/>
+    <circle cx="206" cy="146" r="4" fill="url(#bubbleHighlight)"/>
+    <circle cx="191" cy="176" r="4" fill="url(#bubbleHighlight)"/>
+    <circle cx="221" cy="176" r="4" fill="url(#bubbleHighlight)"/>
+  </g>
+  
+  <!-- Label -->
+  <rect x="140" y="320" width="120" height="25" rx="12" fill="#ffffff" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="200" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#0c4a6e">BUBBLE WRAP</text>
+  
+  <!-- Protective indicators -->
+  <path d="M 60 60 Q 80 40 100 60 T 140 60" stroke="#0ea5e9" stroke-width="3" fill="none" opacity="0.6"/>
+  <circle cx="60" cy="60" r="6" fill="#0ea5e9" opacity="0.6"/>
+  <circle cx="140" cy="60" r="6" fill="#0ea5e9" opacity="0.6"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="340" cy="100" r="8" fill="#10b981" opacity="0.4"/>
+  <circle cx="60" cy="320" r="10" fill="#f59e0b" opacity="0.4"/>
+  <circle cx="350" cy="320" r="6" fill="#8b5cf6" opacity="0.4"/>
+  <circle cx="50" cy="150" r="12" fill="#ef4444" opacity="0.3"/>
+  
+  <!-- Air protection symbol -->
+  <circle cx="200" cy="80" r="20" fill="#0ea5e9" opacity="0.2"/>
+  <path d="M 190 80 Q 200 70 210 80 Q 200 90 190 80" fill="#0ea5e9" opacity="0.6"/>
+</svg>

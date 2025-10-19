@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="tapeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b91c1c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dispenserGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <dropShadow dx="3" dy="5" stdDeviation="3" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="#fef2f2" stroke="#fecaca" stroke-width="2"/>
+  
+  <!-- Tape roll shadow -->
+  <ellipse cx="203" cy="203" rx="70" ry="70" fill="#000000" opacity="0.1"/>
+  
+  <!-- Main tape roll -->
+  <circle cx="200" cy="200" r="65" fill="url(#tapeGradient)" filter="url(#shadow)"/>
+  
+  <!-- Tape roll core -->
+  <circle cx="200" cy="200" r="20" fill="#6b7280"/>
+  <circle cx="200" cy="200" r="15" fill="#9ca3af"/>
+  
+  <!-- Tape dispenser handle -->
+  <rect x="280" y="180" width="60" height="40" rx="20" fill="url(#dispenserGradient)" filter="url(#shadow)"/>
+  <rect x="290" y="190" width="40" height="20" rx="10" fill="#fbbf24"/>
+  
+  <!-- Tape cutting edge -->
+  <rect x="270" y="195" width="15" height="10" fill="#374151"/>
+  <path d="M 270 200 L 285 195 L 285 205 Z" fill="#6b7280"/>
+  
+  <!-- Unrolled tape -->
+  <rect x="135" y="260" width="200" height="15" rx="7" fill="#ef4444" opacity="0.8"/>
+  <rect x="135" y="265" width="200" height="5" fill="#dc2626" opacity="0.6"/>
+  
+  <!-- Tape roll lines -->
+  <g opacity="0.4">
+    <circle cx="200" cy="200" r="55" fill="none" stroke="#b91c1c" stroke-width="1"/>
+    <circle cx="200" cy="200" r="45" fill="none" stroke="#b91c1c" stroke-width="1"/>
+    <circle cx="200" cy="200" r="35" fill="none" stroke="#b91c1c" stroke-width="1"/>
+    <circle cx="200" cy="200" r="25" fill="none" stroke="#b91c1c" stroke-width="1"/>
+  </g>
+  
+  <!-- Label -->
+  <rect x="130" y="320" width="140" height="25" rx="12" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+  <text x="200" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#b91c1c">HEAVY DUTY TAPE</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="90" cy="110" r="8" fill="#3b82f6" opacity="0.4"/>
+  <circle cx="320" cy="130" r="10" fill="#10b981" opacity="0.4"/>
+  <circle cx="70" cy="300" r="12" fill="#8b5cf6" opacity="0.4"/>
+  <circle cx="330" cy="320" r="6" fill="#fbbf24" opacity="0.4"/>
+  
+  <!-- Strength indicators -->
+  <path d="M 80 60 L 90 50 L 100 60 M 90 50 L 90 70" stroke="#ef4444" stroke-width="3" fill="none"/>
+  <path d="M 300 60 L 310 50 L 320 60 M 310 50 L 310 70" stroke="#ef4444" stroke-width="3" fill="none"/>
+  <path d="M 80 350 L 90 340 L 100 350 M 90 340 L 90 360" stroke="#ef4444" stroke-width="3" fill="none"/>
+</svg>

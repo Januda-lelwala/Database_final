@@ -1,0 +1,162 @@
+.truckassign{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --surface:rgba(255,255,255,0.96);
+  --muted:#64748b;
+  --text:#0f172a;
+  --line:#e5e7eb;
+  --line-2:#eef2f7;
+  --accent-1:#0ea5e9;
+  --accent-2:#0284c7;
+  --accent-soft:rgba(14,165,233,0.16);
+  --radius:26px;
+  --r-md:18px;
+  --r-sm:12px;
+  --s-2:8px;
+  --s-3:10px;
+  --s-4:12px;
+  --s-5:14px;
+  --s-6:16px;
+  --s-7:24px;
+  --s-8:32px;
+  --shadow:0 16px 42px rgba(15,23,42,0.12);
+  --shadow-lg:0 28px 64px rgba(15,23,42,0.16);
+  color:var(--text);
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:clamp(22px,4vw,42px);
+  box-shadow:var(--shadow);
+  margin:clamp(22px,6vh,48px);
+  max-width:1000px;
+  margin-inline:auto;
+  display:grid;
+  gap:var(--s-6);
+}
+
+@media (prefers-color-scheme: dark){
+  .truckassign{
+    --bg:#0b1220;
+    --card:#0f172a;
+    --surface:rgba(15,23,42,0.92);
+    --muted:#94a3b8;
+    --text:#e2e8f0;
+    --line:#23314a;
+    --line-2:#1e293b;
+    --shadow:0 16px 42px rgba(0,0,0,0.5);
+    --shadow-lg:0 32px 72px rgba(2,6,23,0.68);
+  }
+}
+
+.truckassign h2{
+  margin:0;
+  font-size:clamp(26px,4vw,36px);
+}
+
+.truckassign .panel{
+  background:var(--card);
+  border-radius:var(--r-md);
+  padding:clamp(18px,3vw,26px);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  display:grid;
+  gap:var(--s-6);
+}
+
+.truckassign .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:var(--s-5);
+}
+
+.truckassign label{
+  display:flex;
+  flex-direction:column;
+  gap:var(--s-2);
+  font-size:14px;
+  color:var(--muted);
+}
+
+.truckassign label span{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text);
+}
+
+.truckassign input,
+.truckassign select{
+  padding:var(--s-4);
+  border-radius:var(--r-sm);
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--text);
+  outline:none;
+  transition:border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+
+.truckassign input:focus,
+.truckassign select:focus{
+  border-color:var(--accent-1);
+  background:var(--card);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+
+.truckassign small{
+  font-size:12px;
+  font-weight:600;
+}
+
+.truckassign small.ok{
+  color:#16a34a;
+}
+
+.truckassign small.err{
+  color:#dc2626;
+}
+
+.truckassign .actions{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.truckassign .btn{
+  padding:var(--s-4) var(--s-6);
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--text);
+  cursor:pointer;
+  transition:transform .1s ease, box-shadow .18s ease, opacity .16s ease;
+}
+
+.truckassign .btn:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow);
+}
+
+.truckassign .btn.primary{
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  border:none;
+  color:#fff;
+  box-shadow:0 14px 32px var(--accent-soft);
+}
+
+.truckassign .btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+.truckassign :focus-visible{
+  outline:3px solid color-mix(in srgb,var(--accent-1) 65%, white);
+  outline-offset:3px;
+  border-radius:10px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .truckassign *, .truckassign *::before, .truckassign *::after{
+    transition-duration:0ms !important;
+    animation-duration:0ms !important;
+  }
+}

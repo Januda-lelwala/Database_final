@@ -1,0 +1,216 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="checkoutBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.08" />
+      <stop offset="50%" style="stop-color:#00f2fe;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#667eea;stop-opacity:0.08" />
+    </linearGradient>
+    <linearGradient id="cartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.7" />
+    </linearGradient>
+    <linearGradient id="paymentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#44A08D;stop-opacity:0.8" />
+    </linearGradient>
+    <filter id="checkoutShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#checkoutBg)"/>
+  
+  <!-- Shopping flow pattern -->
+  <defs>
+    <pattern id="flowPattern" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 0,40 L 80,40" stroke="rgba(102,126,234,0.05)" stroke-width="2" stroke-dasharray="5,5"/>
+      <circle cx="40" cy="40" r="3" fill="rgba(102,126,234,0.08)"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#flowPattern)"/>
+  
+  <!-- Shopping cart visualization -->
+  <g transform="translate(200, 150)">
+    <g filter="url(#checkoutShadow)">
+      <!-- Cart body -->
+      <rect x="0" y="40" width="120" height="80" fill="url(#cartGradient)" rx="8"/>
+      
+      <!-- Cart items -->
+      <rect x="15" y="55" width="25" height="20" fill="rgba(255,255,255,0.8)" rx="3"/>
+      <rect x="45" y="50" width="25" height="25" fill="rgba(255,255,255,0.7)" rx="3"/>
+      <rect x="75" y="60" width="25" height="15" fill="rgba(255,255,255,0.6)" rx="3"/>
+      
+      <!-- Cart wheels -->
+      <circle cx="30" cy="135" r="15" fill="#333"/>
+      <circle cx="30" cy="135" r="10" fill="#666"/>
+      <circle cx="90" cy="135" r="15" fill="#333"/>
+      <circle cx="90" cy="135" r="10" fill="#666"/>
+      
+      <!-- Cart handle -->
+      <path d="M 0,40 L -15,20 L -25,20" fill="none" stroke="url(#cartGradient)" stroke-width="4" stroke-linecap="round"/>
+      
+      <!-- Item count badge -->
+      <circle cx="110" cy="30" r="12" fill="#FF4444"/>
+      <text x="110" y="35" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">3</text>
+    </g>
+  </g>
+  
+  <!-- Order summary area -->
+  <g transform="translate(450, 100)">
+    <rect x="0" y="0" width="300" height="250" fill="rgba(255,255,255,0.1)" rx="15" 
+          stroke="rgba(255,255,255,0.2)" stroke-width="1" filter="url(#checkoutShadow)"/>
+    
+    <!-- Header -->
+    <text x="150" y="30" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="16" font-weight="bold">ORDER SUMMARY</text>
+    
+    <!-- Items list -->
+    <g transform="translate(20, 50)">
+      <rect x="0" y="0" width="260" height="30" fill="rgba(255,255,255,0.05)" rx="5"/>
+      <text x="10" y="20" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="12">Premium Packaging Box × 2</text>
+      <text x="250" y="20" text-anchor="end" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="12" font-weight="bold">$89.99</text>
+      
+      <rect x="0" y="40" width="260" height="30" fill="rgba(255,255,255,0.05)" rx="5"/>
+      <text x="10" y="60" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="12">Standard Shipping Labels</text>
+      <text x="250" y="60" text-anchor="end" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="12" font-weight="bold">$24.50</text>
+      
+      <rect x="0" y="80" width="260" height="30" fill="rgba(255,255,255,0.05)" rx="5"/>
+      <text x="10" y="100" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="12">Bubble Wrap Roll</text>
+      <text x="250" y="100" text-anchor="end" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="12" font-weight="bold">$15.75</text>
+    </g>
+    
+    <!-- Divider -->
+    <line x1="20" y1="200" x2="280" y2="200" stroke="rgba(102,126,234,0.3)" stroke-width="1"/>
+    
+    <!-- Total -->
+    <text x="20" y="225" fill="rgba(102,126,234,0.8)" font-family="Arial" font-size="14" font-weight="bold">TOTAL:</text>
+    <text x="280" y="225" text-anchor="end" fill="rgba(102,126,234,0.8)" font-family="Arial" font-size="16" font-weight="bold">$130.24</text>
+  </g>
+  
+  <!-- Payment methods -->
+  <g transform="translate(800, 120)">
+    <rect x="0" y="0" width="200" height="180" fill="rgba(255,255,255,0.08)" rx="12" filter="url(#checkoutShadow)"/>
+    
+    <text x="100" y="25" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="14" font-weight="bold">PAYMENT OPTIONS</text>
+    
+    <!-- Credit card -->
+    <g transform="translate(20, 40)">
+      <rect x="0" y="0" width="160" height="25" fill="url(#paymentGradient)" rx="5"/>
+      <rect x="5" y="5" width="25" height="15" fill="rgba(255,255,255,0.9)" rx="2"/>
+      <text x="40" y="17" fill="white" font-family="Arial" font-size="11" font-weight="bold">Credit/Debit Card</text>
+    </g>
+    
+    <!-- PayPal -->
+    <g transform="translate(20, 75)">
+      <rect x="0" y="0" width="160" height="25" fill="rgba(0,48,135,0.7)" rx="5"/>
+      <text x="80" y="17" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">PayPal</text>
+    </g>
+    
+    <!-- Bank transfer -->
+    <g transform="translate(20, 110)">
+      <rect x="0" y="0" width="160" height="25" fill="rgba(102,126,234,0.6)" rx="5"/>
+      <text x="80" y="17" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">Bank Transfer</text>
+    </g>
+    
+    <!-- Security badge -->
+    <g transform="translate(60, 145)">
+      <text x="0" y="0" text-anchor="middle" fill="rgba(78,205,196,0.7)" font-family="Arial" font-size="20">🔒</text>
+      <text x="0" y="18" text-anchor="middle" fill="rgba(78,205,196,0.6)" font-family="Arial" font-size="9" font-weight="bold">SECURE PAYMENT</text>
+    </g>
+  </g>
+  
+  <!-- Shipping information area -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="400" height="150" fill="rgba(255,255,255,0.06)" rx="12" filter="url(#checkoutShadow)"/>
+    
+    <text x="200" y="25" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="14" font-weight="bold">SHIPPING DETAILS</text>
+    
+    <!-- Address form mockup -->
+    <g transform="translate(20, 40)">
+      <rect x="0" y="0" width="360" height="20" fill="rgba(255,255,255,0.1)" rx="3"/>
+      <text x="10" y="15" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">Full Name</text>
+      
+      <rect x="0" y="30" width="360" height="20" fill="rgba(255,255,255,0.1)" rx="3"/>
+      <text x="10" y="45" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">Address Line 1</text>
+      
+      <rect x="0" y="60" width="170" height="20" fill="rgba(255,255,255,0.1)" rx="3"/>
+      <text x="10" y="75" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">City</text>
+      
+      <rect x="190" y="60" width="170" height="20" fill="rgba(255,255,255,0.1)" rx="3"/>
+      <text x="200" y="75" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">ZIP Code</text>
+    </g>
+    
+    <!-- Shipping options -->
+    <g transform="translate(20, 120)">
+      <circle cx="10" cy="10" r="6" fill="rgba(78,205,196,0.6)" stroke="rgba(78,205,196,0.8)" stroke-width="2"/>
+      <text x="25" y="15" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11">Standard Shipping (5-7 days)</text>
+      
+      <circle cx="200" cy="10" r="6" fill="none" stroke="rgba(102,126,234,0.4)" stroke-width="2"/>
+      <text x="215" y="15" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="11">Express (2-3 days)</text>
+    </g>
+  </g>
+  
+  <!-- Process steps indicator -->
+  <g transform="translate(600, 400)">
+    <rect x="0" y="0" width="250" height="100" fill="rgba(255,255,255,0.05)" rx="10"/>
+    
+    <text x="125" y="20" text-anchor="middle" fill="rgba(102,126,234,0.6)" 
+          font-family="Arial" font-size="12" font-weight="bold">CHECKOUT PROCESS</text>
+    
+    <!-- Steps -->
+    <g transform="translate(30, 35)">
+      <!-- Step 1 - Complete -->
+      <circle cx="0" cy="0" r="12" fill="rgba(78,205,196,0.8)"/>
+      <text x="0" y="4" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">✓</text>
+      <text x="0" y="25" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Cart</text>
+      
+      <!-- Step 2 - Current -->
+      <circle cx="70" cy="0" r="12" fill="url(#paymentGradient)"/>
+      <text x="70" y="4" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">2</text>
+      <text x="70" y="25" text-anchor="middle" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="8">Payment</text>
+      
+      <!-- Step 3 - Pending -->
+      <circle cx="140" cy="0" r="12" fill="rgba(102,126,234,0.3)" stroke="rgba(102,126,234,0.5)" stroke-width="2"/>
+      <text x="140" y="4" text-anchor="middle" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10" font-weight="bold">3</text>
+      <text x="140" y="25" text-anchor="middle" fill="rgba(102,126,234,0.4)" font-family="Arial" font-size="8">Confirm</text>
+      
+      <!-- Connecting lines -->
+      <line x1="12" y1="0" x2="58" y2="0" stroke="rgba(78,205,196,0.6)" stroke-width="2"/>
+      <line x1="82" y1="0" x2="128" y2="0" stroke="rgba(102,126,234,0.4)" stroke-width="2"/>
+    </g>
+  </g>
+  
+  <!-- Security and trust indicators -->
+  <g transform="translate(50, 200)" opacity="0.6">
+    <circle cx="0" cy="0" r="25" fill="rgba(255,215,0,0.2)"/>
+    <text x="0" y="5" text-anchor="middle" fill="rgba(255,215,0,0.8)" font-family="Arial" font-size="16">🛡️</text>
+    <text x="0" y="40" text-anchor="middle" fill="rgba(255,215,0,0.6)" font-family="Arial" font-size="9" font-weight="bold">SECURE CHECKOUT</text>
+  </g>
+  
+  <g transform="translate(1100, 300)" opacity="0.6">
+    <circle cx="0" cy="0" r="30" fill="rgba(78,205,196,0.2)"/>
+    <text x="0" y="5" text-anchor="middle" fill="rgba(78,205,196,0.8)" font-family="Arial" font-size="18">💳</text>
+    <text x="0" y="45" text-anchor="middle" fill="rgba(78,205,196,0.6)" font-family="Arial" font-size="9" font-weight="bold">SAFE PAYMENT</text>
+  </g>
+  
+  <!-- Background decoration -->
+  <g opacity="0.1">
+    <circle cx="950" cy="100" r="40" fill="rgba(240,147,251,0.4)"/>
+    <circle cx="150" cy="650" r="60" fill="rgba(79,172,254,0.4)"/>
+    <circle cx="1050" cy="600" r="50" fill="rgba(102,126,234,0.4)"/>
+  </g>
+  
+  <!-- Floating shopping elements -->
+  <g transform="translate(900, 500)" opacity="0.4">
+    <rect x="0" y="0" width="30" height="25" fill="rgba(240,147,251,0.5)" rx="3"/>
+    <rect x="10" y="-3" width="8" height="31" fill="rgba(255,215,0,0.6)" rx="1"/>
+  </g>
+  
+  <g transform="translate(1100, 150)" opacity="0.4">
+    <rect x="0" y="0" width="25" height="20" fill="rgba(79,172,254,0.5)" rx="2"/>
+    <rect x="8" y="-2" width="6" height="24" fill="rgba(78,205,196,0.6)" rx="1"/>
+  </g>
+</svg>

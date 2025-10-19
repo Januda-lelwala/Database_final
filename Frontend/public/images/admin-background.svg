@@ -1,0 +1,303 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="adminBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.08" />
+      <stop offset="30%" style="stop-color:#764ba2;stop-opacity:0.06" />
+      <stop offset="70%" style="stop-color:#f093fb;stop-opacity:0.06" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.08" />
+    </linearGradient>
+    <linearGradient id="adminCard1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.9" />
+    </linearGradient>
+    <linearGradient id="adminCard2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.9" />
+    </linearGradient>
+    <linearGradient id="adminCard3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#44A08D;stop-opacity:0.9" />
+    </linearGradient>
+    <linearGradient id="adminCard4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.9" />
+    </linearGradient>
+    <filter id="adminShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="20" flood-opacity="0.25"/>
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#adminBg)"/>
+  
+  <!-- Admin grid pattern -->
+  <defs>
+    <pattern id="adminGrid" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="none" stroke="rgba(102,126,234,0.04)" stroke-width="1"/>
+      <circle cx="50" cy="50" r="1.5" fill="rgba(102,126,234,0.06)"/>
+      <path d="M 25,25 L 75,75 M 75,25 L 25,75" stroke="rgba(102,126,234,0.02)" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#adminGrid)"/>
+  
+  <!-- Admin control center -->
+  <g transform="translate(100, 60)">
+    <!-- System Overview -->
+    <g filter="url(#adminShadow)">
+      <rect x="0" y="0" width="250" height="140" fill="url(#adminCard1)" rx="20"/>
+      <text x="125" y="30" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">SYSTEM OVERVIEW</text>
+      
+      <!-- Stats -->
+      <g transform="translate(20, 50)">
+        <text x="0" y="0" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Total Orders: 1,247</text>
+        <text x="0" y="20" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Active Users: 3,891</text>
+        <text x="0" y="40" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Revenue: $47,293</text>
+        <text x="0" y="60" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Inventory: 99.2% OK</text>
+      </g>
+      
+      <!-- Status indicator -->
+      <circle cx="210" cy="110" r="12" fill="#00C851" filter="url(#glow)"/>
+      <text x="210" y="115" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">✓</text>
+    </g>
+  </g>
+  
+  <g transform="translate(400, 60)">
+    <!-- Product Management -->
+    <g filter="url(#adminShadow)">
+      <rect x="0" y="0" width="250" height="140" fill="url(#adminCard2)" rx="20"/>
+      <text x="125" y="30" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">PRODUCT MANAGER</text>
+      
+      <!-- Product stats -->
+      <g transform="translate(20, 50)">
+        <text x="0" y="0" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Total Products: 847</text>
+        <text x="0" y="20" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Low Stock: 23 items</text>
+        <text x="0" y="40" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">New Today: 5 added</text>
+        <text x="0" y="60" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Categories: 12 active</text>
+      </g>
+      
+      <!-- Product icon -->
+      <g transform="translate(180, 80)">
+        <rect x="0" y="0" width="40" height="30" fill="rgba(255,255,255,0.3)" rx="5"/>
+        <rect x="15" y="-3" width="10" height="36" fill="rgba(255,255,255,0.5)" rx="2"/>
+      </g>
+    </g>
+  </g>
+  
+  <g transform="translate(700, 60)">
+    <!-- Order Management -->
+    <g filter="url(#adminShadow)">
+      <rect x="0" y="0" width="250" height="140" fill="url(#adminCard3)" rx="20"/>
+      <text x="125" y="30" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">ORDER CONTROL</text>
+      
+      <!-- Order stats -->
+      <g transform="translate(20, 50)">
+        <text x="0" y="0" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Pending: 47 orders</text>
+        <text x="0" y="20" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Processing: 23 orders</text>
+        <text x="0" y="40" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Shipped: 156 today</text>
+        <text x="0" y="60" fill="rgba(255,255,255,0.9)" font-family="Arial" font-size="12">Delivered: 89 today</text>
+      </g>
+      
+      <!-- Urgent indicator -->
+      <circle cx="210" cy="50" r="8" fill="#FF4444" filter="url(#glow)"/>
+      <text x="210" y="54" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">!</text>
+      <text x="210" y="70" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="8">URGENT</text>
+    </g>
+  </g>
+  
+  <!-- Analytics Dashboard -->
+  <g transform="translate(100, 240)">
+    <rect x="0" y="0" width="500" height="200" fill="rgba(255,255,255,0.1)" rx="15" filter="url(#adminShadow)"/>
+    
+    <text x="250" y="30" text-anchor="middle" fill="rgba(102,126,234,0.8)" 
+          font-family="Arial" font-size="18" font-weight="bold">ANALYTICS DASHBOARD</text>
+    
+    <!-- Chart representation -->
+    <g transform="translate(50, 50)">
+      <!-- Bar chart mockup -->
+      <rect x="0" y="100" width="30" height="40" fill="rgba(102,126,234,0.6)" rx="3"/>
+      <rect x="40" y="80" width="30" height="60" fill="rgba(240,147,251,0.6)" rx="3"/>
+      <rect x="80" y="60" width="30" height="80" fill="rgba(79,172,254,0.6)" rx="3"/>
+      <rect x="120" y="90" width="30" height="50" fill="rgba(78,205,196,0.6)" rx="3"/>
+      <rect x="160" y="50" width="30" height="90" fill="rgba(255,215,0,0.6)" rx="3"/>
+      <rect x="200" y="70" width="30" height="70" fill="rgba(102,126,234,0.6)" rx="3"/>
+      <rect x="240" y="85" width="30" height="55" fill="rgba(240,147,251,0.6)" rx="3"/>
+      
+      <!-- Axis lines -->
+      <line x1="0" y1="145" x2="280" y2="145" stroke="rgba(102,126,234,0.4)" stroke-width="1"/>
+      <line x1="0" y1="45" x2="0" y2="145" stroke="rgba(102,126,234,0.4)" stroke-width="1"/>
+      
+      <!-- Labels -->
+      <text x="15" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Jan</text>
+      <text x="55" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Feb</text>
+      <text x="95" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Mar</text>
+      <text x="135" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Apr</text>
+      <text x="175" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">May</text>
+      <text x="215" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Jun</text>
+      <text x="255" y="160" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="8">Jul</text>
+      
+      <!-- KPIs -->
+      <g transform="translate(320, 20)">
+        <rect x="0" y="0" width="120" height="80" fill="rgba(255,255,255,0.05)" rx="8"/>
+        <text x="60" y="15" text-anchor="middle" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10" font-weight="bold">MONTHLY GROWTH</text>
+        <text x="60" y="35" text-anchor="middle" fill="rgba(78,205,196,0.8)" font-family="Arial" font-size="20" font-weight="bold">+23.5%</text>
+        <text x="60" y="55" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">vs last month</text>
+        <text x="60" y="70" text-anchor="middle" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">↗ Trending up</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- User Management Panel -->
+  <g transform="translate(650, 240)">
+    <rect x="0" y="0" width="300" height="200" fill="rgba(255,255,255,0.08)" rx="15" filter="url(#adminShadow)"/>
+    
+    <text x="150" y="30" text-anchor="middle" fill="rgba(102,126,234,0.8)" 
+          font-family="Arial" font-size="18" font-weight="bold">USER MANAGEMENT</text>
+    
+    <!-- User stats -->
+    <g transform="translate(30, 50)">
+      <!-- Active users -->
+      <g transform="translate(0, 0)">
+        <circle cx="10" cy="10" r="8" fill="rgba(78,205,196,0.6)"/>
+        <text x="10" y="14" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">👤</text>
+        <text x="25" y="9" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="11" font-weight="bold">Active Users</text>
+        <text x="25" y="20" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">3,891 online now</text>
+      </g>
+      
+      <!-- New registrations -->
+      <g transform="translate(0, 35)">
+        <circle cx="10" cy="10" r="8" fill="rgba(240,147,251,0.6)"/>
+        <text x="10" y="14" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">+</text>
+        <text x="25" y="9" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="11" font-weight="bold">New Today</text>
+        <text x="25" y="20" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">47 registrations</text>
+      </g>
+      
+      <!-- Customer support -->
+      <g transform="translate(0, 70)">
+        <circle cx="10" cy="10" r="8" fill="rgba(255,215,0,0.6)"/>
+        <text x="10" y="14" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">💬</text>
+        <text x="25" y="9" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="11" font-weight="bold">Support Tickets</text>
+        <text x="25" y="20" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">12 pending</text>
+      </g>
+      
+      <!-- Admin actions -->
+      <g transform="translate(0, 105)">
+        <circle cx="10" cy="10" r="8" fill="rgba(102,126,234,0.6)"/>
+        <text x="10" y="14" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">⚙️</text>
+        <text x="25" y="9" fill="rgba(102,126,234,0.7)" font-family="Arial" font-size="11" font-weight="bold">Admin Actions</text>
+        <text x="25" y="20" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="10">System status: OK</text>
+      </g>
+    </g>
+    
+    <!-- Quick actions -->
+    <g transform="translate(170, 60)">
+      <rect x="0" y="0" width="100" height="25" fill="url(#adminCard1)" rx="12"/>
+      <text x="50" y="17" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">Manage Users</text>
+      
+      <rect x="0" y="35" width="100" height="25" fill="url(#adminCard2)" rx="12"/>
+      <text x="50" y="52" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">View Reports</text>
+      
+      <rect x="0" y="70" width="100" height="25" fill="url(#adminCard3)" rx="12"/>
+      <text x="50" y="87" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">Settings</text>
+    </g>
+  </g>
+  
+  <!-- System Status Bar -->
+  <g transform="translate(100, 480)">
+    <rect x="0" y="0" width="850" height="80" fill="rgba(255,255,255,0.06)" rx="12" filter="url(#adminShadow)"/>
+    
+    <text x="425" y="25" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="16" font-weight="bold">SYSTEM STATUS</text>
+    
+    <!-- Status indicators -->
+    <g transform="translate(50, 35)">
+      <!-- Server status -->
+      <circle cx="0" cy="15" r="6" fill="#00C851"/>
+      <text x="15" y="12" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">Server</text>
+      <text x="15" y="24" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">Online</text>
+      
+      <!-- Database -->
+      <circle cx="120" cy="15" r="6" fill="#00C851"/>
+      <text x="135" y="12" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">Database</text>
+      <text x="135" y="24" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">Connected</text>
+      
+      <!-- API -->
+      <circle cx="250" cy="15" r="6" fill="#FFD700"/>
+      <text x="265" y="12" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">API</text>
+      <text x="265" y="24" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">Slow</text>
+      
+      <!-- Storage -->
+      <circle cx="350" cy="15" r="6" fill="#00C851"/>
+      <text x="365" y="12" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">Storage</text>
+      <text x="365" y="24" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">78% used</text>
+      
+      <!-- Security -->
+      <circle cx="470" cy="15" r="6" fill="#00C851"/>
+      <text x="485" y="12" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">Security</text>
+      <text x="485" y="24" fill="rgba(102,126,196,0.5)" font-family="Arial" font-size="9">Secure</text>
+      
+      <!-- Backup -->
+      <circle cx="580" cy="15" r="6" fill="#00C851"/>
+      <text x="595" y="12" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="11" font-weight="bold">Backup</text>
+      <text x="595" y="24" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="9">Last: 2h ago</text>
+      
+      <!-- Uptime -->
+      <rect x="700" y="0" width="100" height="30" fill="rgba(78,205,196,0.2)" rx="8"/>
+      <text x="750" y="12" text-anchor="middle" fill="rgba(78,205,196,0.8)" font-family="Arial" font-size="10" font-weight="bold">UPTIME</text>
+      <text x="750" y="24" text-anchor="middle" fill="rgba(78,205,196,0.7)" font-family="Arial" font-size="9">99.9% (30d)</text>
+    </g>
+  </g>
+  
+  <!-- Recent Admin Actions -->
+  <g transform="translate(100, 600)">
+    <rect x="0" y="0" width="850" height="120" fill="rgba(255,255,255,0.06)" rx="12" filter="url(#adminShadow)"/>
+    
+    <text x="425" y="25" text-anchor="middle" fill="rgba(102,126,234,0.7)" 
+          font-family="Arial" font-size="16" font-weight="bold">RECENT ADMIN ACTIVITY</text>
+    
+    <!-- Activity log -->
+    <g transform="translate(30, 40)">
+      <text x="0" y="0" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">10:23 AM - Product "Premium Box Set" updated by Admin</text>
+      <text x="0" y="15" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">09:45 AM - User account "customer@email.com" verified</text>
+      <text x="0" y="30" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">09:12 AM - Bulk order #KP-2024-BULK-047 processed</text>
+      <text x="0" y="45" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">08:56 AM - System backup completed successfully</text>
+      <text x="0" y="60" fill="rgba(102,126,234,0.6)" font-family="Arial" font-size="10">08:30 AM - New admin "manager@kandypack.com" added</text>
+    </g>
+    
+    <!-- View full log button -->
+    <rect x="700" y="85" width="120" height="25" fill="url(#adminCard1)" rx="12"/>
+    <text x="760" y="102" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">View Full Log</text>
+  </g>
+  
+  <!-- Floating admin elements -->
+  <g opacity="0.4">
+    <g transform="translate(50, 300)">
+      <circle cx="0" cy="0" r="15" fill="rgba(102,126,234,0.3)"/>
+      <text x="0" y="4" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="12">⚡</text>
+    </g>
+    
+    <g transform="translate(1050, 150)">
+      <circle cx="0" cy="0" r="20" fill="rgba(240,147,251,0.3)"/>
+      <text x="0" y="5" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="14">🔧</text>
+    </g>
+    
+    <g transform="translate(1100, 500)">
+      <circle cx="0" cy="0" r="18" fill="rgba(78,205,196,0.3)"/>
+      <text x="0" y="4" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="13">📊</text>
+    </g>
+  </g>
+  
+  <!-- Background decoration -->
+  <g opacity="0.08">
+    <circle cx="1100" cy="100" r="100" fill="rgba(102,126,234,0.4)"/>
+    <circle cx="100" cy="700" r="80" fill="rgba(240,147,251,0.4)"/>
+    <circle cx="1000" cy="700" r="90" fill="rgba(79,172,254,0.4)"/>
+    <circle cx="50" cy="150" r="60" fill="rgba(78,205,196,0.4)"/>
+  </g>
+</svg>

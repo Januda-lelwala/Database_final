@@ -1,0 +1,182 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="supplyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <filter id="supplyGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#f093fb" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#supplyGradient)" opacity="0.08"/>
+  
+  <!-- Abstract background elements -->
+  <circle cx="150" cy="120" r="80" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="650" cy="180" r="100" fill="rgba(255,255,255,0.04)"/>
+  <circle cx="400" cy="480" r="90" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="100" cy="400" r="60" fill="rgba(255,255,255,0.03)"/>
+  
+  <!-- Central hub/warehouse -->
+  <g transform="translate(300, 200)" filter="url(#supplyGlow)">
+    <!-- Main building -->
+    <rect x="0" y="60" width="200" height="120" fill="url(#networkGradient)" opacity="0.3" rx="10"/>
+    
+    <!-- Roof -->
+    <polygon points="0,60 100,20 200,60" fill="rgba(255,255,255,0.2)"/>
+    
+    <!-- Loading docks -->
+    <rect x="20" y="140" width="30" height="40" fill="rgba(255,255,255,0.15)" rx="3"/>
+    <rect x="60" y="140" width="30" height="40" fill="rgba(255,255,255,0.15)" rx="3"/>
+    <rect x="100" y="140" width="30" height="40" fill="rgba(255,255,255,0.15)" rx="3"/>
+    <rect x="140" y="140" width="30" height="40" fill="rgba(255,255,255,0.15)" rx="3"/>
+    
+    <!-- Windows -->
+    <rect x="30" y="80" width="15" height="20" fill="rgba(255,255,255,0.4)" rx="2"/>
+    <rect x="55" y="80" width="15" height="20" fill="rgba(255,255,255,0.4)" rx="2"/>
+    <rect x="80" y="80" width="15" height="20" fill="rgba(255,255,255,0.4)" rx="2"/>
+    <rect x="105" y="80" width="15" height="20" fill="rgba(255,255,255,0.4)" rx="2"/>
+    <rect x="130" y="80" width="15" height="20" fill="rgba(255,255,255,0.4)" rx="2"/>
+    <rect x="155" y="80" width="15" height="20" fill="rgba(255,255,255,0.4)" rx="2"/>
+    
+    <!-- Company sign -->
+    <rect x="70" y="30" width="60" height="20" fill="rgba(255,255,255,0.3)" rx="3"/>
+    <rect x="75" y="35" width="50" height="3" fill="rgba(255,255,255,0.6)" rx="1"/>
+    <rect x="75" y="40" width="40" height="2" fill="rgba(255,255,255,0.5)" rx="1"/>
+    <rect x="75" y="44" width="45" height="2" fill="rgba(255,255,255,0.5)" rx="1"/>
+  </g>
+  
+  <!-- Distribution network nodes -->
+  <g opacity="0.7">
+    <!-- Node 1 - Top left -->
+    <g transform="translate(80, 80)">
+      <circle cx="0" cy="0" r="25" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <rect x="-15" y="-10" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-15" y="2" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <!-- Mini trucks -->
+      <rect x="-8" y="-6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+      <rect x="-8" y="6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+    </g>
+    
+    <!-- Node 2 - Top right -->
+    <g transform="translate(650, 120)">
+      <circle cx="0" cy="0" r="25" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <rect x="-15" y="-10" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-15" y="2" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-8" y="-6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+      <rect x="-8" y="6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+    </g>
+    
+    <!-- Node 3 - Bottom left -->
+    <g transform="translate(120, 450)">
+      <circle cx="0" cy="0" r="25" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <rect x="-15" y="-10" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-15" y="2" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-8" y="-6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+      <rect x="-8" y="6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+    </g>
+    
+    <!-- Node 4 - Bottom right -->
+    <g transform="translate(620, 420)">
+      <circle cx="0" cy="0" r="25" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <rect x="-15" y="-10" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-15" y="2" width="30" height="8" fill="rgba(255,255,255,0.2)" rx="2"/>
+      <rect x="-8" y="-6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+      <rect x="-8" y="6" width="16" height="4" fill="rgba(255,255,255,0.4)" rx="1"/>
+    </g>
+  </g>
+  
+  <!-- Network connections -->
+  <g opacity="0.4" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none">
+    <!-- From central hub to nodes -->
+    <path d="M400,240 Q250,160 105,105" stroke-dasharray="8,4"/>
+    <path d="M400,240 Q550,180 625,145" stroke-dasharray="8,4"/>
+    <path d="M400,300 Q260,380 145,425" stroke-dasharray="8,4"/>
+    <path d="M400,300 Q510,360 595,395" stroke-dasharray="8,4"/>
+    
+    <!-- Inter-node connections -->
+    <path d="M105,105 Q400,50 625,145" stroke-dasharray="4,6" opacity="0.3"/>
+    <path d="M145,425 Q400,500 595,395" stroke-dasharray="4,6" opacity="0.3"/>
+  </g>
+  
+  <!-- Connection points with animation hints -->
+  <g>
+    <circle cx="400" cy="240" r="8" fill="rgba(255,255,255,0.8)">
+      <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="105" cy="105" r="6" fill="rgba(255,255,255,0.6)">
+      <animate attributeName="r" values="6;9;6" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="625" cy="145" r="6" fill="rgba(255,255,255,0.6)">
+      <animate attributeName="r" values="6;9;6" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="145" cy="425" r="6" fill="rgba(255,255,255,0.6)">
+      <animate attributeName="r" values="6;9;6" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="595" cy="395" r="6" fill="rgba(255,255,255,0.6)">
+      <animate attributeName="r" values="6;9;6" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Moving elements along paths to show flow -->
+  <g opacity="0.6">
+    <!-- Packages moving -->
+    <rect x="0" y="0" width="8" height="6" fill="rgba(255,255,255,0.7)" rx="1">
+      <animateMotion dur="6s" repeatCount="indefinite">
+        <path d="M400,240 Q250,160 105,105"/>
+      </animateMotion>
+    </rect>
+    <rect x="0" y="0" width="8" height="6" fill="rgba(255,255,255,0.7)" rx="1">
+      <animateMotion dur="7s" repeatCount="indefinite" begin="2s">
+        <path d="M400,240 Q550,180 625,145"/>
+      </animateMotion>
+    </rect>
+    <rect x="0" y="0" width="8" height="6" fill="rgba(255,255,255,0.7)" rx="1">
+      <animateMotion dur="8s" repeatCount="indefinite" begin="1s">
+        <path d="M400,300 Q260,380 145,425"/>
+      </animateMotion>
+    </rect>
+    <rect x="0" y="0" width="8" height="6" fill="rgba(255,255,255,0.7)" rx="1">
+      <animateMotion dur="7.5s" repeatCount="indefinite" begin="3s">
+        <path d="M400,300 Q510,360 595,395"/>
+      </animateMotion>
+    </rect>
+  </g>
+  
+  <!-- Data flow indicators -->
+  <g opacity="0.3">
+    <!-- Information/data packets -->
+    <rect x="150" y="200" width="20" height="15" fill="rgba(255,255,255,0.4)" rx="3"/>
+    <rect x="155" y="205" width="10" height="2" fill="rgba(255,255,255,0.6)"/>
+    <rect x="155" y="208" width="8" height="1" fill="rgba(255,255,255,0.5)"/>
+    <rect x="155" y="210" width="6" height="1" fill="rgba(255,255,255,0.5)"/>
+    
+    <rect x="550" y="300" width="20" height="15" fill="rgba(255,255,255,0.4)" rx="3"/>
+    <rect x="555" y="305" width="10" height="2" fill="rgba(255,255,255,0.6)"/>
+    <rect x="555" y="308" width="8" height="1" fill="rgba(255,255,255,0.5)"/>
+    <rect x="555" y="310" width="6" height="1" fill="rgba(255,255,255,0.5)"/>
+    
+    <!-- Analytics charts -->
+    <rect x="50" y="300" width="40" height="30" fill="rgba(255,255,255,0.2)" rx="3"/>
+    <rect x="55" y="315" width="5" height="10" fill="rgba(255,255,255,0.4)"/>
+    <rect x="62" y="310" width="5" height="15" fill="rgba(255,255,255,0.4)"/>
+    <rect x="69" y="305" width="5" height="20" fill="rgba(255,255,255,0.4)"/>
+    <rect x="76" y="312" width="5" height="13" fill="rgba(255,255,255,0.4)"/>
+    <rect x="83" y="308" width="5" height="17" fill="rgba(255,255,255,0.4)"/>
+  </g>
+  
+  <!-- Supply chain labels/indicators -->
+  <g opacity="0.25">
+    <text x="400" y="190" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="12" font-weight="bold">DISTRIBUTION HUB</text>
+    <text x="80" y="60" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial" font-size="10">DEPOT A</text>
+    <text x="650" y="100" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial" font-size="10">DEPOT B</text>
+    <text x="120" y="430" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial" font-size="10">DEPOT C</text>
+    <text x="620" y="400" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial" font-size="10">DEPOT D</text>
+  </g>
+</svg>

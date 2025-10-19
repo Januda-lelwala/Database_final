@@ -1,0 +1,174 @@
+/* Global Responsive Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100vw;
+  max-width: 100%;
+}
+
+/* App Container */
+.App {
+  width: 100vw;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Universal Responsive Utilities */
+.container-fluid {
+  width: 100%;
+  max-width: 100vw;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.responsive-grid {
+  display: grid;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.responsive-flex {
+  display: flex;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  flex-wrap: wrap;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Typography Responsive Classes */
+.text-xs { font-size: clamp(0.7rem, 2vw, 0.8rem); }
+.text-sm { font-size: clamp(0.8rem, 2.2vw, 0.9rem); }
+.text-base { font-size: clamp(0.9rem, 2.5vw, 1rem); }
+.text-lg { font-size: clamp(1rem, 3vw, 1.2rem); }
+.text-xl { font-size: clamp(1.2rem, 3.5vw, 1.4rem); }
+.text-2xl { font-size: clamp(1.4rem, 4vw, 1.8rem); }
+.text-3xl { font-size: clamp(1.8rem, 4.5vw, 2.2rem); }
+.text-4xl { font-size: clamp(2.2rem, 5vw, 2.8rem); }
+.text-5xl { font-size: clamp(2.8rem, 6vw, 3.5rem); }
+
+/* Responsive Spacing */
+.p-responsive { padding: clamp(1rem, 3vw, 2rem); }
+.m-responsive { margin: clamp(1rem, 3vw, 2rem); }
+.gap-responsive { gap: clamp(0.5rem, 2vw, 1.5rem); }
+
+/* Responsive Widths */
+.w-full { width: 100%; }
+.w-screen { width: 100vw; max-width: 100%; }
+.h-screen { height: 100vh; }
+.h-full { height: 100%; }
+
+/* Mobile-first Breakpoint Classes */
+.mobile-only { display: block; }
+.tablet-up { display: none; }
+.desktop-up { display: none; }
+
+@media (min-width: 640px) {
+  .mobile-only { display: none; }
+  .tablet-up { display: block; }
+}
+
+@media (min-width: 1024px) {
+  .tablet-up { display: none; }
+  .desktop-up { display: block; }
+}
+
+/* Enhanced Responsive Breakpoints */
+@media (max-width: 360px) {
+  html { font-size: 14px; }
+  .container-fluid { padding: 0 0.5rem; }
+}
+
+@media (min-width: 361px) and (max-width: 640px) {
+  html { font-size: 15px; }
+  .responsive-grid { gap: clamp(0.8rem, 2vw, 1.2rem); }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  html { font-size: 16px; }
+  .responsive-grid { 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .responsive-grid { 
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .container-fluid { max-width: 1200px; }
+  .responsive-grid { 
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+}
+
+@media (min-width: 1441px) {
+  .container-fluid { max-width: 1400px; }
+  html { font-size: 18px; }
+}
+
+/* Landscape Orientation */
+@media (max-height: 600px) and (orientation: landscape) {
+  .h-screen { height: auto; min-height: 100vh; }
+  .container-fluid { padding: clamp(0.5rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem); }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body { -webkit-font-smoothing: subpixel-antialiased; }
+}
+
+/* Legacy styles (keeping for compatibility) */
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

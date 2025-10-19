@@ -1,0 +1,224 @@
+.portal-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.customer-portal-login {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.employee-portal-login {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.login-container {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  overflow: visible;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-header h1 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 2em;
+}
+
+.login-header p {
+  margin: 0;
+  color: #6c757d;
+}
+
+.login-form {
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.customer-portal-login .form-group input:focus,
+.customer-portal-login .form-group select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.employee-portal-login .form-group input:focus,
+.employee-portal-login .form-group select:focus {
+  border-color: #f093fb;
+  box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+}
+
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.customer-portal-login .login-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.customer-portal-login .login-btn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.employee-portal-login .login-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.employee-portal-login .login-btn:hover {
+  background: linear-gradient(135deg, #e881f9 0%, #f3455a 100%);
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+}
+
+.login-footer {
+  text-align: center;
+  color: #6c757d;
+}
+
+.login-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.portal-switch {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+}
+
+.portal-switch a {
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 25px;
+    margin: 10px;
+  }
+  
+  .login-header h1 {
+    font-size: 1.6em;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .login-btn {
+    font-size: 14px;
+  }
+}
+
+/* Back to Home on login pages */
+.login-back-home {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 2000;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-back-home:hover {
+  transform: translateX(-2px) scale(1.03);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+
+.login-back-home .arrow {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.login-back-home .label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 480px) {
+  .login-back-home {
+    padding: 10px 12px;
+  }
+  .login-back-home .label {
+    display: none;
+  }
+  .login-back-home .arrow {
+    font-size: 1.25rem;
+  }
+}

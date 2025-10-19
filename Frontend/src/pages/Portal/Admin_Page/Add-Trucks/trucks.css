@@ -1,0 +1,339 @@
+/* ===========================
+   trucks.css
+   Truck admin workspace with dark-mode conscious styling
+   =========================== */
+
+.trucks {
+  --truck-bg: #ffffff;
+  --truck-card: #ffffff;
+  --truck-soft: #f8fafc;
+  --truck-text: #0f172a;
+  --truck-muted: #64748b;
+  --truck-line: #e2e8f0;
+  --truck-line-strong: #d0d7e2;
+  --truck-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --truck-shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.14);
+  --truck-primary-1: #2563eb;
+  --truck-primary-2: #1d4ed8;
+  --truck-danger-1: #ef4444;
+  --truck-danger-2: #dc2626;
+  --truck-table-head-bg: #f1f5f9;
+  --truck-table-head-text: #0f172a;
+  --truck-row-hover: rgba(37, 99, 235, 0.08);
+  --truck-btn-surface: #ffffff;
+  --truck-btn-border: rgba(148, 163, 184, 0.4);
+  --truck-btn-text: var(--truck-text);
+  --truck-radius: 16px;
+  --truck-radius-sm: 10px;
+  --truck-gap: 16px;
+  color: var(--truck-text);
+  background: var(--truck-bg);
+  padding: clamp(24px, 5vw, 40px);
+  border-radius: var(--truck-radius);
+  max-width: 1100px;
+  margin: clamp(20px, 6vh, 48px) auto;
+  box-shadow: var(--truck-shadow);
+}
+
+@media (prefers-color-scheme: dark) {
+  .trucks {
+    --truck-bg: #0b1220;
+    --truck-card: rgba(15, 23, 42, 0.94);
+    --truck-soft: rgba(30, 41, 59, 0.72);
+    --truck-text: #e2e8f0;
+    --truck-muted: #94a3b8;
+    --truck-line: #273449;
+    --truck-line-strong: #32415a;
+    --truck-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+    --truck-shadow-lg: 0 30px 60px rgba(2, 6, 23, 0.65);
+    --truck-table-head-bg: #1f2937;
+    --truck-table-head-text: #f8fafc;
+    --truck-row-hover: rgba(148, 163, 184, 0.22);
+    --truck-btn-surface: color-mix(in srgb, var(--truck-card) 55%, white 45%);
+    --truck-btn-border: rgba(148, 163, 184, 0.55);
+    --truck-btn-text: #f8fafc;
+  }
+}
+
+.trucks h2 {
+  margin: 0 0 28px;
+  font-size: clamp(28px, 4vw, 34px);
+  font-weight: 700;
+}
+
+.trucks h3 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--truck-text);
+}
+
+.trucks .panels {
+  display: grid;
+  gap: clamp(16px, 3vw, 32px);
+  margin-bottom: clamp(16px, 4vw, 32px);
+}
+
+@media (min-width: 900px) {
+  .trucks .panels {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: start;
+  }
+}
+
+.trucks .panel,
+.trucks .toolbar {
+  background: var(--truck-card);
+  border-radius: var(--truck-radius);
+  padding: clamp(20px, 4vw, 28px);
+  box-shadow: var(--truck-shadow-lg);
+  border: 1px solid var(--truck-line);
+  backdrop-filter: blur(4px);
+}
+
+.trucks .grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--truck-gap);
+}
+
+.trucks .grid .full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .trucks .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.trucks label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--truck-muted);
+}
+
+.trucks label span {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--truck-text);
+}
+
+.trucks input,
+.trucks textarea,
+.trucks select {
+  padding: 12px 14px;
+  border: 1px solid var(--truck-line);
+  border-radius: var(--truck-radius-sm);
+  background: var(--truck-soft);
+  color: var(--truck-text);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.trucks input::placeholder,
+.trucks textarea::placeholder,
+.trucks select::placeholder {
+  color: color-mix(in srgb, var(--truck-muted) 70%, white);
+}
+
+.trucks input:focus,
+.trucks textarea:focus,
+.trucks select:focus {
+  border-color: var(--truck-primary-1);
+  background: var(--truck-card);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+
+.trucks .actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.trucks .actions.full {
+  grid-column: 1 / -1;
+}
+
+.trucks .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--truck-btn-border);
+  background: var(--truck-btn-surface);
+  color: var(--truck-btn-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.trucks .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--truck-shadow);
+  border-color: color-mix(in srgb, var(--truck-btn-border) 50%, var(--truck-primary-1));
+}
+
+.trucks .btn:active {
+  transform: translateY(0);
+}
+
+.trucks .btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.trucks .btn.primary {
+  background: linear-gradient(135deg, var(--truck-primary-1), var(--truck-primary-2));
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 18px 36px -18px rgba(37, 99, 235, 0.65);
+}
+
+.trucks .btn.danger {
+  background: linear-gradient(135deg, var(--truck-danger-1), var(--truck-danger-2));
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 18px 36px -18px rgba(239, 68, 68, 0.55);
+}
+
+.trucks .toolbar {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .trucks .toolbar {
+    grid-template-columns: minmax(0, 2fr) auto;
+    align-items: center;
+  }
+}
+
+.trucks .toolbar-input {
+  width: 100%;
+  padding: 12px 16px 12px 46px;
+  border-radius: var(--truck-radius-sm);
+  border: 1px solid var(--truck-line);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='20' y1='20' x2='16.65' y2='16.65'/%3E%3C/svg%3E")
+      14px 50% / 18px 18px no-repeat,
+    var(--truck-soft);
+  color: var(--truck-text);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.trucks .toolbar-input:focus {
+  border-color: var(--truck-primary-1);
+  background-color: var(--truck-card);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+}
+
+.trucks .muted {
+  color: var(--truck-muted);
+  font-size: 14px;
+}
+
+.trucks .muted b {
+  color: var(--truck-text);
+}
+
+.trucks .table-wrap {
+  background: var(--truck-card);
+  border-radius: calc(var(--truck-radius) - 6px);
+  border: 1px solid var(--truck-line);
+  box-shadow: var(--truck-shadow-lg);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.trucks table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.trucks thead th {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--truck-table-head-bg);
+  color: var(--truck-table-head-text);
+  border-bottom: 1px solid var(--truck-line-strong);
+}
+
+.trucks th,
+.trucks td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--truck-line);
+  vertical-align: middle;
+}
+
+.trucks tbody tr:hover td {
+  background: var(--truck-row-hover);
+}
+
+.trucks td.right {
+  text-align: right;
+}
+
+.trucks .mono {
+  font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.trucks .row-actions {
+  display: inline-flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.trucks td input {
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--truck-radius-sm);
+  border: 1px solid var(--truck-line);
+  background: var(--truck-soft);
+  padding: 8px 12px;
+  color: var(--truck-text);
+  font: inherit;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.trucks td input:focus {
+  border-color: var(--truck-primary-1);
+  background: var(--truck-card);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+}
+
+.trucks .empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--truck-muted);
+  font-style: italic;
+}
+
+.trucks :focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.4);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trucks *,
+  .trucks *::before,
+  .trucks *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

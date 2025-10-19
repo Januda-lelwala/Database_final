@@ -1,0 +1,158 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="authBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.05" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:0.03" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="secureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#44A08D;stop-opacity:0.6" />
+    </linearGradient>
+    <radialGradient id="shieldGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.6" />
+    </radialGradient>
+    <filter id="authGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#authBg)"/>
+  
+  <!-- Security pattern overlay -->
+  <defs>
+    <pattern id="securityPattern" width="100" height="100" patternUnits="userSpaceOnUse">
+      <circle cx="50" cy="50" r="2" fill="rgba(102,126,234,0.03)"/>
+      <path d="M 45,45 L 55,55 M 55,45 L 45,55" stroke="rgba(102,126,234,0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#securityPattern)"/>
+  
+  <!-- Central security shield -->
+  <g transform="translate(600, 300)">
+    <path d="M 0,-80 L 60,-60 L 60,60 L 0,80 L -60,60 L -60,-60 Z" 
+          fill="url(#shieldGradient)" filter="url(#authGlow)"/>
+    
+    <!-- Shield inner design -->
+    <circle cx="0" cy="0" r="50" fill="rgba(255,255,255,0.3)"/>
+    <circle cx="0" cy="0" r="35" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    
+    <!-- Lock icon -->
+    <rect x="-15" y="-5" width="30" height="25" fill="rgba(255,255,255,0.8)" rx="3"/>
+    <circle cx="0" cy="-15" r="12" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="3"/>
+    <circle cx="0" cy="5" r="3" fill="rgba(102,126,234,0.6)"/>
+    
+    <!-- Security text -->
+    <text x="0" y="45" text-anchor="middle" fill="rgba(255,255,255,0.9)" 
+          font-family="Arial" font-size="12" font-weight="bold">SECURE ACCESS</text>
+  </g>
+  
+  <!-- Floating security elements -->
+  <g opacity="0.4">
+    <!-- Key icons -->
+    <g transform="translate(200, 150) rotate(25)">
+      <rect x="0" y="0" width="40" height="8" fill="url(#secureGradient)" rx="4"/>
+      <circle cx="0" cy="4" r="12" fill="rgba(255,215,0,0.6)" stroke="rgba(255,215,0,0.8)" stroke-width="2"/>
+      <rect x="25" y="-2" width="3" height="6" fill="rgba(78,205,196,0.8)"/>
+      <rect x="30" y="-2" width="3" height="4" fill="rgba(78,205,196,0.8)"/>
+    </g>
+    
+    <g transform="translate(1000, 200) rotate(-15)">
+      <rect x="0" y="0" width="35" height="6" fill="url(#secureGradient)" rx="3"/>
+      <circle cx="0" cy="3" r="10" fill="rgba(240,147,251,0.6)" stroke="rgba(240,147,251,0.8)" stroke-width="2"/>
+      <rect x="22" y="-1" width="2" height="4" fill="rgba(245,87,108,0.8)"/>
+      <rect x="26" y="-1" width="2" height="3" fill="rgba(245,87,108,0.8)"/>
+    </g>
+    
+    <!-- User profile icons -->
+    <g transform="translate(150, 400)">
+      <circle cx="0" cy="0" r="30" fill="rgba(102,126,234,0.2)" stroke="rgba(102,126,234,0.3)" stroke-width="2"/>
+      <circle cx="0" cy="-8" r="8" fill="rgba(255,255,255,0.6)"/>
+      <path d="M -15,15 Q 0,5 15,15" fill="rgba(255,255,255,0.6)"/>
+    </g>
+    
+    <g transform="translate(1050, 450)">
+      <circle cx="0" cy="0" r="25" fill="rgba(240,147,251,0.2)" stroke="rgba(240,147,251,0.3)" stroke-width="2"/>
+      <circle cx="0" cy="-6" r="6" fill="rgba(255,255,255,0.6)"/>
+      <path d="M -12,12 Q 0,4 12,12" fill="rgba(255,255,255,0.6)"/>
+    </g>
+  </g>
+  
+  <!-- Login form suggestion area -->
+  <g transform="translate(300, 500)">
+    <rect x="0" y="0" width="300" height="200" fill="rgba(255,255,255,0.05)" rx="15" 
+          stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    
+    <!-- Form field suggestions -->
+    <rect x="20" y="30" width="260" height="30" fill="rgba(255,255,255,0.1)" rx="5"/>
+    <text x="30" y="50" fill="rgba(102,126,234,0.4)" font-family="Arial" font-size="12">Username / Email</text>
+    
+    <rect x="20" y="80" width="260" height="30" fill="rgba(255,255,255,0.1)" rx="5"/>
+    <text x="30" y="100" fill="rgba(102,126,234,0.4)" font-family="Arial" font-size="12">Password</text>
+    
+    <rect x="20" y="130" width="100" height="35" fill="rgba(102,126,234,0.3)" rx="8"/>
+    <text x="70" y="152" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="12" font-weight="bold">Sign In</text>
+    
+    <!-- Security indicators -->
+    <g transform="translate(140, 170)">
+      <text x="0" y="0" text-anchor="middle" fill="rgba(78,205,196,0.6)" font-family="Arial" font-size="10">🔒 Secure Login</text>
+    </g>
+  </g>
+  
+  <!-- Company branding area -->
+  <g transform="translate(700, 550)">
+    <rect x="0" y="0" width="250" height="150" fill="rgba(255,255,255,0.03)" rx="12"/>
+    
+    <!-- Package icon -->
+    <g transform="translate(50, 40)">
+      <rect x="0" y="10" width="30" height="20" fill="rgba(79,172,254,0.4)" rx="3"/>
+      <polygon points="0,10 5,5 35,5 30,10" fill="rgba(255,255,255,0.3)"/>
+      <rect x="12" y="7" width="6" height="26" fill="rgba(255,215,0,0.5)" rx="1"/>
+    </g>
+    
+    <!-- Company text -->
+    <text x="100" y="55" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="16" font-weight="bold">KandyPack</text>
+    <text x="100" y="75" fill="rgba(102,126,234,0.4)" font-family="Arial" font-size="12">Secure Portal Access</text>
+    
+    <!-- Trust indicators -->
+    <g transform="translate(20, 100)">
+      <rect x="0" y="0" width="60" height="20" fill="rgba(78,205,196,0.2)" rx="10"/>
+      <text x="30" y="13" text-anchor="middle" fill="rgba(78,205,196,0.7)" font-family="Arial" font-size="8" font-weight="bold">SSL SECURE</text>
+    </g>
+    
+    <g transform="translate(90, 100)">
+      <rect x="0" y="0" width="70" height="20" fill="rgba(255,215,0,0.2)" rx="10"/>
+      <text x="35" y="13" text-anchor="middle" fill="rgba(255,215,0,0.7)" font-family="Arial" font-size="8" font-weight="bold">VERIFIED</text>
+    </g>
+    
+    <g transform="translate(170, 100)">
+      <rect x="0" y="0" width="60" height="20" fill="rgba(240,147,251,0.2)" rx="10"/>
+      <text x="30" y="13" text-anchor="middle" fill="rgba(240,147,251,0.7)" font-family="Arial" font-size="8" font-weight="bold">TRUSTED</text>
+    </g>
+  </g>
+  
+  <!-- Background geometric elements -->
+  <g opacity="0.1">
+    <circle cx="100" cy="100" r="50" fill="rgba(102,126,234,0.3)"/>
+    <circle cx="1100" cy="100" r="70" fill="rgba(240,147,251,0.3)"/>
+    <circle cx="200" cy="700" r="60" fill="rgba(79,172,254,0.3)"/>
+    <circle cx="1000" cy="700" r="80" fill="rgba(78,205,196,0.3)"/>
+  </g>
+  
+  <!-- Data protection symbols -->
+  <g transform="translate(50, 600)" opacity="0.3">
+    <text x="0" y="0" fill="rgba(102,126,234,0.5)" font-family="Arial" font-size="24">🛡️</text>
+    <text x="0" y="30" fill="rgba(102,126,234,0.4)" font-family="Arial" font-size="10" font-weight="bold">DATA PROTECTION</text>
+  </g>
+  
+  <g transform="translate(1100, 650)" opacity="0.3">
+    <text x="0" y="0" fill="rgba(78,205,196,0.5)" font-family="Arial" font-size="24">🔐</text>
+    <text x="0" y="30" fill="rgba(78,205,196,0.4)" font-family="Arial" font-size="10" font-weight="bold">ENCRYPTED</text>
+  </g>
+</svg>

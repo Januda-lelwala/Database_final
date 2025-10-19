@@ -1,0 +1,224 @@
+.reports{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --surface:rgba(255,255,255,0.96);
+  --muted:#6b7280;
+  --text:#0f172a;
+  --line:#e5e7eb;
+  --line-2:#eef2f7;
+  --table-head-bg:#f6f8fa;
+  --table-head-text:#0f172a;
+  --row-hover:rgba(15,23,42,0.04);
+  --accent-1:#f97316;
+  --accent-2:#ea580c;
+  --accent-soft:rgba(234,88,12,0.18);
+  --radius:26px;
+  --r-md:18px;
+  --r-sm:12px;
+  --s-2:8px;
+  --s-3:10px;
+  --s-4:12px;
+  --s-5:14px;
+  --s-6:16px;
+  --s-7:24px;
+  --s-8:32px;
+  --shadow:0 16px 42px rgba(15,23,42,0.12);
+  --shadow-lg:0 32px 68px rgba(15,23,42,0.18);
+  color:var(--text);
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:clamp(22px,4vw,42px);
+  margin:clamp(22px,6vh,48px);
+  box-shadow:var(--shadow);
+  display:grid;
+  gap:var(--s-7);
+  max-width:1180px;
+  margin-inline:auto;
+}
+
+@media (prefers-color-scheme: dark){
+  .reports{
+    --bg:#0b1220;
+    --card:#0f172a;
+    --surface:rgba(15,23,42,0.92);
+    --muted:#94a3b8;
+    --text:#e2e8f0;
+    --line:#23314a;
+    --line-2:#1e293b;
+    --table-head-bg:#1f2937;
+    --table-head-text:#f8fafc;
+    --row-hover:rgba(148,163,184,0.18);
+    --shadow:0 16px 42px rgba(0,0,0,0.5);
+    --shadow-lg:0 38px 72px rgba(2,6,23,0.68);
+  }
+}
+
+.reports h2{
+  margin:0;
+  font-size:clamp(26px,4vw,38px);
+}
+
+.reports .cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:var(--s-6);
+}
+
+.reports .card{
+  background:var(--surface);
+  border-radius:var(--r-md);
+  padding:clamp(18px,3vw,26px);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  display:grid;
+  gap:var(--s-4);
+  text-align:left;
+  transition:transform .12s ease, box-shadow .18s ease;
+}
+
+.reports .card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);
+}
+
+.reports .card h3{
+  margin:0;
+  font-size:20px;
+}
+
+.reports .card p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.reports .btn{
+  padding:var(--s-4) var(--s-6);
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--text);
+  cursor:pointer;
+  transition:transform .1s ease, box-shadow .18s ease, opacity .16s ease;
+}
+
+.reports .btn:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow);
+}
+
+.reports .btn.primary{
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  color:#fff;
+  border:none;
+  box-shadow:0 16px 32px var(--accent-soft);
+}
+
+.reports .modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(10,16,30,0.65);
+  display:grid;
+  place-items:center;
+  padding:var(--s-6);
+  z-index:60;
+  backdrop-filter:blur(4px);
+}
+
+.reports .modal{
+  background:var(--surface);
+  border-radius:var(--r-md);
+  width:min(960px,96vw);
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--line);
+  color:var(--text);
+  display:grid;
+  max-height:90vh;
+}
+
+.reports .modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:var(--s-5);
+  border-bottom:1px solid var(--line);
+}
+
+.reports .modal-body{
+  padding:var(--s-5);
+  overflow:auto;
+  display:grid;
+  gap:var(--s-5);
+}
+
+.reports .icon-btn{
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  font-size:22px;
+  cursor:pointer;
+  transition:color .16s ease, transform .16s ease;
+}
+
+.reports .icon-btn:hover{
+  color:var(--text);
+  transform:scale(1.1);
+}
+
+.reports .table-wrap{
+  overflow:auto;
+  border-radius:var(--r-sm);
+  border:1px solid var(--line);
+  background:var(--card);
+  box-shadow:var(--shadow);
+  max-height:480px;
+}
+
+.reports table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:680px;
+}
+
+.reports thead th{
+  position:sticky;
+  top:0;
+  z-index:1;
+  text-align:left;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+  font-size:12px;
+  background:var(--table-head-bg);
+  color:var(--table-head-text);
+  padding:var(--s-4);
+  border-bottom:1px solid var(--line-2);
+}
+
+.reports th,
+.reports td{
+  padding:var(--s-4);
+  border-bottom:1px solid var(--line-2);
+}
+
+.reports tbody tr:hover{
+  background:var(--row-hover);
+}
+
+.reports .actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:var(--s-4);
+}
+
+.reports :focus-visible{
+  outline:3px solid color-mix(in srgb,var(--accent-1) 65%, white);
+  outline-offset:3px;
+  border-radius:10px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reports *, .reports *::before, .reports *::after{
+    transition-duration:0ms !important;
+    animation-duration:0ms !important;
+  }
+}

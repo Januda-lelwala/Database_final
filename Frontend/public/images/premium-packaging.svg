@@ -1,0 +1,67 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="packageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="20" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Abstract shapes -->
+  <circle cx="150" cy="100" r="80" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="650" cy="500" r="120" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="700" cy="150" r="60" fill="rgba(255,255,255,0.12)"/>
+  
+  <!-- Main package box -->
+  <g transform="translate(200, 150)" filter="url(#shadow)">
+    <!-- Box base -->
+    <rect x="0" y="80" width="300" height="200" fill="url(#packageGradient)" rx="15"/>
+    
+    <!-- Box top -->
+    <polygon points="0,80 50,30 350,30 300,80" fill="rgba(255,255,255,0.3)"/>
+    
+    <!-- Box side -->
+    <polygon points="300,80 350,30 350,230 300,280" fill="rgba(0,0,0,0.1)"/>
+    
+    <!-- Tape/Seal -->
+    <rect x="120" y="60" width="60" height="240" fill="#FFD700" opacity="0.8" rx="5"/>
+    <rect x="130" y="70" width="40" height="220" fill="#FFA500" opacity="0.6" rx="3"/>
+    
+    <!-- Package details -->
+    <rect x="20" y="120" width="80" height="40" fill="rgba(255,255,255,0.8)" rx="5"/>
+    <rect x="20" y="180" width="120" height="20" fill="rgba(255,255,255,0.6)" rx="3"/>
+    <rect x="20" y="220" width="100" height="20" fill="rgba(255,255,255,0.6)" rx="3"/>
+    
+    <!-- Handle -->
+    <ellipse cx="260" cy="140" rx="15" ry="25" fill="rgba(255,255,255,0.4)"/>
+    <ellipse cx="260" cy="140" rx="8" ry="18" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+  </g>
+  
+  <!-- Floating elements -->
+  <g transform="translate(520, 200)">
+    <circle cx="0" cy="0" r="30" fill="rgba(255,255,255,0.2)"/>
+    <text x="0" y="8" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">📦</text>
+  </g>
+  
+  <g transform="translate(580, 350)">
+    <circle cx="0" cy="0" r="25" fill="rgba(255,255,255,0.15)"/>
+    <text x="0" y="6" text-anchor="middle" fill="white" font-family="Arial" font-size="20">✨</text>
+  </g>
+  
+  <g transform="translate(120, 350)">
+    <circle cx="0" cy="0" r="35" fill="rgba(255,255,255,0.1)"/>
+    <text x="0" y="10" text-anchor="middle" fill="white" font-family="Arial" font-size="28">🎯</text>
+  </g>
+  
+  <!-- Text overlay area (will be handled by CSS overlay) -->
+  <rect x="0" y="400" width="800" height="200" fill="url(#textOverlay)" opacity="0"/>
+</svg>

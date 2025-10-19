@@ -1,0 +1,44 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="productGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:0.8" />
+    </linearGradient>
+    <filter id="productShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="200" fill="url(#productGradient)" rx="15"/>
+  
+  <!-- Product box mockup -->
+  <g transform="translate(100, 60)" filter="url(#productShadow)">
+    <!-- Main box -->
+    <rect x="0" y="20" width="80" height="60" fill="rgba(255,255,255,0.9)" rx="8"/>
+    
+    <!-- Box top -->
+    <polygon points="0,20 15,5 95,5 80,20" fill="rgba(255,255,255,0.7)"/>
+    
+    <!-- Box side -->
+    <polygon points="80,20 95,5 95,65 80,80" fill="rgba(0,0,0,0.1)"/>
+    
+    <!-- Tape -->
+    <rect x="35" y="15" width="12" height="70" fill="#FFD700" opacity="0.8" rx="2"/>
+    
+    <!-- Label -->
+    <rect x="10" y="35" width="30" height="15" fill="rgba(102,126,234,0.7)" rx="2"/>
+    <rect x="10" y="55" width="25" height="8" fill="rgba(102,126,234,0.5)" rx="1"/>
+  </g>
+  
+  <!-- Product name area -->
+  <rect x="20" y="150" width="260" height="30" fill="rgba(255,255,255,0.2)" rx="8"/>
+  <text x="150" y="170" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">Premium Package</text>
+  
+  <!-- Floating elements -->
+  <circle cx="50" cy="50" r="15" fill="rgba(255,255,255,0.2)"/>
+  <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial" font-size="12">📦</text>
+  
+  <circle cx="250" cy="50" r="12" fill="rgba(255,255,255,0.2)"/>
+  <text x="250" y="54" text-anchor="middle" fill="white" font-family="Arial" font-size="10">✨</text>
+</svg>

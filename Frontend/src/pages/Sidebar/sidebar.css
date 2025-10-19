@@ -1,0 +1,92 @@
+/* admin.css */
+
+/* ---------- Base look for admin area ---------- */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f3f4f6; /* Tailwind gray-100 */
+  color: #111827;      /* Tailwind gray-900 */
+}
+
+/* ---------- Subtle scrollbars ---------- */
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: #d1d5db transparent; }
+/* WebKit */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* gray-300 */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: #9ca3af; } /* gray-400 */
+
+/* ---------- Sidebar tweaks ---------- */
+aside {
+  backdrop-filter: saturate(120%);
+}
+
+aside input[type="text"],
+aside input:not([type]) {
+  outline: none;
+}
+
+aside a {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover/active polish on nav items (works with your NavLink classes) */
+aside a:hover {
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+aside a[aria-current="page"] {
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+
+/* ---------- Topbar polish ---------- */
+.sticky {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Buttons/inputs inside topbar */
+.sticky button {
+  transition: background-color .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+.sticky button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #e5e7eb; /* gray-200 */
+}
+
+/* ---------- Generic card utility ---------- */
+.card {
+  border: 1px solid #e5e7eb;    /* gray-200 */
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+/* ---------- Inputs (global, gentle) ---------- */
+input[type="text"],
+input:not([type]) {
+  border-radius: 12px;
+}
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #e5e7eb;
+  border-color: #e5e7eb;
+}
+
+/* ---------- Optional hooks if you want to scope styles ----------
+   Add className="admin-shell" on the outermost div, and optionally
+   admin-sidebar / admin-topbar on those sections to scope styles.
+------------------------------------------------------------------*/
+.admin-shell { min-height: 100vh; background: #f3f4f6; color: #111827; }
+.admin-sidebar { width: 18rem; border-right: 1px solid #e5e7eb; background: rgba(249,250,251,.6); }
+.admin-topbar  { height: 56px; border-bottom: 1px solid #e5e7eb; background: rgba(255,255,255,.8); }
