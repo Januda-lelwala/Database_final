@@ -27,10 +27,6 @@ function midsBetween(r, si, ei) {
 
 export default function Trains() {
   const [trains, setTrains] = useState([]);
-  // Find Trips state
-  const [findDestination, setFindDestination] = useState("");
-  const [matchingTrips, setMatchingTrips] = useState([]);
-  const [finding, setFinding] = useState(false);
   // Matching Routes state
   const [matchingRoutes, setMatchingRoutes] = useState([]);
   const [findingRoutes, setFindingRoutes] = useState(false);
@@ -135,6 +131,13 @@ export default function Trains() {
   const add = async (e) => {
     e.preventDefault();
 
+    // Prepare destinations: add end city if not present
+    let destinationsArr = (route.destinations || "").split(",").map(s => s.trim()).filter(Boolean);
+    const endCity = route.end_city.trim();
+    if (endCity && !destinationsArr.map(d => d.toLowerCase()).includes(endCity.toLowerCase())) {
+      destinationsArr.push(endCity);
+    }
+
     // Merge all fields for backend
     const payload = {
       train_id: form.train_id.trim(),
@@ -143,8 +146,8 @@ export default function Trains() {
       begin_time: form.begin_time || null,
       route_id: route.route_id.trim() || `${form.train_id.trim()}-R`,
       start_city: route.start_city.trim(),
-      end_city: route.end_city.trim(),
-      destinations: (route.destinations || "").trim(),
+      end_city: endCity,
+      destinations: destinationsArr.join(", "),
     };
 
     if (!payload.train_id) return alert("Train ID is required.");
@@ -185,8 +188,15 @@ export default function Trains() {
         return;
       }
       const mids = midsBetween(hit.r, hit.si, hit.ei);
-      if (!mids.length) return alert("No intermediate stops for this pair on the selected route.");
-      setRoute((r) => ({ ...r, destinations: mids.join(", ") }));
+      // Always include the end city at the end if not present
+      let destArr = [...mids];
+      if (
+        end &&
+        !destArr.map(d => d.trim().toLowerCase()).includes(end.toLowerCase())
+      ) {
+        destArr.push(end);
+      }
+      setRoute((r) => ({ ...r, destinations: destArr.join(", ") }));
     } finally {
       setSuggesting(false);
     }
@@ -214,6 +224,32 @@ export default function Trains() {
       return hay.includes(q);
     });
   }, [trains, query]);
+
+  // Add sort state
+  const [sort, setSort] = useState({ key: "train_id", dir: "asc" }); // key: train_id, capacity, notes
+
+  // Derived sorted & filtered list
+  const sortedTrains = useMemo(() => {
+    const arr = [...visibleTrains];
+    const { key, dir } = sort;
+    const mult = dir === "asc" ? 1 : -1;
+    arr.sort((a, b) => {
+      let va = key === "train_id" ? (a.train_id || a.id) : (a[key] || "");
+      let vb = key === "train_id" ? (b.train_id || b.id) : (b[key] || "");
+      // Numeric sort for capacity
+      if (key === "capacity") {
+        va = Number(va);
+        vb = Number(vb);
+        return (va - vb) * mult;
+      }
+      return String(va).localeCompare(String(vb), undefined, { numeric: true, sensitivity: "base" }) * mult;
+    });
+    return arr;
+  }, [visibleTrains, sort]);
+
+  // Sort handler
+  const onSort = (key) =>
+    setSort((s) => (s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: "asc" }));
 
   // Edit helpers
   const startEdit = (t) => {
@@ -268,87 +304,6 @@ export default function Trains() {
 
   return (
     <div className="trains">
-      {/* Find Trips Panel */}
-      <div className="panel" style={{ marginBottom: 24 }}>
-        <h3>Find Trips by Destination</h3>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <input
-            type="text"
-            placeholder="Enter destination (station/city)"
-            value={findDestination}
-            onChange={e => setFindDestination(e.target.value)}
-            style={{ minWidth: 200 }}
-          />
-          <button className="btn primary" onClick={findTrips} disabled={finding}>
-            {finding ? "Searching…" : "Find Trips"}
-          </button>
-        </div>
-        {/* Matching Routes Table */}
-        {matchingRoutes.length > 0 && (
-          <div style={{ marginTop: 16 }}>
-            <b>Matching Routes ({matchingRoutes.length}):</b>
-            <table className="mini-table" style={{ marginTop: 8 }}>
-              <thead>
-                <tr>
-                  <th>Route ID</th>
-                  <th>Start City</th>
-                  <th>End City</th>
-                  <th>Destinations</th>
-                </tr>
-              </thead>
-              <tbody>
-                {matchingRoutes.map(r => (
-                  <tr key={r.route_id}>
-                    <td>{r.route_id}</td>
-                    <td>{r.start_city}</td>
-                    <td>{r.end_city}</td>
-                    <td>{r.destinations}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {findingRoutes && <div style={{ marginTop: 8 }}>Searching for routes…</div>}
-        {!findingRoutes && matchingRoutes.length === 0 && findDestination.trim() && (
-          <div style={{ marginTop: 8, color: '#888' }}>No matching routes found.</div>
-        )}
-        {matchingTrips.length > 0 && (
-          <div style={{ marginTop: 16 }}>
-            <b>Matching Trips ({matchingTrips.length}):</b>
-            <table className="mini-table" style={{ marginTop: 8 }}>
-              <thead>
-                <tr>
-                  <th>Train ID</th>
-                  <th>Capacity</th>
-                  <th>Begin Time</th>
-                  <th>Route ID</th>
-                  <th>Start City</th>
-                  <th>End City</th>
-                  <th>Destinations</th>
-                </tr>
-              </thead>
-              <tbody>
-                {matchingTrips.map(t => (
-                  <tr key={t.train_id || t.id}>
-                    <td>{t.train_id || t.id}</td>
-                    <td>{t.capacity}</td>
-                    <td>{t.begin_time || '-'}</td>
-                    <td>{t.route && t.route.route_id ? t.route.route_id : t.route_id}</td>
-                    <td>{t.route && t.route.start_city ? t.route.start_city : '-'}</td>
-                    <td>{t.route && t.route.end_city ? t.route.end_city : '-'}</td>
-                    <td>{t.route && t.route.destinations ? t.route.destinations : '-'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {finding && <div style={{ marginTop: 8 }}>Searching for trips…</div>}
-        {!finding && matchingTrips.length === 0 && findDestination.trim() && (
-          <div style={{ marginTop: 8, color: '#888' }}>No matching trips found.</div>
-        )}
-      </div>
       {/* Header row: title left, search right */}
       <div className="page-header">
         <h2>Train Management</h2>
@@ -450,11 +405,11 @@ export default function Trains() {
 
             {/* Actions */}
             <div className="actions full" style={{ gap: 8, flexWrap: "wrap" }}>
-              <button type="button" className="btn" onClick={openMaps}>
+              <button type="button" className="btn light" onClick={openMaps}>
                 View route in Google Maps
               </button>
 
-              <button type="button" className="btn" onClick={suggestFromOrdered} disabled={suggesting}>
+              <button type="button" className="btn light" onClick={suggestFromOrdered} disabled={suggesting}>
                 {suggesting ? "Suggesting…" : "Suggest from Rail (offline)"}
               </button>
               <button className="btn primary" type="submit">
@@ -470,20 +425,34 @@ export default function Trains() {
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Capacity</th>
-              <th>Notes</th>
+              <th
+                className={`sortable ${sort.key === "train_id" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("train_id")}
+              >
+                ID
+              </th>
+              <th
+                className={`sortable ${sort.key === "capacity" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("capacity")}
+              >
+                Capacity
+              </th>
+              <th
+                className={`sortable ${sort.key === "notes" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("notes")}
+              >
+                Notes
+              </th>
               <th className="right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {visibleTrains.map((t) => {
+            {sortedTrains.map((t) => {
               const id = t.train_id || t.id;
               const isEditing = editingId === id;
               return (
                 <tr key={id}>
                   <td className="mono">{id}</td>
-
                   <td>
                     {isEditing ? (
                       <input
@@ -497,7 +466,6 @@ export default function Trains() {
                       t.capacity
                     )}
                   </td>
-
                   <td>
                     {isEditing ? (
                       <input
@@ -508,7 +476,6 @@ export default function Trains() {
                       t.notes || "-"
                     )}
                   </td>
-
                   <td className="right">
                     {!isEditing ? (
                       <div className="row-actions">
@@ -529,7 +496,7 @@ export default function Trains() {
                 </tr>
               );
             })}
-            {visibleTrains.length === 0 && (
+            {sortedTrains.length === 0 && (
               <tr>
                 <td colSpan={4} className="empty">No matching trains</td>
               </tr>

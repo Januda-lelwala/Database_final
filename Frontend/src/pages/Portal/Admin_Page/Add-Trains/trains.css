@@ -7,7 +7,7 @@
 :root{
   --bg:#f5f7fb;
   --card:#ffffff;
-  --text:#0f172a;
+  --text:#000; /* use pure black for font in light mode */
   --muted:#6b7280;
 
   --line:#e5e7eb;
@@ -185,6 +185,49 @@
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color:#fff; border:none;
 }
+.trains .btn.light{
+  /* visible, soft/pastel background in light mode */
+  background: linear-gradient(135deg, #f6edff 0%, #efe0ff 100%);
+  color: #000 !important; /* force black text in light mode */
+  -webkit-text-fill-color: #000 !important; /* fallback for some browsers */
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  box-shadow: 0 6px 16px rgba(124,58,237,0.06);
+  text-shadow: none !important;
+}
+
+/* subtle hover */
+.trains .btn.light:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(124,58,237,0.10);
+}
+
+/* Dark mode: keep button lighter than surroundings but readable */
+@media (prefers-color-scheme: dark){
+  .trains .btn.light{
+    background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.18));
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    border: 1px solid rgba(124,58,237,0.24);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+  }
+  .trains .btn.light:hover{
+    box-shadow: 0 12px 28px rgba(0,0,0,0.55);
+  }
+}
+
+/* Make Edit button more visible in light mode */
+.trains .btn:not(.primary):not(.danger) {
+  background: linear-gradient(135deg, #e3f0ff 0%, #cbe3ff 100%);
+  color: #174ea6;
+  border: 1px solid #90caf9;
+}
+
+/* Optional: stronger hover for edit button */
+.trains .btn:not(.primary):not(.danger):hover {
+  background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+  color: #174ea6;
+  border-color: #42a5f5;
+}
 
 /* ===========================
    TABLE
@@ -244,4 +287,39 @@
 .trains :focus-visible{
   outline:3px solid color-mix(in srgb, var(--primary-1) 70%, white);
   outline-offset:2px; border-radius:8px;
+}
+
+/* Ensure plain buttons (including Find Trips) look like buttons and have accessible focus */
+.trains button,
+.trains input[type="button"],
+.trains input[type="submit"] {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--button-surface);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* stronger focus-visible for keyboard users */
+.trains button:focus-visible,
+.trains input[type="button"]:focus-visible,
+.trains input[type="submit"]:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary-1) 70%, white);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary-1) 14%, transparent);
+  border-radius: 10px;
+}
+
+/* Dark mode focus tweak */
+@media (prefers-color-scheme: dark) {
+  .trains button:focus-visible,
+  .trains input[type="button"]:focus-visible,
+  .trains input[type="submit"]:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--primary-1) 60%, black);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary-1) 12%, transparent);
+  }
 }

@@ -55,7 +55,7 @@
     --row-hover: rgba(148, 163, 184, 0.22);
     --icon: #cbd5f5;
     --button-surface: color-mix(in srgb, var(--card) 55%, white 45%);
-    --button-border: rgba(148, 163, 184, 0.45);
+    --button-border: rgba(148,163,184,0.45);
     --button-text: #f5f7ff;
 
     --shadow: 0 8px 24px rgba(0,0,0,.45);
@@ -166,6 +166,20 @@
   background: var(--danger);
   color: #fff;
   border: none;
+}
+
+/* Make Edit button more visible in light mode */
+.products .btn:not(.primary):not(.danger) {
+  background: linear-gradient(135deg, #e3f0ff 0%, #cbe3ff 100%);
+  color: #174ea6;
+  border: 1px solid #90caf9;
+}
+
+/* Optional: stronger hover for edit button */
+.products .btn:not(.primary):not(.danger):hover {
+  background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+  color: #174ea6;
+  border-color: #42a5f5;
 }
 
 /* Toolbar (search area) */

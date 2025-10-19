@@ -183,3 +183,37 @@
 @media (prefers-reduced-motion: reduce) {
   .employees * { transition: none !important; animation: none !important; }
 }
+
+/* Make Edit button more visible in light mode (match products.css) */
+.employees .btn:not(.primary):not(.danger) {
+  background: linear-gradient(135deg, #e3f0ff 0%, #cbe3ff 100%);
+  color: #174ea6;
+  border: 1px solid #90caf9;
+}
+
+/* Stronger hover for edit button */
+.employees .btn:not(.primary):not(.danger):hover {
+  background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+  color: #174ea6;
+  border-color: #42a5f5;
+}
+
+/* Sortable headers + arrows (match products.css) */
+.employees thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+}
+.employees thead th.sortable::after {
+  content: "↕";
+  font-size: 12px;
+  margin-left: 6px;
+  opacity: .45;
+}
+.employees thead th.sorted-asc::after  { content: "▲"; opacity: .9; }
+.employees thead th.sorted-desc::after { content: "▼"; opacity: .9; }
+.employees thead th.sortable:hover { background: var(--table-head-hover); }
+@media (prefers-color-scheme: dark) {
+  .employees thead th.sortable:hover { background: var(--table-head-hover); }
+}
