@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "hm$$mnmPP2003ML",
+    "database": "KandyPack",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "hm$$mnmPP2003ML",
+    "database": "KandyPack_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "hm$$mnmPP2003ML",
+    "database": "KandyPack_prod",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

@@ -1,0 +1,1 @@
+ALTER TABLE train ADD COLUMN begin_time TIME NULL AFTER notes;

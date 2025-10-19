@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Restart backend server",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -match 'server.js' -or $_.Path -match 'node.exe' } | Stop-Process -Force; cd backend; npm run start\"",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
