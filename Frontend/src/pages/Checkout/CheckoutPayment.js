@@ -1,11 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCheckout } from '../../context/CheckoutContext';
 import { useStore } from '../../context/StoreContext';
-import { Truck } from 'lucide-react';
 
 export default function CheckoutPayment() {
-  const { shippingMethod, setShippingMethod } = useCheckout();
   const { cart, products } = useStore();
   const navigate = useNavigate();
 
@@ -14,34 +11,20 @@ export default function CheckoutPayment() {
     return { ...p, qty: ci.qty, lineTotal: ci.qty * p.price };
   });
   const subtotal = items.reduce((s, i) => s + i.lineTotal, 0);
-  const shipping = shippingMethod === 'standard' ? (subtotal > 100 ? 0 : 15) : (subtotal > 200 ? 0 : 25);
+  // Shipping cost is handled by the system based on train route assignment
+  const shipping = 0; // Free shipping as part of rail distribution system
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
   return (
     <div style={styles.card} className="cc-card">
-      <h3 style={styles.title}>Payment</h3>
-      <div style={styles.row}>
-        <button
-          onClick={() => setShippingMethod('standard')}
-          className="cc-radio"
-          aria-pressed={shippingMethod === 'standard'}
-          style={styles.shipBtn}
-        >
-          <Truck size={16} style={{ marginRight: 8 }} /> Standard
-        </button>
-        <button
-          onClick={() => setShippingMethod('express')}
-          className="cc-radio"
-          aria-pressed={shippingMethod === 'express'}
-          style={styles.shipBtn}
-        >
-          <Truck size={16} style={{ marginRight: 8 }} /> Express
-        </button>
-      </div>
+      <h3 style={styles.title}>Order Summary</h3>
+      <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>
+        Your order will be delivered via our rail-based distribution system
+      </p>
 
       <div style={styles.line}><span>Subtotal</span><span className="cc-total-shimmer">${subtotal.toFixed(2)}</span></div>
-      <div style={styles.line}><span>Shipping</span><span className="cc-total-shimmer">{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span></div>
+      <div style={styles.line}><span>Delivery (Train Route)</span><span className="cc-total-shimmer">FREE</span></div>
       <div style={styles.line}><span>Tax</span><span className="cc-total-shimmer">${tax.toFixed(2)}</span></div>
       <div style={styles.divider} />
       <div style={{ ...styles.line, fontWeight: 700 }}><span>Total</span><span>${total.toFixed(2)}</span></div>

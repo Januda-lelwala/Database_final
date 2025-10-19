@@ -571,6 +571,51 @@ const deleteRouteSchedule = async (req, res) => {
   }
 };
 
+// Get all unique destination cities from train_route table
+const getAllCities = async (req, res) => {
+  try {
+    const { sequelize } = require('../models');
+    // Query destinations and end_city from train_route table
+    const [results] = await sequelize.query('SELECT destinations, end_city FROM train_route');
+    
+    const cities = new Set();
+    
+    results.forEach(row => {
+      // Add end_city (final destination)
+      if (row.end_city) {
+        const trimmedEndCity = row.end_city.trim();
+        if (trimmedEndCity) {
+          cities.add(trimmedEndCity.toLowerCase());
+        }
+      }
+      
+      // Add all intermediate destinations
+      if (row.destinations) {
+        // Split by comma and trim whitespace
+        row.destinations.split(',').forEach(city => {
+          const trimmedCity = city.trim();
+          if (trimmedCity) {
+            cities.add(trimmedCity.toLowerCase()); // Store in lowercase for consistent comparison
+          }
+        });
+      }
+    });
+    
+    res.status(200).json({
+      success: true,
+      count: cities.size,
+      data: { cities: Array.from(cities).sort() }
+    });
+  } catch (error) {
+    console.error('Error fetching cities:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch cities',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllRoutes,
   getPublicRoutes,
@@ -585,5 +630,6 @@ module.exports = {
   deleteRouteStop,
   addRouteSchedule,
   updateRouteSchedule,
-  deleteRouteSchedule
+  deleteRouteSchedule,
+  getAllCities
 };

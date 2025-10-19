@@ -13,7 +13,7 @@ export default function CheckoutReview() {
   const {
     destinationCity,
     destinationAddress,
-    shippingMethod,
+    deliveryDate,
     processing,
     setProcessing,
     error,
@@ -24,12 +24,13 @@ export default function CheckoutReview() {
 
   const items = cart.map((ci) => {
     const p = products.find((p) => p.id === ci.id || p.product_id === ci.id);
-    return { ...p, qty: ci.qty, lineTotal: ci.qty * p.price };
+    return { ...p, qty: ci.qty, lineTotal: ci.qty * p.price, space: p.space ?? 0 };
   });
   const subtotal = items.reduce((s, i) => s + i.lineTotal, 0);
-  const shipping = shippingMethod === 'standard' ? (subtotal > 100 ? 0 : 15) : (subtotal > 200 ? 0 : 25);
+    const shipping = 0; // Free delivery via rail distribution system
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
+  const totalSpace = items.reduce((s, i) => s + (i.space * i.qty), 0);
 
   const placeOrder = async () => {
     if (!user) {
@@ -39,15 +40,13 @@ export default function CheckoutReview() {
     try {
       setProcessing(true);
       setError(null);
-      
       // Verify authentication token exists
       const token = localStorage.getItem('authToken');
       if (!token) {
         throw new Error('Session expired. Please login again.');
       }
-      
-      if (!destinationCity.trim() || !destinationAddress.trim()) {
-        throw new Error('Please enter destination city and address');
+      if (!destinationCity.trim() || !destinationAddress.trim() || !deliveryDate) {
+        throw new Error('Please enter destination city, address, and delivery date');
       }
       if (cart.length === 0) {
         throw new Error('Your cart is empty');
@@ -57,19 +56,18 @@ export default function CheckoutReview() {
         if (!p) throw new Error('One or more cart items are invalid');
         return { product_id: p.product_id ?? p.id, quantity: ci.qty, price: Number(p.price) || 0 };
       });
-      
-      const orderPayload = { 
-        destination_city: destinationCity, 
-        destination_address: destinationAddress, 
-        items: itemsPayload 
+      const orderPayload = {
+        destination_city: destinationCity,
+        destination_address: destinationAddress,
+        delivery_date: deliveryDate,
+        items: itemsPayload,
       };
-      
       await ordersAPI.create(orderPayload);
       setOrderSuccess(true);
       clearCart();
       setTimeout(() => {
         if (user?.role === 'customer') navigate('/customer');
-        else if (['admin','driver','assistant'].includes(user?.role)) navigate('/employee');
+        else if (['admin', 'driver', 'assistant'].includes(user?.role)) navigate('/employee');
         else navigate('/login');
       }, 1500);
     } catch (e) {
@@ -97,9 +95,11 @@ export default function CheckoutReview() {
       <h3 style={styles.title}>Review & Place Order</h3>
       <div style={styles.line}><span>Destination City</span><span>{destinationCity || '-'}</span></div>
       <div style={styles.line}><span>Destination Address</span><span>{destinationAddress || '-'}</span></div>
+      <div style={styles.line}><span>Delivery Date</span><span>{deliveryDate || '-'}</span></div>
       <div style={styles.line}><span>Subtotal</span><span className="cc-total-shimmer">${subtotal.toFixed(2)}</span></div>
-      <div style={styles.line}><span>Shipping</span><span className="cc-total-shimmer">{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span></div>
+    <div style={styles.line}><span>Delivery (Train Route)</span><span className="cc-total-shimmer">FREE</span></div>
       <div style={styles.line}><span>Tax</span><span className="cc-total-shimmer">${tax.toFixed(2)}</span></div>
+      <div style={styles.line}><span>Computed Space</span><span>{totalSpace} units</span></div>
       <div style={styles.divider} />
       <div style={{ ...styles.line, fontWeight: 700 }}><span>Total</span><span>${total.toFixed(2)}</span></div>
       {error && <div style={styles.error}>{error}</div>}

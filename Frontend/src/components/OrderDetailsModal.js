@@ -113,6 +113,16 @@ export default function OrderDetailsModal({ order, open, onClose, onCancel }) {
           </div>
           <div style={modernStyles.divider} />
           <div style={modernStyles.section}>
+            <div style={modernStyles.itemsTitle}>Delivery</div>
+            <div style={modernStyles.row}><span style={modernStyles.label}>Method:</span> <span style={modernStyles.value}>Rail (Train Route)</span></div>
+            <div style={modernStyles.row}><span style={modernStyles.label}>Destination:</span> <span style={modernStyles.value}>{order.delivery_city || '—'}</span></div>
+            {order.destination_address && (
+              <div style={modernStyles.row}><span style={modernStyles.label}>Address:</span> <span style={modernStyles.value}>{order.destination_address}</span></div>
+            )}
+            <div style={modernStyles.row}><span style={modernStyles.label}>Fee:</span> <span style={modernStyles.value}>FREE</span></div>
+          </div>
+          <div style={modernStyles.divider} />
+          <div style={modernStyles.section}>
             <div style={modernStyles.itemsTitle}>Items:</div>
             {items.length > 0 ? (
               <ul style={modernStyles.itemsList}>

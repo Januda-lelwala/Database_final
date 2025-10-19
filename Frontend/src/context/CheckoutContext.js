@@ -5,7 +5,7 @@ const CheckoutContext = createContext(null);
 export function CheckoutProvider({ children }) {
   const [destinationCity, setDestinationCity] = useState('');
   const [destinationAddress, setDestinationAddress] = useState('');
-  const [shippingMethod, setShippingMethod] = useState('standard'); // 'standard' | 'express'
+  const [deliveryDate, setDeliveryDate] = useState('');
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [orderSuccess, setOrderSuccess] = useState(false);
@@ -15,15 +15,15 @@ export function CheckoutProvider({ children }) {
     setDestinationCity,
     destinationAddress,
     setDestinationAddress,
-    shippingMethod,
-    setShippingMethod,
+    deliveryDate,
+    setDeliveryDate,
     processing,
     setProcessing,
     error,
     setError,
     orderSuccess,
     setOrderSuccess,
-  }), [destinationCity, destinationAddress, shippingMethod, processing, error, orderSuccess]);
+  }), [destinationCity, destinationAddress, deliveryDate, processing, error, orderSuccess]);
 
   return (
     <CheckoutContext.Provider value={value}>

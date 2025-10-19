@@ -16,6 +16,7 @@ const productRoutes = require('./routes/productRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 const truckRoutes = require('./routes/truckRoutes');
 const trainRoutes = require('./routes/trainRoutes');
+const routeRoutes = require('./routes/routeRoutes');
 // Driver and assistant routes
 const driverRoutes = require('./routes/driverRoutes');
 const assistantRoutes = require('./routes/assistantRoutes');
@@ -90,6 +91,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/stores', storeRoutes);
 app.use('/api/trucks', truckRoutes);
 app.use('/api/trains', trainRoutes);
+app.use('/api/routes', routeRoutes);
 // Driver and assistant routes
 app.use('/api/drivers', driverRoutes);
 app.use('/api/assistants', assistantRoutes);
