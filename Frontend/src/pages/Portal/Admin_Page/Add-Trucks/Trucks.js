@@ -141,7 +141,7 @@ export default function Trucks() {
     setTrucks((t) => t.filter((x) => (x.truck_id || x.id) !== id));
   };
 
-  // Derived list: filter only (no sort)
+  // Derived list: filter first, then sort
   const visibleTrucks = useMemo(() => {
     if (!Array.isArray(trucks)) return [];
     
@@ -153,6 +153,37 @@ export default function Trucks() {
       return hay.includes(q);
     });
   }, [trucks, query]);
+  const [sort, setSort] = useState({ key: "truck_id", dir: "asc" });
+  const sortedTrucks = useMemo(() => {
+    if (!Array.isArray(visibleTrucks)) return [];
+    const arr = [...visibleTrucks];
+    const { key, dir } = sort;
+    const factor = dir === "asc" ? 1 : -1;
+
+    arr.sort((a, b) => {
+      const resolve = (item) => {
+        if (key === "truck_id") return item.truck_id || item.id || "";
+        if (key === "license_plate") return item.license_plate || "";
+        if (key === "capacity") return Number(item.capacity ?? 0);
+        return item[key];
+      };
+
+      let va = resolve(a);
+      let vb = resolve(b);
+
+      if (key === "capacity") {
+        return (va - vb) * factor;
+      }
+
+      va = String(va);
+      vb = String(vb);
+      return va.localeCompare(vb, undefined, { numeric: true, sensitivity: "base" }) * factor;
+    });
+
+    return arr;
+  }, [visibleTrucks, sort]);
+  const onSort = (key) =>
+    setSort((s) => (s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: "asc" }));
 
   return (
     // Keep same outer wrapper & classes as Products.js so CSS matches
@@ -224,14 +255,29 @@ export default function Trucks() {
         <table>
           <thead>
             <tr>
-              <th>Truck ID</th>
-              <th>License Plate</th>
-              <th>Capacity</th>
+              <th
+                className={`sortable ${sort.key === "truck_id" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("truck_id")}
+              >
+                Truck ID
+              </th>
+              <th
+                className={`sortable ${sort.key === "license_plate" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("license_plate")}
+              >
+                License Plate
+              </th>
+              <th
+                className={`sortable ${sort.key === "capacity" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("capacity")}
+              >
+                Capacity
+              </th>
               <th className="right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(visibleTrucks) && visibleTrucks.map((t) => {
+            {sortedTrucks.map((t) => {
               const id = t.truck_id || t.id;
               const isEditing = editingId === id;
               return (
@@ -291,7 +337,7 @@ export default function Trucks() {
                 </tr>
               );
             })}
-            {(!visibleTrucks || visibleTrucks.length === 0) && (
+            {sortedTrucks.length === 0 && (
               <tr>
                 <td colSpan={4} className="empty">No matching trucks</td>
               </tr>

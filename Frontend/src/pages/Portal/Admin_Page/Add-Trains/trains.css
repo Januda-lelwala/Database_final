@@ -13,6 +13,7 @@
   --line:#e5e7eb;
   --line-2:#eef2f7;
   --table-head-bg:#f6f8fa;
+  --table-head-hover:#eef2f6;
   --table-head-text:#0f172a;
   --row-hover:rgba(15,23,42,0.04);
   --map-placeholder:#e6edf5;
@@ -43,6 +44,7 @@
     --line:#23314a;
     --line-2:#1e293b;
     --table-head-bg:#1f2937;
+    --table-head-hover:#243047;
     --table-head-text:#f8fafc;
     --row-hover:rgba(148,163,184,0.22);
     --map-placeholder:#1e293b;
@@ -251,6 +253,33 @@
   text-transform: uppercase;
   letter-spacing: .4px;
   color: var(--table-head-text);
+}
+.trains thead th.sortable{
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 18px;
+  white-space: nowrap;
+}
+.trains thead th.sortable::after{
+  content: "\25B4\25BE";
+  font-size: 11px;
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .45;
+}
+.trains thead th.sorted-asc::after{
+  content: "\25B2";
+  opacity: .9;
+}
+.trains thead th.sorted-desc::after{
+  content: "\25BC";
+  opacity: .9;
+}
+.trains thead th.sortable:hover{
+  background: var(--table-head-hover);
 }
 .trains th, .trains td{
   padding: var(--s-4);

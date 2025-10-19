@@ -19,6 +19,7 @@
   --truck-danger-2: #dc2626;
   --truck-table-head-bg: #f1f5f9;
   --truck-table-head-text: #0f172a;
+  --truck-table-head-hover: #e3e9f3;
   --truck-row-hover: rgba(37, 99, 235, 0.08);
   --truck-btn-surface: #ffffff;
   --truck-btn-border: rgba(148, 163, 184, 0.4);
@@ -48,6 +49,7 @@
     --truck-shadow-lg: 0 30px 60px rgba(2, 6, 23, 0.65);
     --truck-table-head-bg: #1f2937;
     --truck-table-head-text: #f8fafc;
+    --truck-table-head-hover: #243047;
     --truck-row-hover: rgba(148, 163, 184, 0.22);
     --truck-btn-surface: color-mix(in srgb, var(--truck-card) 55%, white 45%);
     --truck-btn-border: rgba(148, 163, 184, 0.55);
@@ -270,6 +272,33 @@
   background: var(--truck-table-head-bg);
   color: var(--truck-table-head-text);
   border-bottom: 1px solid var(--truck-line-strong);
+}
+.trucks thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 22px;
+  white-space: nowrap;
+}
+.trucks thead th.sortable::after {
+  content: "\25B4\25BE";
+  font-size: 11px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.45;
+}
+.trucks thead th.sorted-asc::after {
+  content: "\25B2";
+  opacity: 0.9;
+}
+.trucks thead th.sorted-desc::after {
+  content: "\25BC";
+  opacity: 0.9;
+}
+.trucks thead th.sortable:hover {
+  background: var(--truck-table-head-hover);
 }
 
 .trucks th,

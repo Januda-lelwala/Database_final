@@ -198,6 +198,13 @@
   border-color: #42a5f5;
 }
 
+/* Match delete button styling with products.css */
+.employees .btn.danger {
+  background: var(--danger, #e74c3c);
+  color: #fff;
+  border: none;
+}
+
 /* Sortable headers + arrows (match products.css) */
 .employees thead th.sortable {
   cursor: pointer;
