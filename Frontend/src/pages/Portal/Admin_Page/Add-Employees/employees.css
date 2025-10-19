@@ -16,8 +16,8 @@
   --row-hover: #f8fafc;
   --button-surface: #ffffff;
   --button-border: color-mix(in srgb, var(--line) 80%, transparent);
-  --primary-1: #3498db;
-  --primary-2: #2980b9;
+  --primary-1: #8844a4;
+  --primary-2: #6f3985;
   --danger: #e74c3c;
   --shadow: 0 8px 24px rgba(0,0,0,.08);
   --shadow-lg: 0 20px 60px rgba(0,0,0,.22);
@@ -61,6 +61,8 @@ html[data-theme="dark"] .employees {
   --button-border: rgba(148,163,184,0.45);
   --shadow: 0 8px 24px rgba(0,0,0,.45);
   --shadow-lg: 0 20px 60px rgba(0,0,0,.6);
+  --primary-1: #a86bc4;
+  --primary-2: #8844a4;
 }
 
 /* Segmented toggle bar (Driver / Assistant) */
@@ -182,6 +184,20 @@ html[data-theme="dark"] .employees textarea::placeholder {
 
 /* Actions & buttons */
 .employees .actions { display: flex; justify-content: flex-end; gap: var(--s-2); }
+.employees .btn.primary {
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  color: #fff;
+  border: none;
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.28);
+}
+.employees .btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.32);
+}
+.employees .btn.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+}
 .employees .toolbar {
   display: flex;
   align-items: center;
