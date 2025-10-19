@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import { authService } from '../services/auth.service';
 import { handleAPIError } from '../services/api';
 
@@ -182,48 +182,48 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-    const changePassword = async (passwordData) => {
-      try {
-        if (!user || !user.role) {
-          throw new Error('User not authenticated');
-        }
-
-        let response;
-        const userId = user.driver_id || user.assistant_id || user.id || user.user_id;
-        if (!userId) {
-          throw new Error('User identifier not found');
-        }
-
-        // Route to appropriate password change endpoint based on role
-        switch (user.role) {
-          case 'driver':
-            response = await authService.driver.changePassword(userId, passwordData);
-            break;
-          case 'assistant':
-            response = await authService.assistant.changePassword(userId, passwordData);
-            break;
-          default:
-            throw new Error(`Password change not supported for role: ${user.role}`);
-        }
-
-        // Update user data in state and localStorage
-        const updatedUser = { 
-          ...user, 
-          must_change_password: false,
-          // Update username if it was changed
-          user_name: passwordData.new_user_name || user.user_name
-        };
-      
-        console.log('[AuthContext:changePassword] updated user:', updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        setUser(updatedUser);
-      
-        return response;
-      } catch (error) {
-        console.error('[AuthContext:changePassword] error:', error);
-        throw new Error(handleAPIError(error));
+  const changePassword = useCallback(async (passwordData) => {
+    try {
+      if (!user || !user.role) {
+        throw new Error('User not authenticated');
       }
-    };
+
+      let response;
+      const userId = user.driver_id || user.assistant_id || user.id || user.user_id;
+      if (!userId) {
+        throw new Error('User identifier not found');
+      }
+
+      // Route to appropriate password change endpoint based on role
+      switch (user.role) {
+        case 'driver':
+          response = await authService.driver.changePassword(userId, passwordData);
+          break;
+        case 'assistant':
+          response = await authService.assistant.changePassword(userId, passwordData);
+          break;
+        default:
+          throw new Error(`Password change not supported for role: ${user.role}`);
+      }
+
+      // Update user data in state and localStorage
+      const updatedUser = { 
+        ...user, 
+        must_change_password: false,
+        // Update username if it was changed
+        user_name: passwordData.new_user_name || user.user_name
+      };
+    
+      console.log('[AuthContext:changePassword] updated user:', updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    
+      return response;
+    } catch (error) {
+      console.error('[AuthContext:changePassword] error:', error);
+      throw new Error(handleAPIError(error));
+    }
+  }, [user]);
 
   const value = useMemo(() => ({ 
     user, 
@@ -231,7 +231,7 @@ export const AuthProvider = ({ children }) => {
     login, 
     register,
     logout,
-      changePassword,
+    changePassword,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
     isCustomer: user?.role === 'customer',
@@ -239,7 +239,7 @@ export const AuthProvider = ({ children }) => {
     isAssistant: user?.role === 'assistant',
     isEmployee: user?.portalType === 'employee',
     portalType: user?.portalType || null
-  }), [user, loading]);
+  }), [user, loading, changePassword]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

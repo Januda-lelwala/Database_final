@@ -227,9 +227,6 @@ const CustomerPage = () => {
   // Mark only truly new notifications as unread (ones not in storage)
   useEffect(() => {
     if (notifications.length === 0) return;
-    const storedUnread = (() => {
-      try { return new Set(JSON.parse(localStorage.getItem('customerNotifUnread') || '[]')); } catch { return new Set(); }
-    })();
     const storedRead = (() => {
       try { return new Set(JSON.parse(localStorage.getItem('customerNotifRead') || '[]')); } catch { return new Set(); }
     })();

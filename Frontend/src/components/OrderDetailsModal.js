@@ -48,14 +48,6 @@ export default function OrderDetailsModal({ order, open, onClose, onCancel }) {
     }
   };
 
-  // Helper for date formatting
-  const formatDate = (date) => {
-    if (!date) return '—';
-    const d = new Date(date);
-    if (isNaN(d)) return '—';
-    return d.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-  };
-
   // Items rendering
   const items = Array.isArray(order.items) ? order.items : [];
 

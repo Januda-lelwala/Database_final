@@ -14,6 +14,7 @@ import PasswordChangeModal from '../../components/PasswordChangeModal';
 const EmployeePortalRouter = () => {
   const { user, isEmployee, isAdmin, isDriver, isAssistant, loading, changePassword } = useAuth();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [passwordChangeError, setPasswordChangeError] = useState(null);
 
   // Check if user needs to change password on mount and when user changes

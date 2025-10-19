@@ -14,6 +14,7 @@ export default function Employees() {
 
   const [drivers, setDrivers] = useState([]);
   const [assistants, setAssistants] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
 
   // Forms: only requested fields
