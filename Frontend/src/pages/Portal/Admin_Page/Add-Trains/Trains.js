@@ -30,6 +30,10 @@ export default function Trains() {
   // Matching Routes state
   const [matchingRoutes, setMatchingRoutes] = useState([]);
   const [findingRoutes, setFindingRoutes] = useState(false);
+  // Find Trips state (used by findTrips helper)
+  const [findDestination, setFindDestination] = useState("");
+  const [matchingTrips, setMatchingTrips] = useState([]);
+  const [finding, setFinding] = useState(false);
   /** Find Trips by destination */
   const findTrips = async () => {
     if (!findDestination.trim()) return alert("Enter a destination to search.");
