@@ -61,20 +61,17 @@ export default function CheckoutDetails() {
   const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
   const minDateStr = minDate.toISOString().split('T')[0];
 
-  // Route coverage check - now uses real data from database
-  const isRouteCovered = availableCities.includes(destinationCity.trim().toLowerCase());
-
   const canContinue =
     destinationCity.trim().length > 0 &&
     destinationAddress.trim().length > 0 &&
     deliveryDate &&
-    deliveryDate >= minDateStr &&
-    isRouteCovered;
+    deliveryDate >= minDateStr;
 
   // Handle input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
+    setDestinationCity(value.trim());
     setShowDropdown(true);
   };
 

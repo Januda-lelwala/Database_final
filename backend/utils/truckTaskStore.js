@@ -72,15 +72,18 @@ const completeTask = (order_id, schedule_id) => {
   if (index === -1) return null;
 
   const now = new Date().toISOString();
-  tasks[index] = {
+  const completedTask = {
     ...tasks[index],
     status: 'scheduled',
     schedule_id: schedule_id || null,
     updated_at: now,
     completed_at: now
   };
-  writeFile(tasks);
-  return tasks[index];
+
+  const nextTasks = tasks.filter(task => task.order_id !== order_id);
+  writeFile(nextTasks);
+
+  return completedTask;
 };
 
 module.exports = {

@@ -296,6 +296,15 @@ html[data-theme="dark"] .employees .toolbar-input:focus {
   font-variant-numeric: tabular-nums;
 }
 
+/* Ensure action buttons sit side-by-side within table rows */
+.employees .row-actions {
+  display: inline-flex;
+  gap: var(--s-3);
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
+
 /* Credential preview (optional admin helper) */
 .employees .cred-preview {
   margin-top: var(--s-3);

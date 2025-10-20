@@ -297,6 +297,29 @@ const findTripsByDestination = async (req, res) => {
     });
 
     const normalizedDestination = destination.trim().toLowerCase();
+    const parseDestinations = (raw) => {
+      if (!raw) return [];
+      if (Array.isArray(raw)) return raw;
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return String(raw)
+          .split(',')
+          .map(item => item.trim())
+          .filter(Boolean);
+      }
+    };
+
+    const routeHasExactDestination = (route) => {
+      if (!route) return false;
+      const destinations = parseDestinations(route.destinations).map(city =>
+        String(city).trim().toLowerCase()
+      );
+      return destinations.includes(normalizedDestination);
+    };
+
+    const fallbackRoute = findRouteByDestination(destination);
 
     const matchingRouteIds = routes
       .filter(route => {
@@ -326,21 +349,21 @@ const findTripsByDestination = async (req, res) => {
       })
       .map(route => route.route_id);
 
-    let fallbackMeta = null;
+    let fallbackMeta = fallbackRoute
+      ? {
+          truck_route_id: fallbackRoute.route_id,
+          first_city: fallbackRoute.first_city,
+          store_id: fallbackRoute.store_id,
+          coverage: fallbackRoute.coverage,
+          max_minutes: fallbackRoute.max_minutes
+        }
+      : null;
 
     let candidateRouteIds = matchingRouteIds;
 
     if (candidateRouteIds.length === 0) {
-      const fallback = findRouteByDestination(destination);
-      if (fallback) {
-        fallbackMeta = {
-          truck_route_id: fallback.route_id,
-          first_city: fallback.first_city,
-          store_id: fallback.store_id,
-          coverage: fallback.coverage,
-          max_minutes: fallback.max_minutes
-        };
-        const firstCityLower = fallback.first_city.trim().toLowerCase();
+      if (fallbackRoute) {
+        const firstCityLower = fallbackRoute.first_city.trim().toLowerCase();
         candidateRouteIds = routes
           .filter(route => {
             const values = new Set();
@@ -387,6 +410,9 @@ const findTripsByDestination = async (req, res) => {
     const formattedTrips = trips.map(trip => {
       const train = trip.train || {};
       const remainingCapacity = Number(trip.capacity) - Number(trip.capacity_used || 0);
+      const routeRecord = trip.route || routes.find(route => route.route_id === trip.route_id);
+      const hasDirectDestination = routeHasExactDestination(routeRecord);
+      const fallbackDetails = !hasDirectDestination ? fallbackMeta : null;
       return {
         trip_id: trip.trip_id,
         train_id: trip.train_id,
@@ -400,7 +426,7 @@ const findTripsByDestination = async (req, res) => {
         store_id: trip.store_id,
         train_notes: train.notes || null,
         is_provisional: false,
-        fallback: fallbackMeta
+        fallback: fallbackDetails
       };
     });
 
@@ -427,7 +453,11 @@ const findTripsByDestination = async (req, res) => {
         store_id: null,
         train_notes: train.notes || null,
         is_provisional: true,
-        fallback: fallbackMeta
+        fallback: (() => {
+          const routeRecord = routes.find(route => route.route_id === train.route_id);
+          const hasDirectDestination = routeHasExactDestination(routeRecord);
+          return hasDirectDestination ? null : fallbackMeta;
+        })()
       }));
 
     const combined = [...formattedTrips, ...provisionalTrips];

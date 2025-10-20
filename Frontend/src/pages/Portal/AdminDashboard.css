@@ -64,6 +64,18 @@
 .theme-btn { background: #f39c12; color: white; }
 .logout-btn { background: #e74c3c; color: white; }
 
+.admin-dashboard.light .logout-btn {
+  background: linear-gradient(135deg, #ff6b6b, #e63946);
+  border: 1px solid #d32f2f;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(230, 57, 70, 0.25);
+}
+
+.admin-dashboard.light .logout-btn:hover {
+  background: linear-gradient(135deg, #ff5252, #d62828);
+  box-shadow: 0 6px 18px rgba(214, 40, 40, 0.35);
+}
+
 .theme-btn:hover, .logout-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

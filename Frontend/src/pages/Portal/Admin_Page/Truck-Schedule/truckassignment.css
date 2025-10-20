@@ -35,6 +35,7 @@
   border:1px solid var(--line);
   box-shadow:var(--shadow-sm);
 }
+
 .truckassign .task-row{
   display:flex;
   gap:var(--s-3);
