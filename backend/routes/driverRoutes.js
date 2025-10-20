@@ -6,6 +6,8 @@ const driverController = require('../controllers/driverController');
 // Authenticated driver self-profile endpoints (REGISTER BEFORE parameterized routes)
 router.get('/me', verifyUser, driverController.getMyProfile);
 router.put('/me', verifyUser, driverController.updateMyProfile);
+router.get('/me/requests', verifyUser, driverController.getMyRequests);
+router.post('/me/requests/:requestId/accept', verifyUser, driverController.acceptAssignmentRequest);
 
 // Admin driver routes - all require admin authentication
 router.get('/', verifyAdmin, driverController.getAllDrivers);

@@ -142,6 +142,18 @@ export const adminAPI = {
   updateInventory: (id, quantity) => api.put(`/admin/inventory/${id}`, { available_quantity: quantity })
 };
 
+// Driver portal API
+export const driverPortalAPI = {
+  getRequests: () => api.get('/drivers/me/requests'),
+  acceptRequest: (requestId) => api.post(`/drivers/me/requests/${requestId}/accept`)
+};
+
+// Assistant portal API
+export const assistantPortalAPI = {
+  getRequests: () => api.get('/assistants/me/requests'),
+  acceptRequest: (requestId) => api.post(`/assistants/me/requests/${requestId}/accept`)
+};
+
 // Generic error handler
 export const handleAPIError = (error) => {
   if (error.response?.data?.error) {

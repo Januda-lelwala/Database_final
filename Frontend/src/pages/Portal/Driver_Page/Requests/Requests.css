@@ -1,9 +1,16 @@
 .driver-requests .list { display: grid; gap: 14px; }
-.driver-requests .item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.98); border-radius: 12px; padding: 14px; box-shadow: 0 12px 30px rgba(12,30,60,0.06); }
-.driver-requests .meta { color: #6b7280; font-size: 13px; }
-.driver-requests .status { padding: 6px 10px; border-radius: 999px; font-size: 13px; background: #f3f4f6; font-weight: 700; }
+.driver-requests .item { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.98); border-radius: 12px; padding: 14px; box-shadow: 0 12px 30px rgba(12,30,60,0.06); }
+.driver-requests .meta { color: #6b7280; font-size: 13px; margin-top: 4px; }
+.driver-requests .actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.driver-requests .status { padding: 6px 10px; border-radius: 999px; font-size: 13px; background: #f3f4f6; font-weight: 700; text-transform: capitalize; }
 .driver-requests .status.accepted { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
-.driver-requests .accept-btn { padding: 8px 12px; border-radius: 10px; border: none; background: linear-gradient(90deg,#27ae60,#1fa65a); color: #fff; cursor: pointer; }
+.driver-requests .status.pending { background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; }
+.driver-requests .accept-btn { padding: 8px 12px; border-radius: 10px; border: none; background: linear-gradient(90deg,#27ae60,#1fa65a); color: #fff; cursor: pointer; font-weight: 600; }
+.driver-requests .accept-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.driver-requests__empty { padding: 18px; border-radius: 12px; background: rgba(255,255,255,0.75); text-align: center; color: #4b5563; }
+.driver-requests__error { padding: 12px 16px; margin-bottom: 12px; border-radius: 10px; background: #fee2e2; color: #991b1b; font-weight: 600; }
 
 .dark .driver-requests .item { background: rgba(12,18,34,0.7); }
 .dark .driver-requests .status { background: rgba(255,255,255,0.04); color: #e5e7eb; }
+.dark .driver-requests__empty { background: rgba(12,18,34,0.6); color: #cbd5f5; }
+.dark .driver-requests__error { background: rgba(185,28,28,0.2); color: #fecaca; }

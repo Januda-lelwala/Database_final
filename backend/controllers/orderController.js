@@ -1,6 +1,7 @@
 // Cancel order (customer)
 const cancelOrder = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
     const { reason } = req.body;
 
@@ -46,6 +47,7 @@ const { sequelize } = db;
 const ensureNumber = (value) => Number(value || 0);
 const { findRouteByDestination } = require('../utils/truckRouteConfig');
 const { addOrUpdateTask } = require('../utils/truckTaskStore');
+const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
 
 const calculateRequiredSpace = (orderInstance) => {
   if (!orderInstance?.orderItems) return 0;
@@ -76,6 +78,7 @@ const generateOrderItemId = async () => {
 // Get all orders
 const getAllOrders = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const whereClause = {};
     if (req.query.status) {
       whereClause.status = req.query.status;
@@ -132,6 +135,7 @@ const getAllOrders = async (req, res) => {
 // Get order by ID
 const getOrderById = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
 
     const order = await Order.findByPk(id, {
@@ -177,7 +181,8 @@ const getOrderById = async (req, res) => {
 // Create new order
 const createOrder = async (req, res) => {
   try {
-    let { customer_id, order_date, destination_city, destination_address, items } = req.body;
+    await ensureOrderDeliveryDateColumn();
+    let { customer_id, order_date, destination_city, destination_address, delivery_date, items } = req.body;
 
     // Derive customer_id from JWT for customer role if not submitted explicitly
     if (!customer_id && req.auth?.role === 'customer') {
@@ -203,6 +208,7 @@ const createOrder = async (req, res) => {
       order_date: order_date || new Date(),
       destination_city,
       destination_address,
+      delivery_date: delivery_date || null,
       status: 'pending'
     });
 
@@ -272,8 +278,9 @@ const createOrder = async (req, res) => {
 // Update order
 const updateOrder = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
-    const { destination_city, destination_address, status } = req.body;
+    const { destination_city, destination_address, delivery_date, status } = req.body;
 
     // Find order
     const order = await Order.findByPk(id);
@@ -329,6 +336,7 @@ const updateOrder = async (req, res) => {
 // Delete order
 const deleteOrder = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
 
     const order = await Order.findByPk(id);
@@ -361,6 +369,7 @@ const deleteOrder = async (req, res) => {
 // Get order items
 const getOrderItems = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
 
     const orderItems = await OrderItem.findAll({
@@ -397,6 +406,7 @@ const getOrderItems = async (req, res) => {
 // Update order status
 const updateOrderStatus = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
     const { status } = req.body;
 
@@ -442,6 +452,7 @@ const assignOrderToTrain = async (req, res) => {
   const transaction = await sequelize.transaction();
 
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
     const { trip_id, train_id, route_id } = req.body;
 
@@ -657,6 +668,7 @@ const assignOrderToTrain = async (req, res) => {
         max_minutes: fallbackTruckRoute.max_minutes,
         required_space: requiredSpace,
         order_date: orderJSON?.order_date || new Date(),
+        delivery_date: orderJSON?.delivery_date || null,
         customer_name: orderJSON?.customer?.name || null
       });
     }

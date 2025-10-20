@@ -1,6 +1,8 @@
 const { Op } = require('sequelize');
 const db = require('../models');
 const { listPendingTasks, completeTask } = require('../utils/truckTaskStore');
+const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
+const { addAssignment } = require('../utils/assignmentStore');
 
 const {
   TruckSchedule,
@@ -8,7 +10,8 @@ const {
   Truck,
   Driver,
   Assistant,
-  Order
+  Order,
+  Customer
 } = db;
 
 const parseDate = (value) => {
@@ -118,7 +121,7 @@ const getTruckSchedules = async (req, res) => {
 
     const schedules = await TruckSchedule.findAll({
       where: Object.keys(where).length ? where : undefined,
-      include: includeRelations,
+      include: [...includeRelations, { model: Order, as: 'order', include: [{ model: Customer, as: 'customer', attributes: ['name'] }] }],
       order: [['start_time', 'ASC']]
     });
 
@@ -159,6 +162,7 @@ const getPendingTruckTasks = async (_req, res) => {
 
 const createTruckSchedule = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const {
       truck_schedule_id,
       route_id,
@@ -268,22 +272,62 @@ const createTruckSchedule = async (req, res) => {
       driver_id,
       assistant_id,
       start_time: start,
-      end_time: end
+      end_time: end,
+      order_id: payloadForm.order_id || order_id || null
     });
 
     const hydratedSchedule = await TruckSchedule.findByPk(newSchedule.truck_schedule_id, {
       include: includeRelations
     });
 
+    let orderSnapshot = null;
     if (order_id) {
       await completeTask(order_id, newSchedule.truck_schedule_id);
-      const order = await Order.findByPk(order_id);
-      if (order) {
-        await order.update({
+      orderSnapshot = await Order.findByPk(order_id, {
+        include: [{ model: Customer, as: 'customer', attributes: ['name'] }]
+      });
+      if (orderSnapshot) {
+        await orderSnapshot.update({
           status: 'scheduled',
           updated_at: new Date()
         });
       }
+    }
+
+    const sharedAssignmentDetails = orderSnapshot
+      ? {
+          order_id,
+          customer_name: orderSnapshot.customer?.name || null,
+          destination_address: orderSnapshot.destination_address || null,
+          destination_city: orderSnapshot.destination_city || null,
+          delivery_date: orderSnapshot.delivery_date || null
+        }
+      : {
+          order_id,
+          customer_name: null,
+          destination_address: null,
+          destination_city: null,
+          delivery_date: null
+        };
+
+    if (driver_id) {
+      addAssignment({
+        role: 'driver',
+        user_id: driver_id,
+        schedule_id: newSchedule.truck_schedule_id,
+        trip_id: null,
+        ...sharedAssignmentDetails
+      });
+    }
+
+    if (assistant_id) {
+      addAssignment({
+        role: 'assistant',
+        user_id: assistant_id,
+        schedule_id: newSchedule.truck_schedule_id,
+        trip_id: null,
+        ...sharedAssignmentDetails
+      });
     }
 
     return res.status(201).json({
@@ -367,3 +411,4 @@ module.exports = {
   getPendingTruckTasks,
   checkAvailability
 };
+

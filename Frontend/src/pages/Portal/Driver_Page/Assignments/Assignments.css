@@ -1,7 +1,15 @@
 .driver-assignments .list { display: grid; gap: 14px; }
-.driver-assignments .card { background: rgba(255,255,255,0.98); border-radius: 12px; padding: 14px; box-shadow: 0 12px 30px rgba(12,30,60,0.06); }
+.driver-assignments .card { background: rgba(255,255,255,0.98); border-radius: 12px; padding: 14px; box-shadow: 0 12px 30px rgba(12,30,60,0.06); display: grid; gap: 6px; }
 .driver-assignments .title { font-weight: 700; color: #0b1220; }
+.driver-assignments .meta { color: #4b5563; font-size: 13px; }
 .driver-assignments .date { color: #6b7280; font-size: 13px; }
+.driver-assignments__empty, .driver-assignments__error { padding: 18px; border-radius: 12px; text-align: center; margin-top: 12px; }
+.driver-assignments__empty { background: rgba(255,255,255,0.85); color: #4b5563; }
+.driver-assignments__error { background: #fee2e2; color: #991b1b; font-weight: 600; }
 
 .dark .driver-assignments .card { background: rgba(12,18,34,0.7); }
 .dark .driver-assignments .title { font-weight: 700; color: #ffffff; }
+.dark .driver-assignments .meta { color: #9ca3af; }
+.dark .driver-assignments .date { color: #94a3b8; }
+.dark .driver-assignments__empty { background: rgba(12,18,34,0.7); color: #cbd5f5; }
+.dark .driver-assignments__error { background: rgba(185,28,28,0.2); color: #fecaca; }

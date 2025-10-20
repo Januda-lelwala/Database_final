@@ -1,5 +1,6 @@
 const db = require('../models');
 const { Store, Order, Product } = db;
+const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
 
 // Generate store ID
 const generateStoreId = async () => {

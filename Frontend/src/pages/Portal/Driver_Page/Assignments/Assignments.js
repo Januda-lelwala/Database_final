@@ -1,22 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Assignments.css";
+import { driverPortalAPI, handleAPIError } from "../../../../services/api";
+
+const formatDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString();
+};
 
 export default function DriverAssignments() {
-  const history = [
-    { id: 101, title: "Route A -> B", date: "2025-09-12" },
-    { id: 102, title: "Route C -> D", date: "2025-09-25" },
-  ];
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const loadHistory = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await driverPortalAPI.getRequests();
+      const list =
+        response?.data?.data?.requests ||
+        response?.data?.requests ||
+        response?.data ||
+        [];
+      const accepted = Array.isArray(list)
+        ? list.filter((entry) => entry.status === "accepted")
+        : [];
+      setHistory(accepted);
+    } catch (err) {
+      setError(handleAPIError(err));
+      setHistory([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
+
   return (
     <div className="driver-assignments">
       <h2>Assignments History</h2>
-      <div className="list">
-        {history.map((h) => (
-          <div key={h.id} className="card">
-            <div className="title">{h.title}</div>
-            <div className="date">{h.date}</div>
-          </div>
-        ))}
-      </div>
+      {error && <div className="driver-assignments__error">{error}</div>}
+      {loading ? (
+        <div className="driver-assignments__empty">Loading history...</div>
+      ) : history.length === 0 ? (
+        <div className="driver-assignments__empty">
+          No completed assignments yet. Accepted deliveries will appear here.
+        </div>
+      ) : (
+        <div className="list">
+          {history.map((item) => (
+            <div key={item.id} className="card">
+              <div className="title">Order {item.order_id || "-"}</div>
+              <div className="meta">Customer: {item.customer_name || "-"}</div>
+              <div className="meta">Destination: {item.destination_city || "-"}</div>
+              <div className="meta">Address: {item.destination_address || "-"}</div>
+              <div className="date">Delivery: {formatDate(item.delivery_date || item.updated_at)}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 const db = require('../models');
-const { Driver } = db;
+const { Driver, TruckSchedule, Order, Customer } = db;
+const { listAssignmentsForRole, updateAssignmentStatus } = require('../utils/assignmentStore');
 const { sendEmail } = require('../utils/mailer');
+const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
 const { employeeWelcome } = require('../utils/emailTemplates');
 const { generateSecurePassword, generateUniqueUsername } = require('../utils/credentialGenerator');
 
@@ -336,6 +338,119 @@ module.exports = {
       }});
     } catch (error) {
       return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+  },
+  getMyRequests: async (req, res) => {
+    try {
+      if (!req.auth || req.auth.role !== 'driver') {
+        return res.status(403).json({ success: false, message: 'Driver authentication required' });
+      }
+      const driverId = req.auth.id || req.driver?.driver_id;
+      if (!driverId) {
+        return res.status(400).json({ success: false, message: 'Driver id missing from token' });
+      }
+      await ensureOrderDeliveryDateColumn();
+      const assignmentEntries = listAssignmentsForRole('driver', driverId);
+
+      const schedules = await TruckSchedule.findAll({
+        where: { driver_id: driverId },
+        include: [
+          {
+            model: Order,
+            as: 'order',
+            include: [{ model: Customer, as: 'customer', attributes: ['name'] }]
+          }
+        ],
+        order: [['start_time', 'DESC']]
+      });
+
+      const scheduleMap = new Map(
+        schedules.map((schedule) => [schedule.truck_schedule_id, schedule])
+      );
+
+      const merged = assignmentEntries.map((entry) => {
+        const schedule = entry.schedule_id ? scheduleMap.get(entry.schedule_id) : null;
+        const order = schedule?.order || null;
+        return {
+          id: entry.id,
+          schedule_id: entry.schedule_id || schedule?.truck_schedule_id || null,
+          status: entry.status || 'pending',
+          order_id: entry.order_id || schedule?.order_id || null,
+          start_time: schedule?.start_time || null,
+          end_time: schedule?.end_time || null,
+          customer_name: entry.customer_name || order?.customer?.name || null,
+          destination_city: entry.destination_city || order?.destination_city || null,
+          destination_address: entry.destination_address || order?.destination_address || null,
+          delivery_date: entry.delivery_date || order?.delivery_date || null,
+          created_at: entry.created_at || schedule?.created_at || null,
+          updated_at: entry.updated_at || schedule?.updated_at || null
+        };
+      });
+
+      const assignmentScheduleIds = new Set(
+        assignmentEntries.map((entry) => entry.schedule_id).filter(Boolean)
+      );
+
+      const additional = schedules
+        .filter((schedule) => !assignmentScheduleIds.has(schedule.truck_schedule_id))
+        .map((schedule) => ({
+          id: schedule.truck_schedule_id,
+          schedule_id: schedule.truck_schedule_id,
+          status: 'accepted',
+          order_id: schedule.order_id || null,
+          start_time: schedule.start_time || null,
+          end_time: schedule.end_time || null,
+          customer_name: schedule.order?.customer?.name || null,
+          destination_city: schedule.order?.destination_city || null,
+          destination_address: schedule.order?.destination_address || null,
+          delivery_date: schedule.order?.delivery_date || null,
+          created_at: schedule.created_at || null,
+          updated_at: schedule.updated_at || null
+        }));
+
+      const requests = [...merged, ...additional];
+
+      return res.status(200).json({
+        success: true,
+        count: requests.length,
+        data: { requests }
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: error.message
+      });
+    }
+  },
+  acceptAssignmentRequest: async (req, res) => {
+    try {
+      if (!req.auth || req.auth.role !== 'driver') {
+        return res.status(403).json({ success: false, message: 'Driver authentication required' });
+      }
+      const driverId = req.auth.id || req.driver?.driver_id;
+      if (!driverId) {
+        return res.status(400).json({ success: false, message: 'Driver id missing from token' });
+      }
+      const { requestId } = req.params;
+      if (!requestId) {
+        return res.status(400).json({ success: false, message: 'Request id is required' });
+      }
+      const updated = updateAssignmentStatus(requestId, 'driver', driverId, 'accepted');
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Request not found' });
+      }
+      return res.status(200).json({
+        success: true,
+        message: 'Request accepted',
+        data: { request: updated }
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: error.message
+      });
     }
   }
 };

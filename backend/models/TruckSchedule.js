@@ -38,6 +38,14 @@ module.exports = (sequelize) => {
         key: 'assistant_id'
       }
     },
+    order_id: {
+      type: DataTypes.STRING(40),
+      allowNull: true,
+      references: {
+        model: 'orders',
+        key: 'order_id'
+      }
+    },
     start_time: {
       type: DataTypes.DATE,
       allowNull: false
@@ -79,6 +87,11 @@ module.exports = (sequelize) => {
     TruckSchedule.belongsTo(models.Assistant, {
       foreignKey: 'assistant_id',
       as: 'assistant'
+    });
+
+    TruckSchedule.belongsTo(models.Order, {
+      foreignKey: 'order_id',
+      as: 'order'
     });
   };
 

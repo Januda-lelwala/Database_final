@@ -1,6 +1,8 @@
 const db = require('../models');
-const { Assistant } = db;
+const { Assistant, TruckSchedule, Order, Customer } = db;
+const { listAssignmentsForRole, updateAssignmentStatus } = require('../utils/assignmentStore');
 const { sendEmail } = require('../utils/mailer');
+const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
 const { employeeWelcome } = require('../utils/emailTemplates');
 const { generateSecurePassword, generateUniqueUsername } = require('../utils/credentialGenerator');
 
@@ -328,6 +330,59 @@ module.exports = {
       });
     } catch (error) {
       return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+  },
+  getMyRequests: async (req, res) => {
+    try {
+      if (!req.auth || req.auth.role !== 'assistant') {
+        return res.status(403).json({ success: false, message: 'Assistant authentication required' });
+      }
+      const assistantId = req.auth.id || req.assistant?.assistant_id;
+      if (!assistantId) {
+        return res.status(400).json({ success: false, message: 'Assistant id missing from token' });
+      }
+      const requests = listAssignmentsForRole('assistant', assistantId);
+      return res.status(200).json({
+        success: true,
+        count: requests.length,
+        data: { requests }
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: error.message
+      });
+    }
+  },
+  acceptAssignmentRequest: async (req, res) => {
+    try {
+      if (!req.auth || req.auth.role !== 'assistant') {
+        return res.status(403).json({ success: false, message: 'Assistant authentication required' });
+      }
+      const assistantId = req.auth.id || req.assistant?.assistant_id;
+      if (!assistantId) {
+        return res.status(400).json({ success: false, message: 'Assistant id missing from token' });
+      }
+      const { requestId } = req.params;
+      if (!requestId) {
+        return res.status(400).json({ success: false, message: 'Request id is required' });
+      }
+      const updated = updateAssignmentStatus(requestId, 'assistant', assistantId, 'accepted');
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Request not found' });
+      }
+      return res.status(200).json({
+        success: true,
+        message: 'Request accepted',
+        data: { request: updated }
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: error.message
+      });
     }
   }
 };

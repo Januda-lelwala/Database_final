@@ -7,8 +7,8 @@ import "./AssistantDashboard.css";
 import DriverHeader from "./Components/DriverHeader";
 import DriverSidebar from "./Components/DriverSidebar";
 
-import DriverOverview from "./Overview/Overview";
-import DriverRequests from "./Requests/Requests";
+import AssistantOverview from "./Overview/Overview";
+import AssistantRequests from "./Requests/Requests";
 import DriverAssignments from "./Assignments/Assignments";
 import DriverSettings from "./Settings/Settings";
 
@@ -19,14 +19,14 @@ const NAV_ITEMS = [
   { key: "settings", path: "settings", label: "Settings", icon: 'settings' },
 ];
 
-export default function DriverDashboard() {
+export default function AssistantDashboard() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   if (!user) return <Navigate to="/login" replace />;
 
-  const subtitle = `Welcome, ${user?.name || "Driver"}`;
+  const subtitle = `Welcome, ${user?.name || "Assistant"}`;
 
   const onGoAssignments = () => navigate("assignments");
   const onGoRequests = () => navigate("requests");
@@ -34,7 +34,7 @@ export default function DriverDashboard() {
   return (
     <div className={`driver-dashboard ${theme}`}>
       <DriverHeader
-        title="Driver Portal"
+        title="Assistant Portal"
         subtitle={subtitle}
         onLogout={logout}
         onToggleTheme={toggleTheme}
@@ -44,9 +44,9 @@ export default function DriverDashboard() {
         <section className="driver-main-content">
           <Routes>
             <Route index element={<Navigate to="overview" replace />} />
-            <Route path="overview" element={<DriverOverview onGoAssignments={onGoAssignments} onGoRequests={onGoRequests} />} />
+            <Route path="overview" element={<AssistantOverview onGoAssignments={onGoAssignments} onGoRequests={onGoRequests} />} />
             <Route path="profile" element={<Navigate to="settings?tab=profile" replace />} />
-            <Route path="requests" element={<DriverRequests />} />
+            <Route path="requests" element={<AssistantRequests />} />
             <Route path="assignments" element={<DriverAssignments />} />
             <Route path="settings" element={<DriverSettings />} />
             <Route path="*" element={<Navigate to="overview" replace />} />

@@ -7,6 +7,8 @@ const assistantController = require('../controllers/assistantController');
 // Self profile endpoints must come before :id routes
 router.get('/me', verifyUser, assistantController.getMyProfile);
 router.put('/me', verifyUser, assistantController.updateMyProfile);
+router.get('/me/requests', verifyUser, assistantController.getMyRequests);
+router.post('/me/requests/:requestId/accept', verifyUser, assistantController.acceptAssignmentRequest);
 
 // Admin manage endpoints
 router.get('/', verifyAdmin, assistantController.getAllAssistants);

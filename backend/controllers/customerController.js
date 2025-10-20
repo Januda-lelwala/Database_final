@@ -1,5 +1,6 @@
 const db = require('../models');
 const { Customer, Order, OrderItem, Product } = db;
+const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
 
 // Get all customers (Admin only)
 const getAllCustomers = async (req, res) => {
@@ -141,6 +142,7 @@ const updateCustomer = async (req, res) => {
 // Delete customer (Admin only)
 const deleteCustomer = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
 
     const customer = await Customer.findByPk(id);
@@ -178,6 +180,7 @@ const deleteCustomer = async (req, res) => {
 // Get customer orders
 const getCustomerOrders = async (req, res) => {
   try {
+    await ensureOrderDeliveryDateColumn();
     const { id } = req.params;
 
     // Verify customer exists
