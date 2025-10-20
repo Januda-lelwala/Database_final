@@ -249,31 +249,45 @@ export default function Employees() {
 			phone_no: editForm.phone_no,
 			email: editForm.email,
 		};
+		let replacement = null;
 		try {
 			const url = isDriver
 				? `${API_BASE}/drivers/${encodeURIComponent(id)}`
 				: `${API_BASE}/assistants/${encodeURIComponent(id)}`;
 			const r = await fetch(url, {
-				method: "PATCH",
+				method: "PUT",
 				headers: { "Content-Type": "application/json", ...getTokenHeader() },
 				body: JSON.stringify(payload),
 			});
-			if (!r.ok) throw new Error();
-		} catch {
-			// fallback
-		} finally {
+			const body = await r.json().catch(() => ({}));
+			if (!r.ok) {
+				throw new Error(body?.message || "Failed to update employee.");
+			}
+			replacement = body?.data || body;
+			if (!replacement || typeof replacement !== "object") {
+				replacement = { ...payload };
+			}
+		} catch (error) {
+			console.error("Failed to update employee:", error);
+			alert(error.message || "Unable to update employee.");
 			setSavingId(null);
+			return;
 		}
+		setSavingId(null);
+		const merged = {
+			...payload,
+			...(replacement || {})
+		};
 		if (isDriver) {
 			setDrivers((list) =>
 				list.map((x) =>
-					(x.driver_id || x.id) === id ? { ...x, ...payload, driver_id: x.driver_id || id } : x
+					(x.driver_id || x.id) === id ? { ...x, ...merged, driver_id: x.driver_id || id } : x
 				)
 			);
 		} else {
 			setAssistants((list) =>
 				list.map((x) =>
-					(x.assistant_id || x.id) === id ? { ...x, ...payload, assistant_id: x.assistant_id || id } : x
+					(x.assistant_id || x.id) === id ? { ...x, ...merged, assistant_id: x.assistant_id || id } : x
 				)
 			);
 		}

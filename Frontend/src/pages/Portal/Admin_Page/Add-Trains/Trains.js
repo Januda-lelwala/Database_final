@@ -155,20 +155,24 @@ export default function Trains() {
       return alert("Start and End city are required for the route.");
     }
 
-    try {
-      const r = await fetch("http://localhost:3000/api/trains", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...tokenHeader },
-        body: JSON.stringify(payload),
-      });
-      if (!r.ok) throw new Error("Train + Route create failed");
+      try {
+        const r = await fetch("http://localhost:3000/api/trains", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...tokenHeader },
+          body: JSON.stringify(payload),
+        });
+        const body = await r.json().catch(() => ({}));
+        if (!r.ok) {
+          throw new Error(body?.message || "Train + Route create failed");
+        }
+        const created = body?.data?.train || body?.train || body || payload;
 
-      setTrains((t) => [payload, ...t]);
-      setForm({ train_id: "", capacity: "", notes: "", begin_time: "" });
-      setRoute({ route_id: "", start_city: "", end_city: "", destinations: "" });
-      alert("Train + Route added");
-    } catch (err) {
-      console.error(err);
+        setTrains((t) => [created, ...t]);
+        setForm({ train_id: "", capacity: "", notes: "", begin_time: "" });
+        setRoute({ route_id: "", start_city: "", end_city: "", destinations: "" });
+        alert("Train + Route added");
+      } catch (err) {
+        console.error(err);
       setTrains((t) => [payload, ...t]); // optimistic fallback
       alert("Saved locally. Check backend endpoints if needed.");
     }
@@ -266,20 +270,36 @@ export default function Trains() {
     if (!id) return;
     setSavingId(id);
     const payload = { capacity: Number(editForm.capacity || 0), notes: editForm.notes?.trim() || "" };
+    let replacement = null;
     try {
       const r = await fetch(`http://localhost:3000/api/trains/${encodeURIComponent(id)}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json", ...tokenHeader },
         body: JSON.stringify(payload),
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
-    } finally {
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        throw new Error(body?.message || "Failed to update train.");
+      }
+      replacement = body?.data?.train || body?.train || body;
+      if (!replacement || typeof replacement !== "object") {
+        replacement = { ...payload, train_id: id };
+      }
+    } catch (error) {
+      console.error("Failed to update train:", error);
+      alert(error.message || "Unable to update train.");
       setSavingId(null);
+      return;
     }
+    setSavingId(null);
+    const merged = {
+      ...payload,
+      ...(replacement || {}),
+      train_id: id
+    };
+    merged.capacity = Number(merged.capacity || 0);
     setTrains((list) =>
-      list.map((x) => ((x.train_id || x.id) === id ? { ...x, ...payload, train_id: x.train_id || id } : x))
+      list.map((x) => ((x.train_id || x.id) === id ? { ...x, ...merged, train_id: x.train_id || id } : x))
     );
     cancelEdit();
   };

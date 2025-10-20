@@ -74,9 +74,8 @@ export default function Trucks() {
         body: JSON.stringify(payload),
       });
       if (!r.ok) throw new Error();
-      const response = await r.json().catch(() => ({data: payload}));
-      // Handle backend response format: {success: true, data: {...}}
-      const added = response.data || response;
+      const response = await r.json().catch(() => ({ data: payload }));
+      const added = response?.data?.truck || response?.truck || response;
       setTrucks((t) => [added, ...t]);
     } catch {
       setTrucks((t) => [payload, ...t]); // demo fallback
@@ -105,20 +104,36 @@ export default function Trucks() {
     if (!id) return;
     setSavingId(id);
     const payload = { license_plate: editForm.license_plate, capacity: Number(editForm.capacity || 0) };
+    let replacement = null;
     try {
       const r = await fetch(`http://localhost:3000/api/trucks/${encodeURIComponent(id)}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json", ...tokenHeader },
         body: JSON.stringify(payload),
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
-    } finally {
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        throw new Error(body?.message || "Failed to update truck.");
+      }
+      replacement = body?.data?.truck || body?.truck || body;
+      if (!replacement || typeof replacement !== "object") {
+        replacement = { ...payload, truck_id: id };
+      }
+    } catch (error) {
+      console.error("Failed to update truck:", error);
+      alert(error.message || "Unable to update truck.");
       setSavingId(null);
+      return;
     }
+    setSavingId(null);
+    const merged = {
+      ...payload,
+      ...(replacement || {}),
+      truck_id: id
+    };
+    merged.capacity = Number(merged.capacity || 0);
     setTrucks((list) =>
-      list.map((x) => ((x.truck_id || x.id) === id ? { ...x, ...payload, truck_id: x.truck_id || id } : x))
+      list.map((x) => ((x.truck_id || x.id) === id ? { ...x, ...merged, truck_id: x.truck_id || id } : x))
     );
     cancelEdit();
   };
