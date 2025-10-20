@@ -4,6 +4,7 @@ const { listAssignmentsForRole, updateAssignmentStatus } = require('../utils/ass
 const { sendEmail } = require('../utils/mailer');
 const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
 const { employeeWelcome } = require('../utils/emailTemplates');
+const { ensureScheduleOrderLinks } = require('../utils/scheduleHelper');
 const { generateSecurePassword, generateUniqueUsername } = require('../utils/credentialGenerator');
 
 // Get all assistants
@@ -341,7 +342,68 @@ module.exports = {
       if (!assistantId) {
         return res.status(400).json({ success: false, message: 'Assistant id missing from token' });
       }
-      const requests = listAssignmentsForRole('assistant', assistantId);
+      await ensureOrderDeliveryDateColumn();
+      await ensureScheduleOrderLinks();
+      const assignmentEntries = listAssignmentsForRole('assistant', assistantId);
+
+      const schedules = await TruckSchedule.findAll({
+        where: { assistant_id: assistantId },
+        include: [
+          {
+            model: Order,
+            as: 'order',
+            include: [{ model: Customer, as: 'customer', attributes: ['name'] }]
+          }
+        ],
+        order: [['start_time', 'DESC']]
+      });
+
+      const scheduleMap = new Map(
+        schedules.map((schedule) => [schedule.truck_schedule_id, schedule])
+      );
+
+      const merged = assignmentEntries.map((entry) => {
+        const schedule = entry.schedule_id ? scheduleMap.get(entry.schedule_id) : null;
+        const order = schedule?.order || null;
+        return {
+          id: entry.id,
+          schedule_id: entry.schedule_id || schedule?.truck_schedule_id || null,
+          status: entry.status || 'pending',
+          order_id: entry.order_id || schedule?.order_id || null,
+          start_time: schedule?.start_time || null,
+          end_time: schedule?.end_time || null,
+          customer_name: entry.customer_name || order?.customer?.name || null,
+          destination_city: entry.destination_city || order?.destination_city || null,
+          destination_address: entry.destination_address || order?.destination_address || null,
+          delivery_date: entry.delivery_date || order?.delivery_date || null,
+          created_at: entry.created_at || schedule?.created_at || null,
+          updated_at: entry.updated_at || schedule?.updated_at || null
+        };
+      });
+
+      const assignmentScheduleIds = new Set(
+        assignmentEntries.map((entry) => entry.schedule_id).filter(Boolean)
+      );
+
+      const additional = schedules
+        .filter((schedule) => !assignmentScheduleIds.has(schedule.truck_schedule_id))
+        .map((schedule) => ({
+          id: schedule.truck_schedule_id,
+          schedule_id: schedule.truck_schedule_id,
+          status: 'accepted',
+          order_id: schedule.order_id || null,
+          start_time: schedule.start_time || null,
+          end_time: schedule.end_time || null,
+          customer_name: schedule.order?.customer?.name || null,
+          destination_city: schedule.order?.destination_city || null,
+          destination_address: schedule.order?.destination_address || null,
+          delivery_date: schedule.order?.delivery_date || null,
+          created_at: schedule.created_at || null,
+          updated_at: schedule.updated_at || null
+        }));
+
+      const requests = [...merged, ...additional];
+
       return res.status(200).json({
         success: true,
         count: requests.length,

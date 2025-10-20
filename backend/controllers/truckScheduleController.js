@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const db = require('../models');
 const { listPendingTasks, completeTask } = require('../utils/truckTaskStore');
-const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
+const { ensureOrderDeliveryDateColumn, ensureTruckScheduleOrderColumn } = require('../utils/schemaHelper');
 const { addAssignment } = require('../utils/assignmentStore');
 
 const {
@@ -76,6 +76,11 @@ const includeRelations = [
     model: Assistant,
     as: 'assistant',
     attributes: ['assistant_id', 'name']
+  },
+  {
+    model: Order,
+    as: 'order',
+    include: [{ model: Customer, as: 'customer', attributes: ['name'] }]
   }
 ];
 
@@ -121,7 +126,7 @@ const getTruckSchedules = async (req, res) => {
 
     const schedules = await TruckSchedule.findAll({
       where: Object.keys(where).length ? where : undefined,
-      include: [...includeRelations, { model: Order, as: 'order', include: [{ model: Customer, as: 'customer', attributes: ['name'] }] }],
+      include: includeRelations,
       order: [['start_time', 'ASC']]
     });
 
@@ -163,6 +168,8 @@ const getPendingTruckTasks = async (_req, res) => {
 const createTruckSchedule = async (req, res) => {
   try {
     await ensureOrderDeliveryDateColumn();
+    await ensureTruckScheduleOrderColumn();
+    console.log('[createTruckSchedule] body:', req.body);
     const {
       truck_schedule_id,
       route_id,
@@ -265,6 +272,12 @@ const createTruckSchedule = async (req, res) => {
 
     const scheduleId = truck_schedule_id || await generateTruckScheduleId();
 
+    const effectiveOrderId =
+      order_id ||
+      req.body.orderId ||
+      req.body?.order?.order_id ||
+      null;
+
     const newSchedule = await TruckSchedule.create({
       truck_schedule_id: scheduleId,
       route_id,
@@ -273,7 +286,7 @@ const createTruckSchedule = async (req, res) => {
       assistant_id,
       start_time: start,
       end_time: end,
-      order_id: payloadForm.order_id || order_id || null
+      order_id: effectiveOrderId
     });
 
     const hydratedSchedule = await TruckSchedule.findByPk(newSchedule.truck_schedule_id, {
@@ -281,9 +294,9 @@ const createTruckSchedule = async (req, res) => {
     });
 
     let orderSnapshot = null;
-    if (order_id) {
-      await completeTask(order_id, newSchedule.truck_schedule_id);
-      orderSnapshot = await Order.findByPk(order_id, {
+    if (effectiveOrderId) {
+      await completeTask(effectiveOrderId, newSchedule.truck_schedule_id);
+      orderSnapshot = await Order.findByPk(effectiveOrderId, {
         include: [{ model: Customer, as: 'customer', attributes: ['name'] }]
       });
       if (orderSnapshot) {
@@ -296,14 +309,14 @@ const createTruckSchedule = async (req, res) => {
 
     const sharedAssignmentDetails = orderSnapshot
       ? {
-          order_id,
+          order_id: effectiveOrderId,
           customer_name: orderSnapshot.customer?.name || null,
           destination_address: orderSnapshot.destination_address || null,
           destination_city: orderSnapshot.destination_city || null,
           delivery_date: orderSnapshot.delivery_date || null
         }
       : {
-          order_id,
+          order_id: effectiveOrderId,
           customer_name: null,
           destination_address: null,
           destination_city: null,
@@ -411,4 +424,5 @@ module.exports = {
   getPendingTruckTasks,
   checkAvailability
 };
+
 

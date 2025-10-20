@@ -3,6 +3,7 @@ const { Driver, TruckSchedule, Order, Customer } = db;
 const { listAssignmentsForRole, updateAssignmentStatus } = require('../utils/assignmentStore');
 const { sendEmail } = require('../utils/mailer');
 const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
+const { ensureScheduleOrderLinks } = require('../utils/scheduleHelper');
 const { employeeWelcome } = require('../utils/emailTemplates');
 const { generateSecurePassword, generateUniqueUsername } = require('../utils/credentialGenerator');
 
@@ -350,6 +351,7 @@ module.exports = {
         return res.status(400).json({ success: false, message: 'Driver id missing from token' });
       }
       await ensureOrderDeliveryDateColumn();
+      await ensureScheduleOrderLinks();
       const assignmentEntries = listAssignmentsForRole('driver', driverId);
 
       const schedules = await TruckSchedule.findAll({

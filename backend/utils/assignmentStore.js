@@ -120,6 +120,6 @@ const updateAssignmentStatus = (id, role, userId, status) => {
 module.exports = {
   addAssignment,
   listAssignmentsForRole,
-  updateAssignmentStatus
+  updateAssignmentStatus,
+  listAllAssignments: () => safeRead()
 };
-
