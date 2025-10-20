@@ -244,7 +244,7 @@ export default function TrainAllocation({
         (selectedTrip.trip_id || null) === (trip.trip_id || null);
       const displayTrain = trip.is_provisional ? `${trip.train_id} (new)` : trip.train_id;
       const fallbackLabel = trip?.fallback
-        ? `⚠ Rail to ${trip.fallback.first_city}; truck route ${trip.fallback.truck_route_id} covers ${trip.fallback.coverage?.join(", ")}`
+        ? `⚠ Rail to ${trip.fallback.first_city}; truck route ${trip.fallback.truck_route_id}`
         : null;
       const rowKey = trip.trip_id || `train-${trip.train_id}`;
 

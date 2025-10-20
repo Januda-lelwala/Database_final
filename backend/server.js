@@ -19,6 +19,7 @@ const truckRoutes = require('./routes/truckRoutes');
 const truckRouteRoutes = require('./routes/truckRouteRoutes');
 const truckScheduleRoutes = require('./routes/truckScheduleRoutes');
 const trainRoutes = require('./routes/trainRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 // Driver and assistant routes
 const driverRoutes = require('./routes/driverRoutes');
 const assistantRoutes = require('./routes/assistantRoutes');
@@ -97,6 +98,7 @@ app.use('/api/trucks', truckRoutes);
 app.use('/api/truck-routes', truckRouteRoutes);
 app.use('/api/truck-schedule', truckScheduleRoutes);
 app.use('/api/trains', trainRoutes);
+app.use('/api/reports', reportRoutes);
 // Driver and assistant routes
 app.use('/api/drivers', driverRoutes);
 app.use('/api/assistants', assistantRoutes);
@@ -128,6 +130,7 @@ app.get('/', (req, res) => {
       truckRoutes: '/api/truck-routes',
       truckSchedules: '/api/truck-schedule',
       trains: '/api/trains',
+      reports: '/api/reports',
       drivers: '/api/drivers',
       assistants: '/api/assistants',
       admins: '/api/admins'

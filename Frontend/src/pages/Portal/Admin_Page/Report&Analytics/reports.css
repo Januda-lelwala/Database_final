@@ -85,18 +85,19 @@ html[data-theme="dark"] .reports .card p{
   box-shadow:0 16px 32px var(--accent-soft);
 }
 
-.reports .modal-overlay{
+.reports-modal-overlay{
   position:fixed;
   inset:0;
   background:rgba(10,16,30,0.65);
   display:grid;
   place-items:center;
   padding:var(--s-6);
-  z-index:60;
+  z-index:9999;
   backdrop-filter:blur(4px);
 }
+.reports-portal-wrapper{ display:contents; }
 
-.reports .modal{
+.reports-modal{
   background:var(--surface);
   border-radius:var(--r-md);
   width:min(960px,96vw);
@@ -105,6 +106,8 @@ html[data-theme="dark"] .reports .card p{
   color:var(--text);
   display:grid;
   max-height:90vh;
+  position:relative;
+  z-index:10000;
 }
 
 .reports .modal-header{
