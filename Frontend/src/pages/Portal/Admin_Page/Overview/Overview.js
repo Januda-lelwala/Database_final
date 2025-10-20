@@ -136,28 +136,28 @@ export default function Overview({ onGoAllocate, onGoAssignTruck, refreshKey = 0
     <div className="overview">
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="icon">dY"&lt;</div>
+          <div className="icon" aria-hidden="true">📦</div>
           <div>
             <h3>{combinedOrders.length}</h3>
             <p>Pending Orders</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="icon">dYs&gt;</div>
+          <div className="icon" aria-hidden="true">🚚</div>
           <div>
             <h3>{resources.trucks}</h3>
             <p>Available Trucks</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="icon">dYs,</div>
+          <div className="icon" aria-hidden="true">🚆</div>
           <div>
             <h3>{resources.trains}</h3>
             <p>Available Trains</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="icon">dY`�</div>
+          <div className="icon">🧑‍✈️</div>
           <div>
             <h3>{resources.drivers + resources.assistants}</h3>
             <p>Total Employees</p>
@@ -222,19 +222,19 @@ export default function Overview({ onGoAllocate, onGoAssignTruck, refreshKey = 0
           <h2>Available Resources (Now)</h2>
           <ul className="bubbles">
             <li>
-              <span>Drivers</span>
+              <span className="bubble-label"><span className="bubble-icon" aria-hidden="true">🧑‍✈️</span>Drivers</span>
               <strong>{resources.drivers}</strong>
             </li>
             <li>
-              <span>Assistants</span>
+              <span className="bubble-label"><span className="bubble-icon" aria-hidden="true">🤝</span>Assistants</span>
               <strong>{resources.assistants}</strong>
             </li>
             <li>
-              <span>Trucks</span>
+              <span className="bubble-label"><span className="bubble-icon" aria-hidden="true">🚚</span>Trucks</span>
               <strong>{resources.trucks}</strong>
             </li>
             <li>
-              <span>Trains</span>
+              <span className="bubble-label"><span className="bubble-icon" aria-hidden="true">🚆</span>Trains</span>
               <strong>{resources.trains}</strong>
             </li>
           </ul>

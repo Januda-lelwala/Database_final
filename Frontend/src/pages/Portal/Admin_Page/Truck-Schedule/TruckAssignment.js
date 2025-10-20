@@ -313,33 +313,32 @@ export default function TruckAssignment({ prefill = null, onCompleted = () => {}
       {pendingTasks.length > 0 && (
         <div className="panel">
           <h3>Pending Truck Dispatches</h3>
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Order</th>
-                  <th>Destination</th>
-                  <th>Route</th>
-                  <th>Created</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingTasks.map((task) => (
-                  <tr key={task.id}>
-                    <td className="mono">{task.order_id}</td>
-                    <td>{task.destination}</td>
-                    <td>{task.truck_route_id}</td>
-                    <td>{task.created_at ? new Date(task.created_at).toLocaleString() : "N/A"}</td>
-                    <td>
-                      <button className="btn" onClick={() => handleApplyTask(task)}>
-                        Load
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="tasks-grid" role="list">
+            {pendingTasks.map((task) => (
+              <article className="task-card" role="listitem" key={task.id}>
+                <div className="task-row">
+                  <span className="label">Order</span>
+                  <span className="mono">{task.order_id}</span>
+                </div>
+                <div className="task-row">
+                  <span className="label">Destination</span>
+                  <span>{task.destination}</span>
+                </div>
+                <div className="task-row">
+                  <span className="label">Route</span>
+                  <span className="mono">{task.truck_route_id}</span>
+                </div>
+                <div className="task-row">
+                  <span className="label">Created</span>
+                  <span>{task.created_at ? new Date(task.created_at).toLocaleString() : "N/A"}</span>
+                </div>
+                <div className="card-actions">
+                  <button className="btn" onClick={() => handleApplyTask(task)}>
+                    Load
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       )}

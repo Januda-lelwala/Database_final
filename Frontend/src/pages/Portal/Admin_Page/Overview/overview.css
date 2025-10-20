@@ -252,28 +252,9 @@
   gap: 12px;
 }
 
-/* the icon box before each list item */
-.overview .bubbles li::before{
-  content: "";                      /* replaced per nth-child rules below */
-  display:inline-grid;
-  place-items:center;
-  width:42px;
-  height:42px;
-  border-radius:10px;
-  flex: 0 0 42px;
-  font-size:18px;
-  color: #fff;
-  margin-right: 8px;
-  background: linear-gradient(135deg, #6b46c1, #9f7aea); /* purple */
-}
-
-/* per-item emoji symbols */
-.overview .bubbles li:nth-child(1)::before{ content: "👨‍💼"; /* Drivers */ }
-.overview .bubbles li:nth-child(2)::before{ content: "👥";     /* Assistants */ }
-.overview .bubbles li:nth-child(3)::before{ content: "🚚";     /* Trucks */ }
-.overview .bubbles li:nth-child(4)::before{ content: "🚂";     /* Trains */ }
-
-/* ensure text spacing so the symbol doesn't collide */
+/* bubble icons */
+.overview .bubble-label{display:flex;align-items:center;gap:8px;}
+.overview .bubble-icon{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#6b46c1,#9f7aea);color:#fff;font-size:18px;margin-right:8px;}
 .overview .bubbles li span{ display:flex; align-items:center; gap:8px; }
 
 /* Focus */

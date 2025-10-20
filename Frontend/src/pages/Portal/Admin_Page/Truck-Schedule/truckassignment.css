@@ -22,6 +22,37 @@
   display:grid;
   gap:var(--s-6);
 }
+.truckassign .tasks-grid{
+  display:grid;
+  gap:var(--s-4);
+}
+.truckassign .task-card{
+  display:grid;
+  gap:var(--s-2);
+  background:var(--surface);
+  padding:var(--s-4);
+  border-radius:var(--r-sm);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-sm);
+}
+.truckassign .task-row{
+  display:flex;
+  gap:var(--s-3);
+  align-items:center;
+  flex-wrap:wrap;
+}
+.truckassign .task-row .label{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:var(--muted);
+  min-width:80px;
+}
+.truckassign .task-card .card-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:var(--s-3);
+}
 
 .truckassign .grid{
   display:grid;
