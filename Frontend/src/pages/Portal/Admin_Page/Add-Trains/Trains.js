@@ -288,18 +288,26 @@ export default function Trains() {
   const remove = async (id) => {
     if (!window.confirm("Delete this train?")) return;
     setDeletingId(id);
+    let success = false;
     try {
       const r = await fetch(`http://localhost:3000/api/trains/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: tokenHeader,
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
+      if (!r.ok) {
+        const payload = await r.json().catch(() => ({}));
+        throw new Error(payload?.message || "Failed to delete train.");
+      }
+      success = true;
+    } catch (error) {
+      console.error("Failed to delete train:", error);
+      alert(error.message || "Unable to delete train.");
     } finally {
       setDeletingId(null);
     }
-    setTrains((t) => t.filter((x) => (x.train_id || x.id) !== id));
+    if (success) {
+      setTrains((t) => t.filter((x) => (x.train_id || x.id) !== id));
+    }
   };
 
   return (

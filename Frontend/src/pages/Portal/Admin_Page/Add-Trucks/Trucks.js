@@ -127,18 +127,26 @@ export default function Trucks() {
   const remove = async (id) => {
     if (!window.confirm("Delete this truck?")) return;
     setDeletingId(id);
+    let success = false;
     try {
       const r = await fetch(`http://localhost:3000/api/trucks/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: tokenHeader,
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
+      if (!r.ok) {
+        const payload = await r.json().catch(() => ({}));
+        throw new Error(payload?.message || "Failed to delete truck.");
+      }
+      success = true;
+    } catch (error) {
+      console.error("Failed to delete truck:", error);
+      alert(error.message || "Unable to delete truck.");
     } finally {
       setDeletingId(null);
     }
-    setTrucks((t) => t.filter((x) => (x.truck_id || x.id) !== id));
+    if (success) {
+      setTrucks((t) => t.filter((x) => (x.truck_id || x.id) !== id));
+    }
   };
 
   // Derived list: filter first, then sort

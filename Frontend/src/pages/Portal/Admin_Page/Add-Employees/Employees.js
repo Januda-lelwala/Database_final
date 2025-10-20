@@ -284,6 +284,7 @@ export default function Employees() {
 	const remove = async (id, isDriver) => {
 		if (!window.confirm("Delete this employee?")) return;
 		setDeletingId(id);
+		let success = false;
 		try {
 			const url = isDriver
 				? `${API_BASE}/drivers/${encodeURIComponent(id)}`
@@ -292,16 +293,23 @@ export default function Employees() {
 				method: "DELETE",
 				headers: getTokenHeader(),
 			});
-			if (!r.ok) throw new Error();
-		} catch {
-			// fallback
+			if (!r.ok) {
+				const payload = await r.json().catch(() => ({}));
+				throw new Error(payload?.message || "Failed to delete employee.");
+			}
+			success = true;
+		} catch (error) {
+			console.error("Failed to delete employee:", error);
+			alert(error.message || "Unable to delete employee.");
 		} finally {
 			setDeletingId(null);
 		}
-		if (isDriver) {
-			setDrivers((t) => t.filter((x) => (x.driver_id || x.id) !== id));
-		} else {
-			setAssistants((t) => t.filter((x) => (x.assistant_id || x.id) !== id));
+		if (success) {
+			if (isDriver) {
+				setDrivers((t) => t.filter((x) => (x.driver_id || x.id) !== id));
+			} else {
+				setAssistants((t) => t.filter((x) => (x.assistant_id || x.id) !== id));
+			}
 		}
 	};
 

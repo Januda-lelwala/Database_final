@@ -184,18 +184,26 @@ export default function Products() {
     const ok = window.confirm("Are you sure you want to delete this product?");
     if (!ok) return;
     setDeletingId(id);
+    let success = false;
     try {
       const r = await fetch(`http://localhost:3000/api/products/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: tokenHeader,
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
+      if (!r.ok) {
+        const payload = await r.json().catch(() => ({}));
+        throw new Error(payload?.message || "Failed to delete product.");
+      }
+      success = true;
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      alert(error.message || "Unable to delete product.");
     } finally {
       setDeletingId(null);
     }
-    setProducts((p) => p.filter((x) => x.product_id !== id));
+    if (success) {
+      setProducts((p) => p.filter((x) => x.product_id !== id));
+    }
   };
 
   // NEW: derived list = filtered + sorted (stable)
