@@ -479,7 +479,10 @@ const assignOrderToTrain = async (req, res) => {
       });
     }
 
-    const requiredSpace = calculateRequiredSpace(order);
+    const requiredSpaceRaw = calculateRequiredSpace(order);
+    const requiredSpace = Number.isFinite(requiredSpaceRaw)
+      ? Number(requiredSpaceRaw.toFixed(4))
+      : 0;
 
     if (requiredSpace <= 0) {
       await transaction.rollback();
@@ -507,9 +510,9 @@ const assignOrderToTrain = async (req, res) => {
 
       const capacityUsed = ensureNumber(targetTrip.capacity_used);
       const capacityTotal = ensureNumber(targetTrip.capacity);
-      const remaining = capacityTotal - capacityUsed;
+      const remaining = Number((capacityTotal - capacityUsed).toFixed(4));
 
-      if (remaining < requiredSpace) {
+      if (remaining + 1e-6 < requiredSpace) {
         await transaction.rollback();
         return res.status(400).json({
           success: false,
@@ -522,10 +525,14 @@ const assignOrderToTrain = async (req, res) => {
         });
       }
 
-      await targetTrip.update(
-        { capacity_used: capacityUsed + requiredSpace },
-        { transaction }
-      );
+      await targetTrip.increment('capacity_used', {
+        by: requiredSpace,
+        transaction
+      });
+      await targetTrip.reload({
+        transaction,
+        lock: transaction.LOCK.UPDATE
+      });
     } else {
       const train = await Train.findByPk(train_id, {
         lock: transaction.LOCK.UPDATE,
