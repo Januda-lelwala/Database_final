@@ -44,6 +44,7 @@ const db = require('../models');
 const { Order, OrderItem, Customer, Product, TrainTrip, Train, TrainRoute, Store } = db;
 const { sequelize } = db;
 const ensureNumber = (value) => Number(value || 0);
+const { findRouteByDestination } = require('../utils/truckRouteConfig');
 
 const calculateRequiredSpace = (orderInstance) => {
   if (!orderInstance?.orderItems) return 0;
@@ -635,6 +636,7 @@ const assignOrderToTrain = async (req, res) => {
     await transaction.commit();
 
     const refreshedTrip = await TrainTrip.findByPk(targetTrip.trip_id);
+    const fallbackTruckRoute = findRouteByDestination(order.destination_city);
 
     return res.status(200).json({
       success: true,
@@ -648,6 +650,13 @@ const assignOrderToTrain = async (req, res) => {
         trip: refreshedTrip ? {
           ...refreshedTrip.toJSON(),
           remaining_capacity: ensureNumber(refreshedTrip.capacity) - ensureNumber(refreshedTrip.capacity_used)
+        } : null,
+        recommended_truck_route: fallbackTruckRoute ? {
+          truck_route_id: fallbackTruckRoute.route_id,
+          first_city: fallbackTruckRoute.first_city,
+          store_id: fallbackTruckRoute.store_id,
+          coverage: fallbackTruckRoute.coverage,
+          max_minutes: fallbackTruckRoute.max_minutes
         } : null
       }
     });

@@ -130,6 +130,7 @@ export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) 
       }
 
       const updatedTrip = payload?.data?.trip;
+      const recommendedTruckRoute = payload?.data?.recommended_truck_route;
 
       setOrders((prev) => prev.filter((order) => order.order_id !== selectedOrder.order_id));
 
@@ -149,7 +150,14 @@ export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) 
       setTrips([]);
       await fetchOrders();
       onOrderPlaced?.();
+      if (recommendedTruckRoute) {
+        const coverageList = recommendedTruckRoute.coverage?.join(", ") || "configured area";
+        alert(
+          `Rail leg assigned. Next step: schedule truck route ${recommendedTruckRoute.truck_route_id} from ${recommendedTruckRoute.first_city} covering ${coverageList}.`
+        );
+      } else {
       alert("Order assigned to train successfully.");
+      }
     } catch (error) {
       alert(error.message || "Unable to assign order. Please try again.");
     } finally {
@@ -227,6 +235,9 @@ export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) 
         selectedTrip.train_id === trip.train_id &&
         (selectedTrip.trip_id || null) === (trip.trip_id || null);
       const displayTrain = trip.is_provisional ? `${trip.train_id} (new)` : trip.train_id;
+      const fallbackLabel = trip?.fallback
+        ? `⚠ Rail to ${trip.fallback.first_city}; truck route ${trip.fallback.truck_route_id} covers ${trip.fallback.coverage?.join(", ")}`
+        : null;
       const rowKey = trip.trip_id || `train-${trip.train_id}`;
 
       return (
@@ -234,7 +245,15 @@ export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) 
           <td className="mono">{displayTrain}</td>
           <td>{trip.route_id}</td>
           <td>{formatBeginTime(trip)}</td>
-          <td>{remaining}</td>
+          <td>
+            {remaining}
+            {fallbackLabel && (
+              <>
+                <br />
+                <small>{fallbackLabel}</small>
+              </>
+            )}
+          </td>
           <td>
             {isSelected ? (
               <button className="btn primary" disabled>

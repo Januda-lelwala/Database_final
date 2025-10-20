@@ -1,0 +1,20 @@
+{
+  "TR_MTR_KATAR": {
+    "first_city": "Matara",
+    "store_id": "ST_MTR",
+    "coverage": ["Kataragama", "Katharagama", "Tissamaharama", "Hambantota"],
+    "max_minutes": 150
+  },
+  "TR_COL_NEGOMBO": {
+    "first_city": "Colombo",
+    "store_id": "ST_COL",
+    "coverage": ["Negombo", "Katunayake"],
+    "max_minutes": 90
+  },
+  "TR_GAL_HIK": {
+    "first_city": "Galle",
+    "store_id": "ST_GAL",
+    "coverage": ["Hikkaduwa", "Unawatuna"],
+    "max_minutes": 60
+  }
+}

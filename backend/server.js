@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const { connectDB } = require('./config/database');
 const db = require('./models');
+const { ensureTruckRoutes } = require('./utils/truckRouteSeeder');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -28,7 +29,9 @@ const adminRoutes = require('./routes/adminRoutes');
 const app = express();
 
 // Database connection
-connectDB();
+connectDB().then(() => ensureTruckRoutes()).catch((error) => {
+  console.error('[Startup] Failed while ensuring truck routes:', error.message);
+});
 
 // CORS configuration - MUST come before rate limiter and routes
 const allowedOriginRegex = /^https?:\/\/(localhost|127\.0\.0\.1):30(00|01)$/i;

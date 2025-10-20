@@ -37,6 +37,7 @@ const findRoutesByDestination = async (req, res) => {
 const { Op } = require('sequelize');
 const db = require('../models');
 const { Train, TrainTrip, TrainRoute } = db;
+const { findRouteByDestination } = require('../utils/truckRouteConfig');
 
 // Generate train ID
 const generateTrainId = async () => {
@@ -325,7 +326,46 @@ const findTripsByDestination = async (req, res) => {
       })
       .map(route => route.route_id);
 
-    if (matchingRouteIds.length === 0) {
+    let fallbackMeta = null;
+
+    let candidateRouteIds = matchingRouteIds;
+
+    if (candidateRouteIds.length === 0) {
+      const fallback = findRouteByDestination(destination);
+      if (fallback) {
+        fallbackMeta = {
+          truck_route_id: fallback.route_id,
+          first_city: fallback.first_city,
+          store_id: fallback.store_id,
+          coverage: fallback.coverage,
+          max_minutes: fallback.max_minutes
+        };
+        const firstCityLower = fallback.first_city.trim().toLowerCase();
+        candidateRouteIds = routes
+          .filter(route => {
+            const values = new Set();
+            if (route.start_city) values.add(route.start_city.toLowerCase());
+            if (route.end_city) values.add(route.end_city.toLowerCase());
+            if (route.destinations) {
+              try {
+                const parsed = Array.isArray(route.destinations)
+                  ? route.destinations
+                  : JSON.parse(route.destinations);
+                parsed.forEach(city => values.add(String(city).trim().toLowerCase()));
+              } catch {
+                route.destinations
+                  .split(',')
+                  .map(c => c.trim().toLowerCase())
+                  .forEach(city => values.add(city));
+              }
+            }
+            return values.has(firstCityLower);
+          })
+          .map(route => route.route_id);
+      }
+    }
+
+    if (candidateRouteIds.length === 0) {
       return res.status(200).json({
         success: true,
         count: 0,
@@ -335,7 +375,7 @@ const findTripsByDestination = async (req, res) => {
 
     const trips = await TrainTrip.findAll({
       where: {
-        route_id: { [Op.in]: matchingRouteIds }
+        route_id: { [Op.in]: candidateRouteIds }
       },
       include: [
         { model: Train, as: 'train' },
@@ -359,13 +399,14 @@ const findTripsByDestination = async (req, res) => {
         remaining_capacity: remainingCapacity,
         store_id: trip.store_id,
         train_notes: train.notes || null,
-        is_provisional: false
+        is_provisional: false,
+        fallback: fallbackMeta
       };
     });
 
     const trains = await Train.findAll({
       where: {
-        route_id: { [Op.in]: matchingRouteIds }
+        route_id: { [Op.in]: candidateRouteIds }
       }
     });
 
@@ -385,7 +426,8 @@ const findTripsByDestination = async (req, res) => {
         remaining_capacity: Number(train.capacity || 0),
         store_id: null,
         train_notes: train.notes || null,
-        is_provisional: true
+        is_provisional: true,
+        fallback: fallbackMeta
       }));
 
     const combined = [...formattedTrips, ...provisionalTrips];
