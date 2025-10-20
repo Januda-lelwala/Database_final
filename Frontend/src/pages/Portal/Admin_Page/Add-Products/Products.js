@@ -101,8 +101,7 @@ export default function Products() {
       });
       if (!r.ok) throw new Error();
       const response = await r.json();
-      // Handle backend response format: {success: true, data: {...}}
-      const added = response.data || response;
+      const added = response?.data?.product || response?.product || response;
       setProducts((p) => [added, ...p]);
     } catch {
       setProducts((p) => [payload, ...p]); // demo fallback
@@ -161,21 +160,37 @@ export default function Products() {
       category: editForm.category,
       available_quantity: Number(editForm.available_quantity || 0),
     };
+    let replacement = null;
     try {
       const r = await fetch(`http://localhost:3000/api/products/${encodeURIComponent(id)}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json", ...tokenHeader },
         body: JSON.stringify(payload),
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
-    } finally {
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        throw new Error(body?.message || "Failed to update product.");
+      }
+      replacement = body?.data?.product || body?.product || body;
+      if (!replacement || typeof replacement !== "object") {
+        replacement = { ...payload, product_id: id };
+      }
+    } catch (error) {
+      console.error("Failed to update product:", error);
+      alert(error.message || "Unable to update product.");
       setSavingId(null);
+      return;
     }
-    setProducts((p) =>
-      p.map((x) => (x.product_id === id ? { ...x, ...payload, product_id: id } : x))
-    );
+    setSavingId(null);
+    const merged = {
+      ...payload,
+      ...(replacement || {}),
+      product_id: id
+    };
+    merged.price = Number(merged.price || 0);
+    merged.space_consumption = Number(merged.space_consumption || 0);
+    merged.available_quantity = Number(merged.available_quantity || 0);
+    setProducts((p) => p.map((x) => (x.product_id === id ? { ...x, ...merged } : x)));
     cancelEdit();
   };
 
@@ -184,18 +199,26 @@ export default function Products() {
     const ok = window.confirm("Are you sure you want to delete this product?");
     if (!ok) return;
     setDeletingId(id);
+    let success = false;
     try {
       const r = await fetch(`http://localhost:3000/api/products/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: tokenHeader,
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
+      if (!r.ok) {
+        const payload = await r.json().catch(() => ({}));
+        throw new Error(payload?.message || "Failed to delete product.");
+      }
+      success = true;
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      alert(error.message || "Unable to delete product.");
     } finally {
       setDeletingId(null);
     }
-    setProducts((p) => p.filter((x) => x.product_id !== id));
+    if (success) {
+      setProducts((p) => p.filter((x) => x.product_id !== id));
+    }
   };
 
   // NEW: derived list = filtered + sorted (stable)

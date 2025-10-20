@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const { verifyAdmin } = require('../middleware/auth');
+const truckScheduleController = require('../controllers/truckScheduleController');
+
+router.get('/', verifyAdmin, truckScheduleController.getTruckSchedules);
+router.get('/pending', verifyAdmin, truckScheduleController.getPendingTruckTasks);
+router.post('/', verifyAdmin, truckScheduleController.createTruckSchedule);
+router.get('/availability', verifyAdmin, truckScheduleController.checkAvailability);
+
+module.exports = router;

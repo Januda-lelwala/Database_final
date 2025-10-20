@@ -1,0 +1,60 @@
+[
+  {
+    "id": "7b9f6c64-33f3-4ad3-aa3f-bf4209e7d8e1",
+    "status": "scheduled",
+    "created_at": "2025-10-20T12:21:32.470Z",
+    "order_id": "ORD010",
+    "destination": "Katharagama",
+    "first_city": "Matara",
+    "train_trip_id": "TT0002",
+    "truck_route_id": "TR_MTR_KATAR",
+    "store_id": "ST_MTR",
+    "coverage": [
+      "Kataragama",
+      "Katharagama",
+      "Tangalle",
+      "Tissamaharama",
+      "Hambantota"
+    ],
+    "max_minutes": 150,
+    "required_space": 17.1,
+    "order_date": "2025-10-20T10:36:23.000Z",
+    "customer_name": "Dinuka Kavinda",
+    "updated_at": "2025-10-20T12:32:14.298Z",
+    "schedule_id": "TS001",
+    "completed_at": "2025-10-20T12:32:14.298Z"
+  },
+  {
+    "id": "32d33f62-c062-434f-befc-9a26f81767f8",
+    "status": "pending",
+    "created_at": "2025-10-20T13:01:57.061Z",
+    "order_id": "ORD005",
+    "destination": "Ranna",
+    "first_city": "Matara",
+    "train_trip_id": "TT0002",
+    "truck_route_id": "TR_MAT_SOUTH",
+    "store_id": "ST_MAT",
+    "coverage": [
+      "Kataragama",
+      "Katharagama",
+      "Tissamaharama",
+      "Hambantota",
+      "Tangalle",
+      "Ambalantota",
+      "Dickwella",
+      "Dikwella",
+      "Beliatta",
+      "Middeniya",
+      "Hakmana",
+      "Weerawila",
+      "Kirinda",
+      "Walasmulla",
+      "Ranna"
+    ],
+    "max_minutes": 240,
+    "required_space": 0.47,
+    "order_date": "2025-10-19T06:08:18.000Z",
+    "customer_name": "Dinuka Kavinda",
+    "updated_at": "2025-10-20T13:01:57.061Z"
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "TR_MAT_SOUTH": {
+    "first_city": "Matara",
+    "store_id": "ST_MAT",
+    "coverage": [
+      "Kataragama", "Katharagama", "Tissamaharama", "Hambantota",
+      "Tangalle", "Ambalantota", "Dickwella", "Dikwella",
+      "Beliatta", "Middeniya", "Hakmana", "Weerawila",
+      "Kirinda", "Walasmulla", "Ranna"
+    ],
+    "max_minutes": 240
+  },
+
+  "TR_COL_GAMPAHA": {
+    "first_city": "Colombo",
+    "store_id": "ST_COL",
+    "coverage": [
+      "Negombo", "Katunayake", "Seeduwa", "Ja-Ela",
+      "Kandana", "Ragama", "Wattala", "Minuwangoda",
+      "Peliyagoda", "Mahabage", "Kochchikade"
+    ],
+    "max_minutes": 120
+  },
+
+  "TR_GAL_COAST": {
+    "first_city": "Galle",
+    "store_id": "ST_GAL",
+    "coverage": [
+      "Hikkaduwa", "Ambalangoda", "Unawatuna", "Ahangama",
+      "Koggala", "Habaraduwa", "Baddegama", "Batapola",
+      "Karapitiya", "Talpe"
+    ],
+    "max_minutes": 120
+  },
+
+  "TR_NEG_PUTTALAM": {
+    "first_city": "Negombo",
+    "store_id": "ST_NEG",
+    "coverage": [
+      "Katunayake", "Seeduwa", "Minuwangoda", "Divulapitiya",
+      "Kochchikade", "Wennappuwa", "Nattandiya", "Chilaw",
+      "Dankotuwa"
+    ],
+    "max_minutes": 120
+  },
+
+  "TR_JAF_PENINSULA": {
+    "first_city": "Jaffna",
+    "store_id": "ST_JAF",
+    "coverage": [
+      "Nallur", "Chavakachcheri", "Point Pedro", "Karainagar",
+      "Kayts", "Chunnakam", "Tellippalai", "Kopay",
+      "Valvettithurai", "Velanai"
+    ],
+    "max_minutes": 180
+  },
+
+  "TR_TRI_EAST": {
+    "first_city": "Trincomalee",
+    "store_id": "ST_TRI",
+    "coverage": [
+      "China Bay", "Kinniya", "Nilaveli", "Uppuveli",
+      "Kuchchaveli", "Kantale", "Muttur", "Kumburupiddy",
+      "Thambalagamuwa"
+    ],
+    "max_minutes": 180
+  }
+}

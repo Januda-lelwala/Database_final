@@ -9,6 +9,7 @@ router.get('/', verifyAdmin, orderController.getAllOrders);
 router.get('/:id', verifyUser, orderController.getOrderById);
 router.post('/', verifyUser, validateOrder, orderController.createOrder);
 router.put('/:id', verifyUser, validateOrder, orderController.updateOrder);
+router.post('/:id/assign-train', verifyAdmin, orderController.assignOrderToTrain);
 router.delete('/:id', verifyAdmin, orderController.deleteOrder);
 
 // Order items routes

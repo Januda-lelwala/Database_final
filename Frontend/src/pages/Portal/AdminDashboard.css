@@ -1,8 +1,13 @@
 /* Rail & Road Distribution Admin Dashboard Styles */
+:root {
+  --text: #000; /* black text for light mode */
+}
+
 .admin-dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #d3cae6 25%, #bb9bf9 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text); /* base text color */
 }
 
 .admin-dashboard.dark {
@@ -11,6 +16,12 @@
 
 /* ---------- Header ---------- */
 .dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 1002;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,7 +39,7 @@
 
 .header-left h1 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text);
   font-size: 1.8rem;
   font-weight: 600;
 }
@@ -59,12 +70,24 @@
 }
 
 /* ---------- Layout ---------- */
-.dashboard-content { display: flex; min-height: calc(100vh - 80px); }
+.dashboard-content {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  margin-top: 80px;
+  margin-left: 280px;
+}
 
 .sidebar {
-  width: 280px; background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px); padding: 2rem 0;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem 0;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1001;
 }
 .admin-dashboard.dark .sidebar { background: rgba(44, 62, 80, 0.95); }
 
@@ -72,7 +95,7 @@
 .nav-menu button {
   padding: 1rem 1.5rem; border: none; background: transparent; text-align: left;
   border-radius: 12px; cursor: pointer; font-size: 1rem; font-weight: 500;
-  color: #2c3e50; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;
+  color: var(--text); transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;
 }
 .admin-dashboard.dark .nav-menu button { color: white; }
 .nav-menu button:hover { background: rgba(52, 152, 219, 0.1); transform: translateX(8px); }
@@ -81,7 +104,12 @@
   box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
-.main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  min-height: calc(100vh - 80px);
+}
 
 /* ---------- Overview ---------- */
 .admin-overview { display: flex; flex-direction: column; gap: 2rem; }
@@ -107,7 +135,7 @@
 .stat-card.trucks  .stat-icon { background: linear-gradient(135deg, #8e44ad, #7d3c98); }
 .stat-card.capacity .stat-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
 
-.stat-content h3 { font-size: 2.5rem; margin: 0; font-weight: 700; color: #2c3e50; }
+.stat-content h3 { font-size: 2.5rem; margin: 0; font-weight: 700; color: var(--text); }
 .admin-dashboard.dark .stat-content h3 { color: white; }
 .stat-content p { margin: 0.5rem 0 0 0; color: #7f8c8d; font-weight: 500; }
 .admin-dashboard.dark .stat-content p { color: #bdc3c7; }
@@ -119,7 +147,7 @@
 }
 .admin-dashboard.dark .pending-orders-section { background: rgba(44, 62, 80, 0.95); color: white; }
 
-.pending-orders-section h2 { margin: 0 0 1.5rem 0; color: #2c3e50; font-size: 1.5rem; font-weight: 600; }
+.pending-orders-section h2 { margin: 0 0 1.5rem 0; color: var(--text); font-size: 1.5rem; font-weight: 600; }
 .admin-dashboard.dark .pending-orders-section h2 { color: white; }
 
 .orders-table table { width: 100%; border-collapse: collapse; border-radius: 8px; overflow: hidden; }
@@ -129,7 +157,7 @@
 .admin-dashboard.dark .orders-table th, .admin-dashboard.dark .orders-table td {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
-.orders-table th { background: #f8f9fa; font-weight: 600; color: #2c3e50; }
+.orders-table th { background: #f8f9fa; font-weight: 600; color: var(--text); }
 .admin-dashboard.dark .orders-table th { background: rgba(52, 152, 219, 0.2); color: white; }
 
 .allocate-btn {
@@ -150,7 +178,7 @@
 }
 
 .train-allocation h2, .truck-scheduling h2, .reports-section h2 {
-  margin: 0 0 2rem 0; color: #2c3e50; font-size: 1.8rem; font-weight: 600;
+  margin: 0 0 2rem 0; color: var(--text); font-size: 1.8rem; font-weight: 600;
 }
 .admin-dashboard.dark .train-allocation h2,
 .admin-dashboard.dark .truck-scheduling h2,
@@ -196,7 +224,7 @@
 .available-resources {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;
 }
-.resource-section h3 { margin: 0 0 1rem 0; color: #2c3e50; font-weight: 600; }
+.resource-section h3 { margin: 0 0 1rem 0; color: var(--text); font-weight: 600; }
 .admin-dashboard.dark .resource-section h3 { color: white; }
 
 /* Train list grid (trains view) */
@@ -216,7 +244,7 @@
 .admin-dashboard.dark .report-card { background: rgba(52, 152, 219, 0.1); }
 
 .report-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
-.report-card h3 { margin: 0 0 1rem 0; color: #2c3e50; font-size: 1.2rem; font-weight: 600; }
+.report-card h3 { margin: 0 0 1rem 0; color: var(--text); font-size: 1.2rem; font-weight: 600; }
 .admin-dashboard.dark .report-card h3 { color: white; }
 .report-card p { margin: 0 0 1.5rem 0; color: #7f8c8d; font-size: 0.9rem; }
 .admin-dashboard.dark .report-card p { color: #bdc3c7; }
@@ -340,6 +368,17 @@
 }
 
 @media (max-width: 720px) {
-  .dashboard-header { padding: 1rem; }
-  .sidebar { position: sticky; top: 0; height: auto; }
+  .dashboard-header { padding: 1rem; position: fixed; height: 108px; }
+  .sidebar {
+    position: sticky;
+    top: 64px;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    padding: 1rem 0;
+  }
+  .dashboard-content {
+    margin-top: 64px;
+    margin-left: 0;
+  }
 }

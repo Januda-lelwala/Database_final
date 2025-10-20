@@ -40,7 +40,7 @@ const EmployeeLogin = () => {
 
     try {
       await login(formData.username, formData.password, formData.role, 'employee');
-      navigate('/employee');
+      navigate(formData.role === "admin" ? "/admin" : "/employee");
     } catch (error) {
       setError(error.message);
     } finally {

@@ -41,7 +41,25 @@ const cancelOrder = async (req, res) => {
   }
 };
 const db = require('../models');
-const { Order, OrderItem, Customer, Product } = db;
+const { Order, OrderItem, Customer, Product, TrainTrip, Train, TrainRoute, Store } = db;
+const { sequelize } = db;
+const ensureNumber = (value) => Number(value || 0);
+const { findRouteByDestination } = require('../utils/truckRouteConfig');
+const { addOrUpdateTask } = require('../utils/truckTaskStore');
+
+const calculateRequiredSpace = (orderInstance) => {
+  if (!orderInstance?.orderItems) return 0;
+  return orderInstance.orderItems.reduce((total, item) => {
+    const quantity = ensureNumber(item.quantity);
+    const spacePerUnit = ensureNumber(item.product?.space_consumption);
+    return total + quantity * spacePerUnit;
+  }, 0);
+};
+
+const generateTrainTripId = async () => {
+  const tripCount = await TrainTrip.count();
+  return `TT${String(tripCount + 1).padStart(4, '0')}`;
+};
 
 // Generate order ID
 const generateOrderId = async () => {
@@ -58,7 +76,13 @@ const generateOrderItemId = async () => {
 // Get all orders
 const getAllOrders = async (req, res) => {
   try {
+    const whereClause = {};
+    if (req.query.status) {
+      whereClause.status = req.query.status;
+    }
+
     const orders = await Order.findAll({
+      where: Object.keys(whereClause).length ? whereClause : undefined,
       include: [
         {
           model: Customer,
@@ -72,7 +96,7 @@ const getAllOrders = async (req, res) => {
             {
               model: Product,
               as: 'product',
-              attributes: ['product_id', 'name', 'price']
+              attributes: ['product_id', 'name', 'price', 'space_consumption']
             }
           ]
         }
@@ -80,10 +104,21 @@ const getAllOrders = async (req, res) => {
       order: [['created_at', 'DESC']]
     });
 
+    const hydratedOrders = orders.map(order => {
+      const orderJSON = order.toJSON();
+      const required_space = calculateRequiredSpace(orderJSON);
+      return {
+        ...orderJSON,
+        customer_name: orderJSON.customer?.name || null,
+        customer_city: orderJSON.customer?.city || null,
+        required_space
+      };
+    });
+
     res.status(200).json({
       success: true,
-      count: orders.length,
-      data: { orders }
+      count: hydratedOrders.length,
+      data: { orders: hydratedOrders }
     });
   } catch (error) {
     res.status(500).json({
@@ -366,7 +401,7 @@ const updateOrderStatus = async (req, res) => {
     const { status } = req.body;
 
     // Validate status
-    const validStatuses = ['pending', 'confirmed', 'scheduled', 'in_transit', 'delivered', 'cancelled'];
+    const validStatuses = ['pending', 'confirmed', 'placed', 'scheduled', 'in_transit', 'delivered', 'cancelled'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
@@ -403,6 +438,265 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+const assignOrderToTrain = async (req, res) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const { id } = req.params;
+    const { trip_id, train_id, route_id } = req.body;
+
+    if (!trip_id && !train_id) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Train selection is required to assign an order.'
+      });
+    }
+
+    const order = await Order.findByPk(id, {
+      include: [
+        {
+          model: Customer,
+          as: 'customer'
+        },
+        {
+          model: OrderItem,
+          as: 'orderItems',
+          include: [{ model: Product, as: 'product' }]
+        }
+      ],
+      lock: transaction.LOCK.UPDATE,
+      transaction
+    });
+
+    if (!order) {
+      await transaction.rollback();
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
+      });
+    }
+
+    if (!['pending', 'confirmed'].includes(order.status)) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Only pending or confirmed orders can be placed on a train.'
+      });
+    }
+
+    const requiredSpaceRaw = calculateRequiredSpace(order);
+    const requiredSpace = Number.isFinite(requiredSpaceRaw)
+      ? Number(requiredSpaceRaw.toFixed(4))
+      : 0;
+
+    if (requiredSpace <= 0) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Order does not have any allocatable space requirement.'
+      });
+    }
+
+    let targetTrip = null;
+
+    if (trip_id) {
+      targetTrip = await TrainTrip.findByPk(trip_id, {
+        lock: transaction.LOCK.UPDATE,
+        transaction
+      });
+
+      if (!targetTrip) {
+        await transaction.rollback();
+        return res.status(404).json({
+          success: false,
+          message: 'Train trip not found'
+        });
+      }
+
+      const capacityUsed = ensureNumber(targetTrip.capacity_used);
+      const capacityTotal = ensureNumber(targetTrip.capacity);
+      const remaining = Number((capacityTotal - capacityUsed).toFixed(4));
+
+      if (remaining + 1e-6 < requiredSpace) {
+        await transaction.rollback();
+        return res.status(400).json({
+          success: false,
+          message: 'Selected trip does not have enough remaining capacity for this order.',
+          data: {
+            trip_id,
+            required_space: requiredSpace,
+            remaining_capacity: remaining
+          }
+        });
+      }
+
+      await targetTrip.increment('capacity_used', {
+        by: requiredSpace,
+        transaction
+      });
+      await targetTrip.reload({
+        transaction,
+        lock: transaction.LOCK.UPDATE
+      });
+    } else {
+      const train = await Train.findByPk(train_id, {
+        lock: transaction.LOCK.UPDATE,
+        transaction
+      });
+
+      if (!train) {
+        await transaction.rollback();
+        return res.status(404).json({
+          success: false,
+          message: 'Selected train not found.'
+        });
+      }
+
+      const routeIdToUse = route_id || train.route_id;
+
+      if (!routeIdToUse) {
+        await transaction.rollback();
+        return res.status(400).json({
+          success: false,
+          message: 'Selected train does not have an associated route.'
+        });
+      }
+
+      const trainCapacity = ensureNumber(train.capacity);
+      if (trainCapacity < requiredSpace) {
+        await transaction.rollback();
+        return res.status(400).json({
+          success: false,
+          message: 'Selected train does not have enough capacity for this order.'
+        });
+      }
+
+      const tripIdentifier = await generateTrainTripId();
+
+      const normalizedDestination = order.destination_city
+        ? order.destination_city.trim().toLowerCase()
+        : null;
+
+      let destinationStore = null;
+
+      if (normalizedDestination) {
+        destinationStore = await Store.findOne({
+          where: sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('city')),
+            normalizedDestination
+          ),
+          transaction,
+          lock: transaction.LOCK.SHARE
+        });
+      }
+
+      if (!destinationStore) {
+        const route = await TrainRoute.findByPk(routeIdToUse, {
+          transaction,
+          lock: transaction.LOCK.SHARE
+        });
+
+        if (route?.end_city) {
+          const normalizedEnd = route.end_city.trim().toLowerCase();
+          destinationStore = await Store.findOne({
+            where: sequelize.where(
+              sequelize.fn('LOWER', sequelize.col('city')),
+              normalizedEnd
+            ),
+            transaction,
+            lock: transaction.LOCK.SHARE
+          });
+        }
+      }
+
+      if (!destinationStore) {
+        await transaction.rollback();
+        return res.status(400).json({
+          success: false,
+          message: 'No destination store configured for this route. Please add a store for the destination city.'
+        });
+      }
+
+      const departTime = new Date();
+      const arriveTime = new Date(departTime.getTime() + 6 * 60 * 60 * 1000);
+
+      targetTrip = await TrainTrip.create({
+        trip_id: tripIdentifier,
+        route_id: routeIdToUse,
+        train_id,
+        depart_time: departTime,
+        arrive_time: arriveTime,
+        capacity: train.capacity,
+        capacity_used: requiredSpace,
+        store_id: destinationStore.store_id
+      }, { transaction });
+    }
+
+    await order.update(
+      { status: 'placed', updated_at: new Date() },
+      { transaction }
+    );
+
+    await transaction.commit();
+
+    const refreshedTrip = await TrainTrip.findByPk(targetTrip.trip_id);
+    const fallbackTruckRoute = findRouteByDestination(order.destination_city);
+    let truckTask = null;
+
+    if (fallbackTruckRoute) {
+      const orderJSON = order.toJSON();
+      truckTask = addOrUpdateTask({
+        order_id: order.order_id,
+        destination: order.destination_city,
+        first_city: fallbackTruckRoute.first_city,
+        train_trip_id: refreshedTrip?.trip_id || targetTrip.trip_id,
+        truck_route_id: fallbackTruckRoute.route_id,
+        store_id: fallbackTruckRoute.store_id,
+        coverage: fallbackTruckRoute.coverage,
+        max_minutes: fallbackTruckRoute.max_minutes,
+        required_space: requiredSpace,
+        order_date: orderJSON?.order_date || new Date(),
+        customer_name: orderJSON?.customer?.name || null
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Order assigned to train successfully.',
+      data: {
+        order: {
+          order_id: order.order_id,
+          status: order.status,
+          required_space: requiredSpace
+        },
+        trip: refreshedTrip ? {
+          ...refreshedTrip.toJSON(),
+          remaining_capacity: ensureNumber(refreshedTrip.capacity) - ensureNumber(refreshedTrip.capacity_used)
+        } : null,
+        recommended_truck_route: fallbackTruckRoute ? {
+          truck_route_id: fallbackTruckRoute.route_id,
+          first_city: fallbackTruckRoute.first_city,
+          store_id: fallbackTruckRoute.store_id,
+          coverage: fallbackTruckRoute.coverage,
+          max_minutes: fallbackTruckRoute.max_minutes
+        } : null,
+        truck_task: truckTask
+      }
+    });
+  } catch (error) {
+    if (!transaction.finished) {
+      await transaction.rollback();
+    }
+    console.error('[assignOrderToTrain] failed:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while assigning order to train',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -411,5 +705,6 @@ module.exports = {
   deleteOrder,
   getOrderItems,
   updateOrderStatus
-  , cancelOrder
+  , cancelOrder,
+  assignOrderToTrain
 };

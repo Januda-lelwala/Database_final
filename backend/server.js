@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const { connectDB } = require('./config/database');
 const db = require('./models');
+const { ensureTruckRoutes } = require('./utils/truckRouteSeeder');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -15,8 +16,10 @@ const productRoutes = require('./routes/productRoutes');
 // Store and truck routes
 const storeRoutes = require('./routes/storeRoutes');
 const truckRoutes = require('./routes/truckRoutes');
+const truckRouteRoutes = require('./routes/truckRouteRoutes');
+const truckScheduleRoutes = require('./routes/truckScheduleRoutes');
 const trainRoutes = require('./routes/trainRoutes');
-const routeRoutes = require('./routes/routeRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 // Driver and assistant routes
 const driverRoutes = require('./routes/driverRoutes');
 const assistantRoutes = require('./routes/assistantRoutes');
@@ -27,7 +30,9 @@ const adminRoutes = require('./routes/adminRoutes');
 const app = express();
 
 // Database connection
-connectDB();
+connectDB().then(() => ensureTruckRoutes()).catch((error) => {
+  console.error('[Startup] Failed while ensuring truck routes:', error.message);
+});
 
 // CORS configuration - MUST come before rate limiter and routes
 const allowedOriginRegex = /^https?:\/\/(localhost|127\.0\.0\.1):30(00|01)$/i;
@@ -90,8 +95,10 @@ app.use('/api/products', productRoutes);
 // Store and truck routes
 app.use('/api/stores', storeRoutes);
 app.use('/api/trucks', truckRoutes);
+app.use('/api/truck-routes', truckRouteRoutes);
+app.use('/api/truck-schedule', truckScheduleRoutes);
 app.use('/api/trains', trainRoutes);
-app.use('/api/routes', routeRoutes);
+app.use('/api/reports', reportRoutes);
 // Driver and assistant routes
 app.use('/api/drivers', driverRoutes);
 app.use('/api/assistants', assistantRoutes);
@@ -120,7 +127,10 @@ app.get('/', (req, res) => {
       products: '/api/products',
       stores: '/api/stores',
       trucks: '/api/trucks',
+      truckRoutes: '/api/truck-routes',
+      truckSchedules: '/api/truck-schedule',
       trains: '/api/trains',
+      reports: '/api/reports',
       drivers: '/api/drivers',
       assistants: '/api/assistants',
       admins: '/api/admins'

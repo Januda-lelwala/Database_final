@@ -74,9 +74,8 @@ export default function Trucks() {
         body: JSON.stringify(payload),
       });
       if (!r.ok) throw new Error();
-      const response = await r.json().catch(() => ({data: payload}));
-      // Handle backend response format: {success: true, data: {...}}
-      const added = response.data || response;
+      const response = await r.json().catch(() => ({ data: payload }));
+      const added = response?.data?.truck || response?.truck || response;
       setTrucks((t) => [added, ...t]);
     } catch {
       setTrucks((t) => [payload, ...t]); // demo fallback
@@ -105,20 +104,36 @@ export default function Trucks() {
     if (!id) return;
     setSavingId(id);
     const payload = { license_plate: editForm.license_plate, capacity: Number(editForm.capacity || 0) };
+    let replacement = null;
     try {
       const r = await fetch(`http://localhost:3000/api/trucks/${encodeURIComponent(id)}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json", ...tokenHeader },
         body: JSON.stringify(payload),
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
-    } finally {
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        throw new Error(body?.message || "Failed to update truck.");
+      }
+      replacement = body?.data?.truck || body?.truck || body;
+      if (!replacement || typeof replacement !== "object") {
+        replacement = { ...payload, truck_id: id };
+      }
+    } catch (error) {
+      console.error("Failed to update truck:", error);
+      alert(error.message || "Unable to update truck.");
       setSavingId(null);
+      return;
     }
+    setSavingId(null);
+    const merged = {
+      ...payload,
+      ...(replacement || {}),
+      truck_id: id
+    };
+    merged.capacity = Number(merged.capacity || 0);
     setTrucks((list) =>
-      list.map((x) => ((x.truck_id || x.id) === id ? { ...x, ...payload, truck_id: x.truck_id || id } : x))
+      list.map((x) => ((x.truck_id || x.id) === id ? { ...x, ...merged, truck_id: x.truck_id || id } : x))
     );
     cancelEdit();
   };
@@ -127,21 +142,29 @@ export default function Trucks() {
   const remove = async (id) => {
     if (!window.confirm("Delete this truck?")) return;
     setDeletingId(id);
+    let success = false;
     try {
       const r = await fetch(`http://localhost:3000/api/trucks/${encodeURIComponent(id)}`, {
         method: "DELETE",
         headers: tokenHeader,
       });
-      if (!r.ok) throw new Error();
-    } catch {
-      // demo fallback
+      if (!r.ok) {
+        const payload = await r.json().catch(() => ({}));
+        throw new Error(payload?.message || "Failed to delete truck.");
+      }
+      success = true;
+    } catch (error) {
+      console.error("Failed to delete truck:", error);
+      alert(error.message || "Unable to delete truck.");
     } finally {
       setDeletingId(null);
     }
-    setTrucks((t) => t.filter((x) => (x.truck_id || x.id) !== id));
+    if (success) {
+      setTrucks((t) => t.filter((x) => (x.truck_id || x.id) !== id));
+    }
   };
 
-  // Derived list: filter only (no sort)
+  // Derived list: filter first, then sort
   const visibleTrucks = useMemo(() => {
     if (!Array.isArray(trucks)) return [];
     
@@ -153,6 +176,37 @@ export default function Trucks() {
       return hay.includes(q);
     });
   }, [trucks, query]);
+  const [sort, setSort] = useState({ key: "truck_id", dir: "asc" });
+  const sortedTrucks = useMemo(() => {
+    if (!Array.isArray(visibleTrucks)) return [];
+    const arr = [...visibleTrucks];
+    const { key, dir } = sort;
+    const factor = dir === "asc" ? 1 : -1;
+
+    arr.sort((a, b) => {
+      const resolve = (item) => {
+        if (key === "truck_id") return item.truck_id || item.id || "";
+        if (key === "license_plate") return item.license_plate || "";
+        if (key === "capacity") return Number(item.capacity ?? 0);
+        return item[key];
+      };
+
+      let va = resolve(a);
+      let vb = resolve(b);
+
+      if (key === "capacity") {
+        return (va - vb) * factor;
+      }
+
+      va = String(va);
+      vb = String(vb);
+      return va.localeCompare(vb, undefined, { numeric: true, sensitivity: "base" }) * factor;
+    });
+
+    return arr;
+  }, [visibleTrucks, sort]);
+  const onSort = (key) =>
+    setSort((s) => (s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: "asc" }));
 
   return (
     // Keep same outer wrapper & classes as Products.js so CSS matches
@@ -224,14 +278,29 @@ export default function Trucks() {
         <table>
           <thead>
             <tr>
-              <th>Truck ID</th>
-              <th>License Plate</th>
-              <th>Capacity</th>
+              <th
+                className={`sortable ${sort.key === "truck_id" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("truck_id")}
+              >
+                Truck ID
+              </th>
+              <th
+                className={`sortable ${sort.key === "license_plate" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("license_plate")}
+              >
+                License Plate
+              </th>
+              <th
+                className={`sortable ${sort.key === "capacity" ? `sorted-${sort.dir}` : ""}`}
+                onClick={() => onSort("capacity")}
+              >
+                Capacity
+              </th>
               <th className="right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(visibleTrucks) && visibleTrucks.map((t) => {
+            {sortedTrucks.map((t) => {
               const id = t.truck_id || t.id;
               const isEditing = editingId === id;
               return (
@@ -291,7 +360,7 @@ export default function Trucks() {
                 </tr>
               );
             })}
-            {(!visibleTrucks || visibleTrucks.length === 0) && (
+            {sortedTrucks.length === 0 && (
               <tr>
                 <td colSpan={4} className="empty">No matching trucks</td>
               </tr>
