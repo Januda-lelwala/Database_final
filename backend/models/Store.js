@@ -32,6 +32,13 @@ module.exports = (sequelize) => {
       foreignKey: 'store_id',
       as: 'truckRoutes'
     });
+
+    if (models.TrainTrip) {
+      Store.hasMany(models.TrainTrip, {
+        foreignKey: 'store_id',
+        as: 'trainTrips'
+      });
+    }
   };
 
   return Store;

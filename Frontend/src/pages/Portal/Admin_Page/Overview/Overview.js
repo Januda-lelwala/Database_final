@@ -3,7 +3,7 @@ import "./overview.css";
 
 const tokenHeader = { Authorization: `Bearer ${localStorage.getItem("authToken")}` };
 
-export default function Overview({ onGoAllocate }) {
+export default function Overview({ onGoAllocate, refreshKey = 0 }) {
   const [pendingOrders, setPendingOrders] = useState([]);
   const [resources, setResources] = useState({ drivers: 0, assistants: 0, trucks: 0, trains: 0 });
 
@@ -26,7 +26,7 @@ export default function Overview({ onGoAllocate }) {
     // pending orders
     (async () => {
       try {
-        const r = await fetch("http://localhost:3000/api/orders?status=confirmed", { headers: tokenHeader });
+        const r = await fetch("http://localhost:3000/api/orders?status=pending", { headers: tokenHeader });
         if (r.ok) {
           const data = await r.json();
           
@@ -85,7 +85,7 @@ export default function Overview({ onGoAllocate }) {
         setResources({ drivers: 0, assistants: 0, trucks: 0, trains: 0 });
       }
     })();
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div className="overview">
@@ -103,13 +103,23 @@ export default function Overview({ onGoAllocate }) {
             <table>
               <thead><tr><th>Order</th><th>Customer</th><th>Destination</th><th>Req. Space</th><th>Date</th><th></th></tr></thead>
               <tbody>
-                {Array.isArray(pendingOrders) && pendingOrders.map(o => (
-                  <tr key={o.order_id}>
-                    <td className="mono">{o.order_id}</td><td>{o.customer_name}</td><td>{o.destination_city}</td>
-                    <td>{o.required_space} u</td><td>{o.order_date}</td>
-                    <td><button className="btn primary" onClick={onGoAllocate}>Allocate</button></td>
-                  </tr>
-                ))}
+                {Array.isArray(pendingOrders) && pendingOrders.map(o => {
+                  const customerName = o.customer_name || o.customer?.name || 'Unknown';
+                  const destination = o.destination_city;
+                  const requiredValue = Number(o.required_space);
+                  const requiredSpace = Number.isFinite(requiredValue) ? `${requiredValue.toFixed(2)} u` : 'N/A';
+                  const orderDate = o.order_date ? new Date(o.order_date).toLocaleDateString() : 'N/A';
+                  return (
+                    <tr key={o.order_id}>
+                      <td className="mono">{o.order_id}</td>
+                      <td>{customerName}</td>
+                      <td>{destination}</td>
+                      <td>{requiredSpace}</td>
+                      <td>{orderDate}</td>
+                      <td><button className="btn primary" onClick={onGoAllocate}>Allocate</button></td>
+                    </tr>
+                  );
+                })}
                 {(!pendingOrders || pendingOrders.length === 0) && <tr><td colSpan={6} className="empty">No pending orders</td></tr>}
               </tbody>
             </table>

@@ -27,6 +27,11 @@ export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [view, setView] = useState("overview");
+  const [pendingRefreshKey, setPendingRefreshKey] = useState(0);
+
+  const handleOrderPlaced = () => {
+    setPendingRefreshKey((key) => key + 1);
+  };
 
   return (
     <div className={`admin-dashboard ${theme}`}>
@@ -53,12 +58,22 @@ export default function AdminDashboard() {
         </aside>
 
         <section className="main-content">
-          {view === "overview" && <Overview onGoAllocate={() => setView("train-allocation")} />}
+          {view === "overview" && (
+            <Overview
+              onGoAllocate={() => setView("train-allocation")}
+              refreshKey={pendingRefreshKey}
+            />
+          )}
           {view === "products" && <Products />}
           {view === "employees" && <Employees />}
           {view === "trucks" && <Trucks />}
           {view === "trains" && <Trains />}
-          {view === "train-allocation" && <TrainAllocation onGoTruckAssignment={() => setView("truck-assignment")} />}
+          {view === "train-allocation" && (
+            <TrainAllocation
+              onGoTruckAssignment={() => setView("truck-assignment")}
+              onOrderPlaced={handleOrderPlaced}
+            />
+          )}
           {view === "truck-assignment" && <TruckAssignment />}
           {view === "reports" && <Reports />}
         </section>

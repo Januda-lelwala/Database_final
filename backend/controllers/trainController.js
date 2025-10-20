@@ -34,8 +34,9 @@ const findRoutesByDestination = async (req, res) => {
     });
   }
 };
+const { Op } = require('sequelize');
 const db = require('../models');
-const { Train } = db;
+const { Train, TrainTrip, TrainRoute } = db;
 
 // Generate train ID
 const generateTrainId = async () => {
@@ -284,43 +285,115 @@ const findTripsByDestination = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Destination is required.' });
     }
 
-    // Find all routes where destinations list includes the given destination
-    const routes = await db.TrainRoute.findAll();
-    // Filter routes whose destinations field includes the destination
-    const matchingRoutes = routes.filter(route => {
-      if (!route.destinations) return false;
-      // Support comma-separated or JSON array
-      let destList;
-      try {
-        destList = Array.isArray(route.destinations)
-          ? route.destinations
-          : JSON.parse(route.destinations);
-      } catch {
-        destList = route.destinations.split(',').map(d => d.trim());
-      }
-      return destList.includes(destination);
+    const routes = await TrainRoute.findAll({
+      include: [
+        {
+          model: TrainTrip,
+          as: 'trips',
+          include: [{ model: Train, as: 'train' }]
+        }
+      ]
     });
 
-    // For each matching route, find associated trains and include full route details
-    let trains = [];
-    for (const route of matchingRoutes) {
-      const routeTrains = await db.Train.findAll({ where: { route_id: route.route_id } });
-      trains = trains.concat(routeTrains.map(train => ({
-        trip_id: train.train_id, // Use train_id as unique trip_id
-        ...train.toJSON(),
-        route: {
-          route_id: route.route_id,
-          start_city: route.start_city,
-          end_city: route.end_city,
-          destinations: route.destinations
+    const normalizedDestination = destination.trim().toLowerCase();
+
+    const matchingRouteIds = routes
+      .filter(route => {
+        const candidates = new Set();
+        if (route.start_city) {
+          candidates.add(route.start_city.toLowerCase());
         }
-      })));
+        if (route.end_city) {
+          candidates.add(route.end_city.toLowerCase());
+        }
+
+        if (route.destinations) {
+          try {
+            const parsed = Array.isArray(route.destinations)
+              ? route.destinations
+              : JSON.parse(route.destinations);
+            parsed.forEach(city => candidates.add(String(city).trim().toLowerCase()));
+          } catch {
+            route.destinations
+              .split(',')
+              .map(c => c.trim().toLowerCase())
+              .forEach(city => candidates.add(city));
+          }
+        }
+
+        return candidates.has(normalizedDestination);
+      })
+      .map(route => route.route_id);
+
+    if (matchingRouteIds.length === 0) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        data: { trips: [] }
+      });
     }
+
+    const trips = await TrainTrip.findAll({
+      where: {
+        route_id: { [Op.in]: matchingRouteIds }
+      },
+      include: [
+        { model: Train, as: 'train' },
+        { model: TrainRoute, as: 'route' }
+      ],
+      order: [['depart_time', 'ASC']]
+    });
+
+    const formattedTrips = trips.map(trip => {
+      const train = trip.train || {};
+      const remainingCapacity = Number(trip.capacity) - Number(trip.capacity_used || 0);
+      return {
+        trip_id: trip.trip_id,
+        train_id: trip.train_id,
+        route_id: trip.route_id,
+        depart_time: trip.depart_time,
+        arrive_time: trip.arrive_time,
+        begin_time: train.begin_time || null,
+        capacity: trip.capacity,
+        capacity_used: trip.capacity_used,
+        remaining_capacity: remainingCapacity,
+        store_id: trip.store_id,
+        train_notes: train.notes || null,
+        is_provisional: false
+      };
+    });
+
+    const trains = await Train.findAll({
+      where: {
+        route_id: { [Op.in]: matchingRouteIds }
+      }
+    });
+
+    const existingTrainIds = new Set(formattedTrips.map(t => t.train_id));
+
+    const provisionalTrips = trains
+      .filter(train => !existingTrainIds.has(train.train_id))
+      .map(train => ({
+        trip_id: null,
+        train_id: train.train_id,
+        route_id: train.route_id,
+        depart_time: null,
+        arrive_time: null,
+        begin_time: train.begin_time || null,
+        capacity: train.capacity,
+        capacity_used: 0,
+        remaining_capacity: Number(train.capacity || 0),
+        store_id: null,
+        train_notes: train.notes || null,
+        is_provisional: true
+      }));
+
+    const combined = [...formattedTrips, ...provisionalTrips];
 
     res.status(200).json({
       success: true,
-      count: trains.length,
-      data: { trains }
+      count: combined.length,
+      data: { trips: combined }
     });
   } catch (error) {
     res.status(500).json({
