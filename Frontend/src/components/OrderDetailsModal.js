@@ -48,14 +48,6 @@ export default function OrderDetailsModal({ order, open, onClose, onCancel }) {
     }
   };
 
-  // Helper for date formatting
-  const formatDate = (date) => {
-    if (!date) return '—';
-    const d = new Date(date);
-    if (isNaN(d)) return '—';
-    return d.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-  };
-
   // Items rendering
   const items = Array.isArray(order.items) ? order.items : [];
 
@@ -118,6 +110,16 @@ export default function OrderDetailsModal({ order, open, onClose, onCancel }) {
             <div style={modernStyles.row}><span style={modernStyles.label}>Total:</span> <span style={modernStyles.value}>{
               totalValue !== null ? formatTotalValue(totalValue) : '—'
             }</span></div>
+          </div>
+          <div style={modernStyles.divider} />
+          <div style={modernStyles.section}>
+            <div style={modernStyles.itemsTitle}>Delivery</div>
+            <div style={modernStyles.row}><span style={modernStyles.label}>Method:</span> <span style={modernStyles.value}>Rail (Train Route)</span></div>
+            <div style={modernStyles.row}><span style={modernStyles.label}>Destination:</span> <span style={modernStyles.value}>{order.delivery_city || '—'}</span></div>
+            {order.destination_address && (
+              <div style={modernStyles.row}><span style={modernStyles.label}>Address:</span> <span style={modernStyles.value}>{order.destination_address}</span></div>
+            )}
+            <div style={modernStyles.row}><span style={modernStyles.label}>Fee:</span> <span style={modernStyles.value}>FREE</span></div>
           </div>
           <div style={modernStyles.divider} />
           <div style={modernStyles.section}>

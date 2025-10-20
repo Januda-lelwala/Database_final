@@ -227,9 +227,6 @@ const CustomerPage = () => {
   // Mark only truly new notifications as unread (ones not in storage)
   useEffect(() => {
     if (notifications.length === 0) return;
-    const storedUnread = (() => {
-      try { return new Set(JSON.parse(localStorage.getItem('customerNotifUnread') || '[]')); } catch { return new Set(); }
-    })();
     const storedRead = (() => {
       try { return new Set(JSON.parse(localStorage.getItem('customerNotifRead') || '[]')); } catch { return new Set(); }
     })();
@@ -364,7 +361,7 @@ const CustomerPage = () => {
             id,
             customer_id: o.customer_id,
             status,
-            transport_mode: o.transport_mode || 'Road',
+            transport_mode: o.transport_mode || 'Rail',
             route: o.route || (o.destination_city ? `→ ${o.destination_city}` : '—'),
             items: Array.isArray(o.items)
               ? o.items
@@ -393,6 +390,7 @@ const CustomerPage = () => {
             // Progress is derived from DB-reported status only (no client-side simulation)
             progress: statusToProgress(norm),
             delivery_city: o.destination_city || o.city || '—',
+            destination_address: o.destination_address || o.address || '',
             train_assignment: o.train_assignment || null,
             truck_assignment: o.truck_assignment || null,
             customer_notes: o.customer_notes || ''
@@ -678,7 +676,7 @@ const CustomerPage = () => {
             <span style={styles.modeIcon}>
               {order.transport_mode === 'Rail' ? '🚂' : '🚛'}
             </span>
-            <span>{order.transport_mode || '—'} • {order.route || '—'}</span>
+            <span>{order.transport_mode === 'Rail' ? 'Rail (Train Route)' : (order.transport_mode || '—')} • {order.route || '—'}</span>
           </div>
           
           <div style={styles.orderItems}>
@@ -811,7 +809,7 @@ const CustomerPage = () => {
         id: o.order_id || o.id,
         customer_id: o.customer_id,
         status,
-        transport_mode: o.transport_mode || 'Road',
+        transport_mode: o.transport_mode || 'Rail',
         route: o.route || (o.destination_city ? `→ ${o.destination_city}` : '—'),
         items: Array.isArray(o.orderItems)
           ? o.orderItems.map((it) => ({
@@ -840,6 +838,7 @@ const CustomerPage = () => {
         actual_delivery: o.delivered_at || o.actual_delivery || null,
         progress: statusToProgress(norm),
         delivery_city: o.destination_city || o.city || '—',
+        destination_address: o.destination_address || o.address || '',
         train_assignment: o.train_assignment || null,
         truck_assignment: o.truck_assignment || null,
         customer_notes: o.customer_notes || ''

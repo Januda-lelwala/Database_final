@@ -5,6 +5,7 @@ const { validateRoute } = require('../middleware/validation');
 const routeController = require('../controllers/routeController');
 
 // Public routes
+router.get('/cities', routeController.getAllCities); // Get all available delivery cities
 router.get('/public', routeController.getPublicRoutes);
 router.get('/public/:id', routeController.getPublicRouteById);
 
