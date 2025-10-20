@@ -45,6 +45,7 @@ const { Order, OrderItem, Customer, Product, TrainTrip, Train, TrainRoute, Store
 const { sequelize } = db;
 const ensureNumber = (value) => Number(value || 0);
 const { findRouteByDestination } = require('../utils/truckRouteConfig');
+const { addOrUpdateTask } = require('../utils/truckTaskStore');
 
 const calculateRequiredSpace = (orderInstance) => {
   if (!orderInstance?.orderItems) return 0;
@@ -455,6 +456,10 @@ const assignOrderToTrain = async (req, res) => {
     const order = await Order.findByPk(id, {
       include: [
         {
+          model: Customer,
+          as: 'customer'
+        },
+        {
           model: OrderItem,
           as: 'orderItems',
           include: [{ model: Product, as: 'product' }]
@@ -637,6 +642,24 @@ const assignOrderToTrain = async (req, res) => {
 
     const refreshedTrip = await TrainTrip.findByPk(targetTrip.trip_id);
     const fallbackTruckRoute = findRouteByDestination(order.destination_city);
+    let truckTask = null;
+
+    if (fallbackTruckRoute) {
+      const orderJSON = order.toJSON();
+      truckTask = addOrUpdateTask({
+        order_id: order.order_id,
+        destination: order.destination_city,
+        first_city: fallbackTruckRoute.first_city,
+        train_trip_id: refreshedTrip?.trip_id || targetTrip.trip_id,
+        truck_route_id: fallbackTruckRoute.route_id,
+        store_id: fallbackTruckRoute.store_id,
+        coverage: fallbackTruckRoute.coverage,
+        max_minutes: fallbackTruckRoute.max_minutes,
+        required_space: requiredSpace,
+        order_date: orderJSON?.order_date || new Date(),
+        customer_name: orderJSON?.customer?.name || null
+      });
+    }
 
     return res.status(200).json({
       success: true,
@@ -657,7 +680,8 @@ const assignOrderToTrain = async (req, res) => {
           store_id: fallbackTruckRoute.store_id,
           coverage: fallbackTruckRoute.coverage,
           max_minutes: fallbackTruckRoute.max_minutes
-        } : null
+        } : null,
+        truck_task: truckTask
       }
     });
   } catch (error) {

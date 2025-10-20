@@ -8,9 +8,20 @@ const ensureTruckRoutes = async () => {
     return;
   }
 
-  const { TruckRoute } = db;
+  const { TruckRoute, Store } = db;
   await Promise.all(definitions.map(async (def) => {
     try {
+      if (def.store_id) {
+        const existingStore = await Store.findByPk(def.store_id);
+        if (!existingStore) {
+          await Store.create({
+            store_id: def.store_id,
+            name: def.store_name || `${def.first_city} Rail Depot`,
+            city: def.first_city
+          });
+        }
+      }
+
       await TruckRoute.upsert({
         route_id: def.route_id,
         store_id: def.store_id,

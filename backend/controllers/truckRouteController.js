@@ -1,4 +1,5 @@
 const db = require('../models');
+const { ensureTruckRoutes } = require('../utils/truckRouteSeeder');
 
 const { TruckRoute, Store } = db;
 
@@ -7,6 +8,7 @@ const { TruckRoute, Store } = db;
  */
 const getAllTruckRoutes = async (_req, res) => {
   try {
+    await ensureTruckRoutes();
     const routes = await TruckRoute.findAll({
       include: [
         {

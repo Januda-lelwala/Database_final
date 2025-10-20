@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./truckassignment.css";
 
 const API_BASE = "http://localhost:3000";
@@ -23,7 +23,13 @@ const fallbackTrucks = [{ truck_id: "TK01", license_plate: "WP-1234", capacity: 
 const fallbackDrivers = [{ driver_id: "DRV001", name: "John Driver" }];
 const fallbackAssistants = [{ assistant_id: "AST001", name: "Sarah Support" }];
 
-export default function TruckAssignment() {
+const toDateInputValue = (date) => {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+};
+
+export default function TruckAssignment({ prefill = null, onCompleted = () => {} }) {
   const [routes, setRoutes] = useState([]);
   const [trucks, setTrucks] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -38,6 +44,9 @@ export default function TruckAssignment() {
   });
   const [availability, setAvailability] = useState({ driver: null, assistant: null });
   const [busy, setBusy] = useState(false);
+  const [appliedPrefillKey, setAppliedPrefillKey] = useState(null);
+  const [pendingTasks, setPendingTasks] = useState([]);
+  const [activeTask, setActiveTask] = useState(null);
 
   const findRouteMinutes = (routeId, currentRoutes = routes) => {
     const route = currentRoutes.find((r) => r.route_id === routeId);
@@ -51,12 +60,30 @@ export default function TruckAssignment() {
     if (Number.isNaN(startDate.getTime())) return "";
     const minutes = findRouteMinutes(routeId, currentRoutes);
     const endDate = new Date(startDate.getTime() + minutes * 60000);
-    return endDate.toISOString().slice(0, 16);
+    return toDateInputValue(endDate);
   };
+
+  const fetchPendingTasks = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/truck-schedule/pending`, { headers: tokenHeader });
+      if (!res.ok) {
+        setPendingTasks([]);
+        return [];
+      }
+      const payload = await res.json();
+      const tasks = extractArray(payload, "tasks").filter((task) => task.status === "pending");
+      setPendingTasks(tasks);
+      return tasks;
+    } catch (error) {
+      console.error("Failed to load pending truck tasks:", error);
+      setPendingTasks([]);
+      return [];
+    }
+  }, []);
 
   useEffect(() => {
     const loadInitialData = async () => {
-      const hydrate = async (url, key, setter, fallback, storeRoutes) => {
+      const hydrate = async (url, key, setter, fallback) => {
         try {
           const res = await fetch(url, { headers: tokenHeader });
           if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
@@ -75,8 +102,7 @@ export default function TruckAssignment() {
         `${API_BASE}/api/truck-routes`,
         "routes",
         setRoutes,
-        fallbackRoutes,
-        true
+        fallbackRoutes
       );
       await Promise.all([
         hydrate(`${API_BASE}/api/trucks`, "trucks", setTrucks, fallbackTrucks),
@@ -91,8 +117,76 @@ export default function TruckAssignment() {
     };
 
     loadInitialData();
+    fetchPendingTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    fetchPendingTasks();
+    if (!prefill) {
+      setAppliedPrefillKey(null);
+      setActiveTask(null);
+      return;
+    }
+
+    const keyParts = [
+      prefill.route?.truck_route_id || "",
+      prefill.order?.order_id || "",
+      prefill.order?.destination_city || prefill.order?.destination || ""
+    ];
+    const key = keyParts.join("|");
+
+    if (appliedPrefillKey === key) {
+      return;
+    }
+
+    const recommendedRouteId = prefill.route?.truck_route_id || "";
+    const routeExists =
+      !recommendedRouteId || routes.some((route) => route.route_id === recommendedRouteId);
+    if (!routeExists) {
+      return;
+    }
+
+    const nextStart = toDateInputValue(new Date());
+
+    setForm((prev) => {
+      const next = { ...prev };
+      if (recommendedRouteId) {
+        next.route_id = recommendedRouteId;
+      }
+      if (!next.start_time) {
+        next.start_time = nextStart;
+      }
+      if (next.start_time) {
+        next.end_time = computeEndTime(next.start_time, next.route_id);
+      }
+      return next;
+    });
+    setAvailability({ driver: null, assistant: null });
+    setActiveTask({
+      order_id: prefill.order?.order_id || null,
+      destination: prefill.order?.destination_city || prefill.order?.destination || null,
+       first_city: prefill.route?.first_city || null,
+      truck_route_id: recommendedRouteId,
+      coverage: prefill.route?.coverage || []
+    });
+    setAppliedPrefillKey(key);
+  }, [prefill, appliedPrefillKey, routes, fetchPendingTasks]);
+
+  const recommendedRouteId =
+    prefill?.route?.truck_route_id || activeTask?.truck_route_id || null;
+  const recommendedCoverage = prefill?.route?.coverage || activeTask?.coverage || [];
+  const coverageDisplay = recommendedCoverage.length ? recommendedCoverage.join(", ") : "configured area";
+  const orderDestination =
+    prefill?.order?.destination_city ||
+    prefill?.order?.destination ||
+    activeTask?.destination ||
+    null;
+  const orderId =
+    prefill?.order?.order_id ||
+    prefill?.order?.orderId ||
+    activeTask?.order_id ||
+    null;
 
   const ensureEndTime = (nextForm) => {
     if (!nextForm.start_time) return nextForm;
@@ -137,6 +231,9 @@ export default function TruckAssignment() {
     }
 
     const payloadForm = ensureEndTime(form);
+    if (orderId) {
+      payloadForm.order_id = orderId;
+    }
 
     setBusy(true);
     try {
@@ -153,6 +250,15 @@ export default function TruckAssignment() {
       }
 
       alert(payload?.message || "Truck schedule created successfully.");
+      const latestTasks = await fetchPendingTasks();
+      if (Array.isArray(latestTasks)) {
+        setPendingTasks(latestTasks);
+      } else {
+        setPendingTasks((prev) =>
+          orderId ? prev.filter((task) => task.order_id !== orderId) : prev
+        );
+      }
+      onCompleted?.();
       setForm({
         route_id: "",
         truck_id: "",
@@ -162,6 +268,8 @@ export default function TruckAssignment() {
         end_time: ""
       });
       setAvailability({ driver: null, assistant: null });
+      setActiveTask(null);
+      setAppliedPrefillKey(null);
     } catch (error) {
       console.error("Failed to create truck schedule:", error);
       alert(error.message || "Unable to create truck schedule. Please try again.");
@@ -170,19 +278,85 @@ export default function TruckAssignment() {
     }
   };
 
+  const handleApplyTask = (task) => {
+    const key = `${task.order_id}|${task.truck_route_id}`;
+    const start = toDateInputValue(new Date());
+    const nextForm = ensureEndTime({
+      ...form,
+      route_id: task.truck_route_id,
+      start_time: start
+    });
+    setForm(nextForm);
+    setAvailability({ driver: null, assistant: null });
+    setActiveTask(task);
+    setAppliedPrefillKey(key);
+  };
+
   return (
     <div className="truckassign">
       <h2>Truck Assignment to Route</h2>
+      {(prefill || activeTask) && (
+        <div style={{ marginBottom: "1rem" }}>
+          <strong>Recommended:</strong>{" "}
+          {recommendedRouteId || "Select route"} from{" "}
+          {prefill?.route?.first_city || activeTask?.first_city || "origin"} covering{" "}
+          {coverageDisplay}.{" "}
+          {orderId && (
+            <>
+              Order {orderId}
+              {orderDestination ? ` → ${orderDestination}` : ""}
+            </>
+          )}
+        </div>
+      )}
+
+      {pendingTasks.length > 0 && (
+        <div className="panel">
+          <h3>Pending Truck Dispatches</h3>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Destination</th>
+                  <th>Route</th>
+                  <th>Created</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingTasks.map((task) => (
+                  <tr key={task.id}>
+                    <td className="mono">{task.order_id}</td>
+                    <td>{task.destination}</td>
+                    <td>{task.truck_route_id}</td>
+                    <td>{task.created_at ? new Date(task.created_at).toLocaleString() : "N/A"}</td>
+                    <td>
+                      <button className="btn" onClick={() => handleApplyTask(task)}>
+                        Load
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       <div className="panel">
         <div className="grid">
-          <label><span>Route</span>
+          <label>
+            <span>Route</span>
             <select
               value={form.route_id}
               onChange={async (e) => {
                 const value = e.target.value;
                 const next = ensureEndTime({ ...form, route_id: value });
                 setForm(next);
+                if (activeTask && activeTask.order_id) {
+                  setActiveTask((prev) => (prev ? { ...prev, truck_route_id: value } : prev));
+                }
                 if (next.start_time) {
                   if (next.driver_id) {
                     await checkAvailability("driver", next.driver_id, next.start_time, next.end_time);
@@ -194,15 +368,20 @@ export default function TruckAssignment() {
               }}
             >
               <option value="">Select...</option>
-              {routes.map((r) => (
-                <option key={r.route_id} value={r.route_id}>
-                  {r.route_id} - {r.route_name}
-                </option>
-              ))}
+              {routes.map((r) => {
+                const isRecommended = recommendedRouteId === r.route_id;
+                const optionLabel = `${r.route_id} - ${r.route_name}${isRecommended ? " (recommended)" : ""}`;
+                return (
+                  <option key={r.route_id} value={r.route_id}>
+                    {optionLabel}
+                  </option>
+                );
+              })}
             </select>
           </label>
 
-          <label><span>Truck</span>
+          <label>
+            <span>Truck</span>
             <select
               value={form.truck_id}
               onChange={(e) => setForm((f) => ({ ...f, truck_id: e.target.value }))}
@@ -216,7 +395,8 @@ export default function TruckAssignment() {
             </select>
           </label>
 
-          <label><span>Driver</span>
+          <label>
+            <span>Driver</span>
             <select
               value={form.driver_id}
               onChange={async (e) => {
@@ -240,7 +420,8 @@ export default function TruckAssignment() {
             )}
           </label>
 
-          <label><span>Assistant</span>
+          <label>
+            <span>Assistant</span>
             <select
               value={form.assistant_id}
               onChange={async (e) => {
@@ -264,7 +445,8 @@ export default function TruckAssignment() {
             )}
           </label>
 
-          <label><span>Start Time</span>
+          <label>
+            <span>Start Time</span>
             <input
               type="datetime-local"
               value={form.start_time}
@@ -280,6 +462,7 @@ export default function TruckAssignment() {
                 }
               }}
             />
+            {(prefill || activeTask) && <small>Defaulted to current time; adjust if needed.</small>}
           </label>
         </div>
 

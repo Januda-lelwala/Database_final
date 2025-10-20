@@ -2,7 +2,7 @@
   "TR_MTR_KATAR": {
     "first_city": "Matara",
     "store_id": "ST_MTR",
-    "coverage": ["Kataragama", "Katharagama", "Tissamaharama", "Hambantota"],
+    "coverage": ["Kataragama", "Katharagama", "Tangalle","Tissamaharama", "Hambantota"],
     "max_minutes": 150
   },
   "TR_COL_NEGOMBO": {

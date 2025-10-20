@@ -1,12 +1,14 @@
 const { Op } = require('sequelize');
 const db = require('../models');
+const { listPendingTasks, completeTask } = require('../utils/truckTaskStore');
 
 const {
   TruckSchedule,
   TruckRoute,
   Truck,
   Driver,
-  Assistant
+  Assistant,
+  Order
 } = db;
 
 const parseDate = (value) => {
@@ -137,6 +139,24 @@ const getTruckSchedules = async (req, res) => {
   }
 };
 
+const getPendingTruckTasks = async (_req, res) => {
+  try {
+    const tasks = listPendingTasks();
+    return res.status(200).json({
+      success: true,
+      count: tasks.length,
+      data: { tasks }
+    });
+  } catch (error) {
+    console.error('[truckScheduleController.getPendingTruckTasks] failed:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while fetching pending truck tasks',
+      error: error.message
+    });
+  }
+};
+
 const createTruckSchedule = async (req, res) => {
   try {
     const {
@@ -146,7 +166,8 @@ const createTruckSchedule = async (req, res) => {
       driver_id,
       assistant_id,
       start_time,
-      end_time
+      end_time,
+      order_id
     } = req.body;
 
     if (!route_id || !truck_id || !driver_id || !assistant_id || !start_time || !end_time) {
@@ -254,6 +275,17 @@ const createTruckSchedule = async (req, res) => {
       include: includeRelations
     });
 
+    if (order_id) {
+      await completeTask(order_id, newSchedule.truck_schedule_id);
+      const order = await Order.findByPk(order_id);
+      if (order) {
+        await order.update({
+          status: 'scheduled',
+          updated_at: new Date()
+        });
+      }
+    }
+
     return res.status(201).json({
       success: true,
       message: 'Truck schedule created successfully.',
@@ -332,5 +364,6 @@ const checkAvailability = async (req, res) => {
 module.exports = {
   getTruckSchedules,
   createTruckSchedule,
+  getPendingTruckTasks,
   checkAvailability
 };

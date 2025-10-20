@@ -48,7 +48,11 @@ const formatBeginTime = (trip) => {
   return "N/A";
 };
 
-export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) {
+export default function TrainAllocation({
+  onGoTruckAssignment,
+  onOrderPlaced,
+  onTruckSuggested = () => {}
+}) {
   const [orders, setOrders] = useState([]);
   const [trips, setTrips] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -131,6 +135,8 @@ export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) 
 
       const updatedTrip = payload?.data?.trip;
       const recommendedTruckRoute = payload?.data?.recommended_truck_route;
+      const truckTask = payload?.data?.truck_task;
+      const orderSnapshot = { ...selectedOrder };
 
       setOrders((prev) => prev.filter((order) => order.order_id !== selectedOrder.order_id));
 
@@ -151,19 +157,21 @@ export default function TrainAllocation({ onGoTruckAssignment, onOrderPlaced }) 
       await fetchOrders();
       onOrderPlaced?.();
       if (recommendedTruckRoute) {
-        const coverageList = recommendedTruckRoute.coverage?.join(", ") || "configured area";
-        alert(
-          `Rail leg assigned. Next step: schedule truck route ${recommendedTruckRoute.truck_route_id} from ${recommendedTruckRoute.first_city} covering ${coverageList}.`
-        );
+        onTruckSuggested({
+          order: orderSnapshot,
+          trip: updatedTrip,
+          route: recommendedTruckRoute,
+          task: truckTask
+        });
       } else {
-      alert("Order assigned to train successfully.");
+        alert("Order assigned to train successfully.");
       }
     } catch (error) {
       alert(error.message || "Unable to assign order. Please try again.");
     } finally {
       setBusy(false);
     }
-  }, [selectedOrder, selectedTrip, onOrderPlaced, fetchOrders]);
+  }, [selectedOrder, selectedTrip, onOrderPlaced, fetchOrders, onTruckSuggested]);
 
   const renderOrders = () => {
     if (loadingOrders) {

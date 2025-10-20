@@ -28,9 +28,21 @@ export default function AdminDashboard() {
   const { theme, toggleTheme } = useTheme();
   const [view, setView] = useState("overview");
   const [pendingRefreshKey, setPendingRefreshKey] = useState(0);
+  const [truckPlan, setTruckPlan] = useState(null);
 
   const handleOrderPlaced = () => {
     setPendingRefreshKey((key) => key + 1);
+  };
+
+  const handleTruckSuggested = (suggestion) => {
+    if (suggestion?.route?.truck_route_id) {
+      const coverage = suggestion.route.coverage?.join(", ") || "configured area";
+      alert(
+        `Rail leg assigned. Next step: schedule truck route ${suggestion.route.truck_route_id} from ${suggestion.route.first_city} covering ${coverage}.`
+      );
+    }
+    setTruckPlan(suggestion);
+    setView("truck-assignment");
   };
 
   return (
@@ -61,6 +73,7 @@ export default function AdminDashboard() {
           {view === "overview" && (
             <Overview
               onGoAllocate={() => setView("train-allocation")}
+              onGoAssignTruck={() => setView("truck-assignment")}
               refreshKey={pendingRefreshKey}
             />
           )}
@@ -72,9 +85,18 @@ export default function AdminDashboard() {
             <TrainAllocation
               onGoTruckAssignment={() => setView("truck-assignment")}
               onOrderPlaced={handleOrderPlaced}
+              onTruckSuggested={handleTruckSuggested}
             />
           )}
-          {view === "truck-assignment" && <TruckAssignment />}
+          {view === "truck-assignment" && (
+            <TruckAssignment
+              prefill={truckPlan}
+              onCompleted={() => {
+                setTruckPlan(null);
+                setPendingRefreshKey((key) => key + 1);
+              }}
+            />
+          )}
           {view === "reports" && <Reports />}
         </section>
       </main>
