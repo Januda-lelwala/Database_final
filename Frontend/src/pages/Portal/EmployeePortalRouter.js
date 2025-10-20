@@ -11,6 +11,25 @@ import EmployeeSettings from './EmployeeSettings';
 import PasswordChangeModal from '../../components/PasswordChangeModal';
 
 
+const getNonEmployeeRedirect = (user) => {
+  if (user?.portalType === 'customer') {
+    return '/customer';
+  }
+  if (user?.portalType === 'employee') {
+    switch (user.role) {
+      case 'admin':
+        return '/admin';
+      case 'driver':
+        return '/employee/driver';
+      case 'assistant':
+        return '/employee/assistant';
+      default:
+        return '/employee';
+    }
+  }
+  return '/login/employee';
+};
+
 const EmployeePortalRouter = () => {
   const { user, isEmployee, isAdmin, isDriver, isAssistant, loading, changePassword } = useAuth();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -55,9 +74,10 @@ const EmployeePortalRouter = () => {
     );
   }
 
-  // Redirect non-employees to the employee login to avoid redirect loops
+  // Redirect non-employees to their appropriate home instead of a login loop
   if (!isEmployee) {
-    return <Navigate to="/login/employee" replace />;
+    const redirectPath = getNonEmployeeRedirect(user);
+    return <Navigate to={redirectPath} replace />;
   }
 
   const getDashboardComponent = () => {
