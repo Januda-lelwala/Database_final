@@ -4,14 +4,14 @@ import { useAuth } from '../../context/AuthContext';
 
 // Employee Portal Components
 import Admin from './Admin_Page/Admin.js';
-import DriverDashboard from './DriverDashboard';
-import AssistantDashboard from './AssistantDashboard';
+import DriverDashboard from './Driver_Page/DriverDashboard.js';
+import AssistantDashboard from './Assistant_Page/AssistantDashboard.js';
 import EmployeeProfile from './EmployeeProfile';
 import EmployeeSettings from './EmployeeSettings';
 import PasswordChangeModal from '../../components/PasswordChangeModal';
 
 
-const EmployeePortalRouter = () => {
+export default function EmployeePortalRouter() {
   const { user, isEmployee, isAdmin, isDriver, isAssistant, loading, changePassword } = useAuth();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -71,7 +71,21 @@ const EmployeePortalRouter = () => {
       <>
         <div className="employee-portal">
           <Routes>
-            <Route path="/" element={getDashboardComponent()} />
+            {/* Ensure base path redirects to the correct dashboard route so nested routing works */}
+            <Route
+              path="/"
+              element={
+                isAdmin ? (
+                  <Admin />
+                ) : isDriver ? (
+                  <Navigate to="/employee/driver" replace />
+                ) : isAssistant ? (
+                  <Navigate to="/employee/assistant" replace />
+                ) : (
+                  <Navigate to="/login/employee" replace />
+                )
+              }
+            />
             <Route path="/profile" element={<EmployeeProfile />} />
             <Route path="/settings" element={<EmployeeSettings />} />
           
@@ -86,16 +100,16 @@ const EmployeePortalRouter = () => {
             {/* Driver-specific routes */}
             {isDriver && (
               <>
-                <Route path="/driver" element={<DriverDashboard />} />
-                <Route path="/driver/routes" element={<DriverDashboard />} />
+                {/* Allow nested driver routes like /employee/driver/overview */}
+                <Route path="/driver/*" element={<DriverDashboard />} />
               </>
             )}
           
             {/* Assistant-specific routes */}
             {isAssistant && (
               <>
-                <Route path="/assistant" element={<AssistantDashboard />} />
-                <Route path="/assistant/support" element={<AssistantDashboard />} />
+                {/* Support nested assistant routes if needed */}
+                <Route path="/assistant/*" element={<AssistantDashboard />} />
               </>
             )}
           
@@ -115,6 +129,4 @@ const EmployeePortalRouter = () => {
         )}
       </>
   );
-};
-
-export default EmployeePortalRouter;
+}

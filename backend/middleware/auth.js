@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const db = require('../models');
-const { User, Admin, Customer } = db;
+const { User, Admin, Customer, Driver, Assistant } = db;
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -57,6 +57,20 @@ const verifyUser = async (req, res, next) => {
       }
       req.admin = admin;
       req.user = admin; // some routes may check req.user presence
+    } else if (decoded.role === 'driver') {
+      const driver = await Driver.findByPk(decoded.id);
+      if (!driver) {
+        return res.status(401).json({ success: false, message: 'Driver not found.' });
+      }
+      req.driver = driver;
+      req.user = driver;
+    } else if (decoded.role === 'assistant') {
+      const assistant = await Assistant.findByPk(decoded.id);
+      if (!assistant) {
+        return res.status(401).json({ success: false, message: 'Assistant not found.' });
+      }
+      req.assistant = assistant;
+      req.user = assistant;
     } else {
       // fallback to generic User model if present
       const user = await User.findByPk(decoded.id);

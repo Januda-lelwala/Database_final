@@ -286,5 +286,48 @@ module.exports = {
   createAssistant,
   updateAssistant,
   deleteAssistant,
-  changeAssistantPassword
+  changeAssistantPassword,
+  // Self profile: authenticated assistant only
+  getMyProfile: async (req, res) => {
+    try {
+      const assistant = req.assistant || req.user;
+      if (!assistant) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const data = {
+        assistant_id: assistant.assistant_id,
+        name: assistant.name,
+        email: assistant.email,
+        phone_no: assistant.phone_no,
+        address: assistant.address,
+        user_name: assistant.user_name
+      };
+      return res.status(200).json(data);
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+  },
+  updateMyProfile: async (req, res) => {
+    try {
+      const assistant = req.assistant || req.user;
+      if (!assistant) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { name, email, phone_no, address } = req.body || {};
+      if (name !== undefined) assistant.name = name;
+      if (email !== undefined) assistant.email = email;
+      if (phone_no !== undefined) assistant.phone_no = phone_no;
+      if (address !== undefined) assistant.address = address;
+      await assistant.save();
+      return res.status(200).json({
+        message: 'Profile updated successfully',
+        data: {
+          assistant_id: assistant.assistant_id,
+          name: assistant.name,
+          email: assistant.email,
+          phone_no: assistant.phone_no,
+          address: assistant.address,
+          user_name: assistant.user_name
+        }
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+  }
 };

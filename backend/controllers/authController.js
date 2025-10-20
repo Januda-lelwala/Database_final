@@ -275,7 +275,7 @@ const registerDriver = async (req, res) => {
     });
 
     // Generate token
-    const token = generateToken(driver.id, 'driver');
+  const token = generateToken(driver.driver_id, 'driver');
 
     res.status(201).json({
       success: true,
@@ -325,7 +325,7 @@ const loginDriver = async (req, res) => {
     }
 
     // Generate token
-    const token = generateToken(driver.id, 'driver');
+  const token = generateToken(driver.driver_id, 'driver');
 
     res.status(200).json({
       success: true,
@@ -386,8 +386,8 @@ const registerAssistant = async (req, res) => {
       password
     });
 
-    // Generate token
-    const token = generateToken(assistant.id, 'assistant');
+  // Generate token using primary key assistant_id
+  const token = generateToken(assistant.assistant_id || assistant.id, 'assistant');
 
     res.status(201).json({
       success: true,
@@ -436,8 +436,8 @@ const loginAssistant = async (req, res) => {
       });
     }
 
-    // Generate token
-    const token = generateToken(assistant.id, 'assistant');
+  // Generate token using primary key assistant_id
+  const token = generateToken(assistant.assistant_id || assistant.id, 'assistant');
 
     res.status(200).json({
       success: true,

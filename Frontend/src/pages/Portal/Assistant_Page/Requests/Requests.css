@@ -1,0 +1,9 @@
+.driver-requests .list { display: grid; gap: 14px; }
+.driver-requests .item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.98); border-radius: 12px; padding: 14px; box-shadow: 0 12px 30px rgba(12,30,60,0.06); }
+.driver-requests .meta { color: #6b7280; font-size: 13px; }
+.driver-requests .status { padding: 6px 10px; border-radius: 999px; font-size: 13px; background: #f3f4f6; font-weight: 700; }
+.driver-requests .status.accepted { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+.driver-requests .accept-btn { padding: 8px 12px; border-radius: 10px; border: none; background: linear-gradient(90deg,#27ae60,#1fa65a); color: #fff; cursor: pointer; }
+
+.dark .driver-requests .item { background: rgba(12,18,34,0.7); }
+.dark .driver-requests .status { background: rgba(255,255,255,0.04); color: #e5e7eb; }

@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { verifyAdmin } = require('../middleware/auth');
+const { verifyAdmin, verifyUser } = require('../middleware/auth');
 const driverController = require('../controllers/driverController');
+
+// Authenticated driver self-profile endpoints (REGISTER BEFORE parameterized routes)
+router.get('/me', verifyUser, driverController.getMyProfile);
+router.put('/me', verifyUser, driverController.updateMyProfile);
 
 // Admin driver routes - all require admin authentication
 router.get('/', verifyAdmin, driverController.getAllDrivers);

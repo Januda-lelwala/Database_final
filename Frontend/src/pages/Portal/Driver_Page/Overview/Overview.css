@@ -1,0 +1,18 @@
+.driver-main-content .driver-overview,
+.driver-main-content .driver-card {
+  background: rgba(255,255,255,0.98);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(12,30,60,0.06);
+}
+.driver-main-content .quick-actions {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;
+}
+.driver-main-content .quick-actions button {
+  padding: 10px 14px; border-radius: 10px; border: none; background: linear-gradient(90deg,#2575fc,#6a11cb);
+  color: white; cursor: pointer; font-weight: 700; box-shadow: 0 8px 20px rgba(37,117,252,0.12);
+}
+.driver-main-content .quick-actions button:hover { transform: translateY(-3px); }
+
+.dark .driver-main-content .driver-overview,
+.dark .driver-main-content .driver-card { background: rgba(12,18,34,0.7); color: #e5e7eb; box-shadow: none; }

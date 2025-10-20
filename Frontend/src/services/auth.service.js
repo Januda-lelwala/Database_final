@@ -82,6 +82,22 @@ export const authService = {
       changePassword: async (driverId, passwordData) => {
         const response = await api.post(`/drivers/${driverId}/change-password`, passwordData);
         return response.data;
+    },
+
+    /**
+     * Get the authenticated driver's profile
+     */
+    getProfile: async () => {
+      const response = await api.get('/drivers/me');
+      return response.data;
+    },
+
+    /**
+     * Update the authenticated driver's profile
+     */
+    updateProfile: async (profileData) => {
+      const response = await api.put('/drivers/me', profileData);
+      return response.data;
     }
   },
 
@@ -109,6 +125,22 @@ export const authService = {
       changePassword: async (assistantId, passwordData) => {
         const response = await api.post(`/assistants/${assistantId}/change-password`, passwordData);
         return response.data;
+    },
+
+    /**
+     * Get the authenticated assistant's profile
+     */
+    getProfile: async () => {
+      const response = await api.get('/assistants/me');
+      return response.data;
+    },
+
+    /**
+     * Update the authenticated assistant's profile
+     */
+    updateProfile: async (profileData) => {
+      const response = await api.put('/assistants/me', profileData);
+      return response.data;
     }
   },
 

@@ -1,0 +1,139 @@
+.driver-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--driver-header-h, 72px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  background: #ffffff;
+  backdrop-filter: blur(6px) saturate(120%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 1100;
+  transition: background 0.3s ease;
+}
+
+/* Header in dark mode */
+.dark .driver-header {
+  background: #0b1220; /* navy blue tone */
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Text styling */
+.driver-header-left h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0b1220;
+}
+.driver-subtitle {
+  margin: 4px 0 0;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 13px;
+}
+
+/* Text colors in dark mode */
+.dark .driver-header-left h1 {
+  color: #ffffff;
+}
+.dark .driver-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Button base */
+.driver-header-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.status-toggle,
+.theme-toggle,
+.logout-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+/* Status buttons */
+.status-toggle.online {
+  background: #dcfce7;
+  color: #166534;
+}
+.status-toggle.offline {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Hover effect */
+.status-toggle:hover,
+.theme-toggle:hover,
+.logout-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 20, 40, 0.1);
+}
+
+
+.logout-btn:hover {
+  opacity: 0.9;
+  transform: translateY(1px);
+}
+
+/* Smooth mode transition */
+body,
+.driver-header,
+.status-toggle,
+.theme-toggle,
+.logout-btn {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode (when .dark is NOT present) */
+.driver-dashboard .driver-header .logout-btn,
+.driver-header .logout-btn {
+  background: #ff0000 !important;   /* strong red in light mode */
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Slightly darker on hover */
+.driver-dashboard .driver-header .logout-btn:hover,
+.driver-header .logout-btn:hover {
+  background: #cc0000 !important;
+  transform: translateY(-1px) !important;
+  opacity: 1 !important;
+}
+
+/* Theme toggle: black in light mode */
+.driver-dashboard .driver-header .theme-toggle,
+.driver-header .theme-toggle {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Dark mode overrides: keep logout red, theme button white */
+.dark .driver-dashboard .driver-header .logout-btn,
+.dark .driver-header .logout-btn {
+  background: #ff0000 !important;   /* keep red in dark too */
+  color: #ffffff !important;
+}
+.dark .driver-dashboard .driver-header .theme-toggle,
+.dark .driver-header .theme-toggle {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Make sure global generic selector doesn't override via transparency */
+.status-toggle, .theme-toggle, .logout-btn {
+  /* keep generic defaults but don't force background here */
+  /* If you have earlier rule setting background: rgba(...), these above more specific rules win */
+  background-clip: padding-box;
+}

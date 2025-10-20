@@ -1,0 +1,99 @@
+.driver-sidebar {
+  position: fixed;
+  top: var(--driver-header-h, 72px);
+  bottom: 0;
+  left: 0;
+  width: var(--driver-sidebar-w, 280px);
+  padding: 18px;
+  display: block !important;
+  background: rgba(241, 241, 241, 0.91);
+  box-shadow: 0 12px 30px rgba(10,20,40,0.15);
+  box-sizing: border-box;
+  overflow-y: auto;
+  z-index: 1000;
+  border-radius: 1px;
+}
+
+.driver-sidebar nav {
+  position: relative;
+}
+
+.driver-sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: grid;
+  gap: 10px;
+}
+
+.driver-sidebar li { list-style: none; }
+
+.driver-sidebar a {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text, #0b1220);
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.driver-sidebar a .icon {
+  width: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.04);
+  color: inherit;
+}
+
+.driver-sidebar a .label { flex: 1; }
+.driver-sidebar a:hover {
+  transform: translateX(6px);
+  box-shadow: 0 8px 18px rgba(12,30,60,0.06);
+}
+.driver-sidebar a:hover .icon { background: rgba(37,99,235,0.06); }
+
+/* Light mode: Active sidebar item box */
+.driver-sidebar a.active {
+  background: rgba(37, 99, 235, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(37,99,235,0.2);
+  color: var(--driver-accent);
+}
+.driver-sidebar a.active .icon {
+  background: rgba(37, 99, 235, 0.2);
+  color: var(--driver-accent);
+}
+
+/* Dark mode tweaks */
+[data-theme="dark"] .driver-sidebar a {
+  color: var(--text);
+}
+[data-theme="dark"] .driver-sidebar a .icon {
+  background: rgba(255,255,255,0.02);
+}
+[data-theme="dark"] .driver-sidebar a:hover .icon {
+  background: rgba(0,0,0,0.48);
+  color: var(--header-text);
+}
+[data-theme="dark"] .driver-sidebar a.active {
+  background: #1e293b;
+  border-color: #334155;
+  color: #93c5fd;
+}
+[data-theme="dark"] .driver-sidebar a.active .icon {
+  background: rgba(0,0,0,0.48);
+  color: #93c5fd;
+}
+
+/* Responsive: compact sidebar */
+@media (max-width: 980px) {
+  .driver-sidebar {
+    width: 72px;
+    padding: 8px;
+  }
+  .driver-sidebar a .label { display: none; }
+  .driver-dashboard { --driver-sidebar-w: 88px; }
+}

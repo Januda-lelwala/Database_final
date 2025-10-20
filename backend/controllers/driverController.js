@@ -282,5 +282,60 @@ module.exports = {
   getDriverById,
   updateDriver,
   deleteDriver,
-  changeDriverPassword
+  changeDriverPassword,
+  // New self-profile handlers
+  getMyProfile: async (req, res) => {
+    try {
+      if (!req.auth || req.auth.role !== 'driver') {
+        return res.status(403).json({ success: false, message: 'Driver authentication required' });
+      }
+      const driverId = req.auth.id; // should be driver_id from JWT
+      if (!driverId) {
+        return res.status(400).json({ success: false, message: 'Driver id missing from token' });
+      }
+      const driver = await Driver.findByPk(driverId);
+      if (!driver) return res.status(404).json({ success: false, message: 'Driver not found' });
+      const data = {
+        driver_id: driver.driver_id,
+        name: driver.name,
+        address: driver.address,
+        phone_no: driver.phone_no,
+        email: driver.email,
+        user_name: driver.user_name,
+        must_change_password: driver.must_change_password || false
+      };
+      return res.status(200).json({ success: true, data });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+  },
+  updateMyProfile: async (req, res) => {
+    try {
+      if (!req.auth || req.auth.role !== 'driver') {
+        return res.status(403).json({ success: false, message: 'Driver authentication required' });
+      }
+      const driverId = req.auth.id;
+      if (!driverId) {
+        return res.status(400).json({ success: false, message: 'Driver id missing from token' });
+      }
+      const driver = await Driver.findByPk(driverId);
+      if (!driver) return res.status(404).json({ success: false, message: 'Driver not found' });
+      const { name, email, phone_no, address } = req.body || {};
+      if (name !== undefined) driver.name = name;
+      if (email !== undefined) driver.email = email;
+      if (phone_no !== undefined) driver.phone_no = phone_no;
+      if (address !== undefined) driver.address = address;
+      await driver.save();
+      return res.status(200).json({ success: true, message: 'Profile updated', data: {
+        driver_id: driver.driver_id,
+        name: driver.name,
+        address: driver.address,
+        phone_no: driver.phone_no,
+        email: driver.email,
+        user_name: driver.user_name
+      }});
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+  }
 };
