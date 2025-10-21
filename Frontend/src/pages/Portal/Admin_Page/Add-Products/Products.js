@@ -30,7 +30,7 @@ export default function Products() {
   const [sort, setSort] = useState({ key: "product_id", dir: "asc" }); // asc | desc
 
   // Add form (top panel)
-  const [form, setForm] = useState(makeEmptyForm);
+  const [form, setForm] = useState(() => makeEmptyForm());
 
   // Inline edit state
   const [editingId, setEditingId] = useState(null);

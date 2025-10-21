@@ -78,7 +78,7 @@ export default function Trains() {
 
   // Add form (keep all existing necessary components)
   const [form, setForm] = useState({ capacity: "", notes: "", begin_time: "" });
-  const [route, setRoute] = useState({ route_id: "", start_city: "", end_city: "", destinations: "" });
+  const [route, setRoute] = useState({ start_city: "", end_city: "", destinations: "" });
   const [suggesting, setSuggesting] = useState(false);
 
   // Search
@@ -149,16 +149,10 @@ export default function Trains() {
       return alert("Start and End city are required for the route.");
     }
 
-    const slug = (value) =>
-      value.replace(/[^0-9a-z]/gi, "").toUpperCase().slice(0, 3) || "GEN";
-    const autoRouteId = `RT-${slug(startCity)}-${slug(endCityTrimmed)}-${Date.now()}`;
-    const routeId = route.route_id.trim() || autoRouteId;
-
     const payload = {
       capacity: Number(form.capacity || 0),
       notes: form.notes?.trim() || "",
       begin_time: form.begin_time || null,
-      route_id: routeId,
       start_city: startCity,
       end_city: endCityTrimmed,
       destinations: destinationsArr.join(", "),
@@ -178,11 +172,11 @@ export default function Trains() {
 
       setTrains((t) => [created, ...t]);
       setForm({ capacity: "", notes: "", begin_time: "" });
-      setRoute({ route_id: "", start_city: "", end_city: "", destinations: "" });
+      setRoute({ start_city: "", end_city: "", destinations: "" });
       alert("Train + Route added");
     } catch (err) {
       console.error(err);
-      setTrains((t) => [{ ...payload, train_id: `TEMP-${Date.now()}` }, ...t]); // optimistic fallback
+      setTrains((t) => [{ ...payload, train_id: `TEMP-${Date.now()}`, route_id: null }, ...t]); // optimistic fallback
       alert("Saved locally. Check backend endpoints if needed.");
     }
   };
@@ -394,15 +388,6 @@ export default function Trains() {
               />
             </label>
 
-            {/* ROUTE */}
-            <label>
-              <span>Route ID</span>
-              <input
-                placeholder="(auto if empty)"
-                value={route.route_id}
-                onChange={(e) => setRoute((r) => ({ ...r, route_id: e.target.value }))}
-              />
-            </label>
             <label>
               <span>Start City / Station</span>
               <input

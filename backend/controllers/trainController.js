@@ -45,6 +45,64 @@ const generateTrainId = async () => {
   return `TRN${String(trainCount + 1).padStart(3, '0')}`;
 };
 
+// Generate sequential route ID (R001, R002, ...)
+const generateRouteId = async () => {
+  const routes = await TrainRoute.findAll({
+    attributes: ['route_id'],
+    where: {
+      route_id: {
+        [Op.like]: 'R%'
+      }
+    }
+  });
+
+  let maxNumber = 0;
+
+  routes.forEach(({ route_id }) => {
+    const match = String(route_id).match(/^R(\d+)$/i);
+    if (match) {
+      const current = parseInt(match[1], 10);
+      if (current > maxNumber) {
+        maxNumber = current;
+      }
+    }
+  });
+
+  const next = maxNumber + 1;
+  return `R${String(next).padStart(3, '0')}`;
+};
+
+const normalizeDestinations = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  if (Array.isArray(value)) {
+    const cleaned = value.map((item) => String(item).trim()).filter(Boolean);
+    return cleaned.length ? cleaned.join(', ') : null;
+  }
+
+  if (typeof value === 'string') {
+    const cleaned = value
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+    return cleaned.length ? cleaned.join(', ') : null;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      const cleaned = parsed.map((item) => String(item).trim()).filter(Boolean);
+      return cleaned.length ? cleaned.join(', ') : null;
+    }
+  } catch (err) {
+    // ignore parse errors and fall through
+  }
+
+  return String(value);
+};
+
 // Get all trains
 const getAllTrains = async (req, res) => {
   try {
@@ -96,53 +154,80 @@ const getTrainById = async (req, res) => {
 // Create new train and train_route
 const createTrain = async (req, res) => {
   try {
-    const { capacity, notes, begin_time, route_id, start_city, end_city, destinations } = req.body;
+    const {
+      capacity,
+      notes,
+      begin_time,
+      start_city,
+      end_city,
+      destinations,
+      route_id: providedRouteId
+    } = req.body;
 
-    console.log('[createTrain] Received data:', { capacity, notes, begin_time, route_id, start_city, end_city, destinations });
+    console.log('[createTrain] Received data:', {
+      capacity,
+      notes,
+      begin_time,
+      start_city,
+      end_city,
+      destinations,
+      route_id: providedRouteId
+    });
+
+    if (!start_city || !end_city) {
+      return res.status(400).json({
+        success: false,
+        message: 'Start city and end city are required to create a train route'
+      });
+    }
 
     // Generate train ID
     const train_id = await generateTrainId();
 
-    // Handle route: Create new route or use existing route_id
+    // Handle route: Create new route or reuse existing
     let finalRouteId = null;
     let trainRoute = null;
-    
-    if (start_city && end_city) {
-      if (route_id) {
-        // Check if route exists
-        trainRoute = await db.TrainRoute.findByPk(route_id);
-        if (trainRoute) {
-          console.log('[createTrain] Using existing route:', route_id);
-          finalRouteId = route_id;
-        } else {
-          // Create new route with provided route_id
-          console.log('[createTrain] Creating new route:', route_id);
-          trainRoute = await db.TrainRoute.create({
-            route_id,
-            start_city,
-            end_city,
-            destinations: destinations || null
-          });
-          finalRouteId = route_id;
-        }
-      } else {
-        // Auto-generate route_id
-        const autoRouteId = `R-${start_city.substring(0,3).toUpperCase()}-${end_city.substring(0,3).toUpperCase()}`;
-        trainRoute = await db.TrainRoute.findByPk(autoRouteId);
-        
-        if (!trainRoute) {
-          console.log('[createTrain] Creating new auto-generated route:', autoRouteId);
-          trainRoute = await db.TrainRoute.create({
-            route_id: autoRouteId,
-            start_city,
-            end_city,
-            destinations: destinations || null
-          });
-        } else {
-          console.log('[createTrain] Using existing auto-generated route:', autoRouteId);
-        }
-        finalRouteId = autoRouteId;
+
+    // Attempt to reuse existing route if matches
+    const normalizedDestinations = normalizeDestinations(destinations);
+
+    const existingRoute = await TrainRoute.findOne({
+      where: {
+        start_city,
+        end_city,
+        destinations: normalizedDestinations
       }
+    });
+
+    if (existingRoute) {
+      finalRouteId = existingRoute.route_id;
+      trainRoute = existingRoute;
+      console.log('[createTrain] Reusing existing route for start/end:', finalRouteId);
+    } else if (providedRouteId) {
+      // Fallback to provided route ID (legacy support)
+      trainRoute = await TrainRoute.findByPk(providedRouteId);
+      if (!trainRoute) {
+        trainRoute = await TrainRoute.create({
+          route_id: providedRouteId,
+          start_city,
+          end_city,
+          destinations: normalizedDestinations
+        });
+        console.log('[createTrain] Created route using provided route_id:', providedRouteId);
+      } else {
+        console.log('[createTrain] Using provided route_id:', providedRouteId);
+      }
+      finalRouteId = providedRouteId;
+    } else {
+      const autoRouteId = await generateRouteId();
+      trainRoute = await TrainRoute.create({
+        route_id: autoRouteId,
+        start_city,
+        end_city,
+        destinations: normalizedDestinations
+      });
+      finalRouteId = autoRouteId;
+      console.log('[createTrain] Created new auto route:', autoRouteId);
     }
 
     // Create train with route_id
