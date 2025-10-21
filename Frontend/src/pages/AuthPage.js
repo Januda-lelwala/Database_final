@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/ToastProvider';
 import { useAuth } from '../context/AuthContext';
 
 const AuthPage = () => {
@@ -7,12 +8,13 @@ const AuthPage = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useAuth(); 
+  const { showToast } = useToast();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!userType || !credentials.username || !credentials.password) {
-      alert('Please select user type and enter username and password');
+      showToast('Please select user type and enter username and password', { type: 'warning' });
       return;
     }
 
@@ -30,7 +32,7 @@ const AuthPage = () => {
         navigate('/login'); // Fallback if unknown role
       }
     } catch (err) {
-      alert(err.message || 'Login failed');
+      showToast(err.message || 'Login failed', { type: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -263,3 +265,4 @@ const styles = {
 };
 
 export default AuthPage;
+

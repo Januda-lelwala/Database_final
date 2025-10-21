@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useTheme } from "../../../context/ThemeContext";
+import { useToast } from "../../../components/ToastProvider";
 import { useNavigate, useLocation, Routes, Route, Navigate } from "react-router-dom";
 import "../AdminDashboard.css";
 
@@ -26,6 +27,7 @@ const NAV = [
 
 export default function AdminDashboard() {
   const { user, logout, isAdmin } = useAuth();
+  const { showToast } = useToast();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,7 +57,7 @@ export default function AdminDashboard() {
   const handleTruckSuggested = (suggestion) => {
     if (suggestion?.route?.truck_route_id) {
       const coverage = suggestion.route.coverage?.join(', ') || 'configured area';
-      alert(`Rail leg assigned. Next step: schedule truck route ${suggestion.route.truck_route_id} from ${suggestion.route.first_city} covering ${coverage}.`);
+      showToast(`Rail leg assigned. Next step: schedule truck route ${suggestion.route.truck_route_id} from ${suggestion.route.first_city} covering ${coverage}.`, { type: "info" });
     }
     setTruckPlan(suggestion);
     navigate('/admin/truck-assignment');

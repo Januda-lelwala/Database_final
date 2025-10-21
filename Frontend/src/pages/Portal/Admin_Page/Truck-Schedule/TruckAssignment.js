@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useToast } from "../../../../components/ToastProvider";
 import "./truckassignment.css";
 
 const API_BASE = "http://localhost:3000";
@@ -30,6 +31,7 @@ const toDateInputValue = (date) => {
 };
 
 export default function TruckAssignment({ prefill = null, onCompleted = () => {} }) {
+  const { showToast } = useToast();
   const [routes, setRoutes] = useState([]);
   const [trucks, setTrucks] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -226,7 +228,7 @@ export default function TruckAssignment({ prefill = null, onCompleted = () => {}
     const { route_id, truck_id, driver_id, assistant_id, start_time } = form;
 
     if (!route_id || !truck_id || !driver_id || !assistant_id || !start_time) {
-      alert("Fill all fields");
+      showToast("Fill all fields", { type: "warning" });
       return;
     }
 
@@ -249,7 +251,7 @@ export default function TruckAssignment({ prefill = null, onCompleted = () => {}
         throw new Error(payload?.message || "Failed to create truck schedule.");
       }
 
-      alert(payload?.message || "Truck schedule created successfully.");
+      showToast(payload?.message || "Truck schedule created successfully.", { type: "success" });
       const latestTasks = await fetchPendingTasks();
       if (Array.isArray(latestTasks)) {
         setPendingTasks(latestTasks);
@@ -272,7 +274,7 @@ export default function TruckAssignment({ prefill = null, onCompleted = () => {}
       setAppliedPrefillKey(null);
     } catch (error) {
       console.error("Failed to create truck schedule:", error);
-      alert(error.message || "Unable to create truck schedule. Please try again.");
+      showToast(error.message || "Unable to create truck schedule. Please try again.", { type: "error" });
     } finally {
       setBusy(false);
     }

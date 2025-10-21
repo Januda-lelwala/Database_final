@@ -1,6 +1,7 @@
 // src/pages/Portal/Admin_Page/Employees.js
 import React, { useEffect, useState, useMemo } from "react";
 import "./employees.css";
+import { useToast } from "../../../../components/ToastProvider";
 
 const API_BASE = "http://localhost:3000/api";
 const getTokenHeader = () => ({ Authorization: `Bearer ${localStorage.getItem("authToken") || ""}` });
@@ -10,6 +11,7 @@ const getTokenHeader = () => ({ Authorization: `Bearer ${localStorage.getItem("a
 
 export default function Employees() {
 	// NEW: segment state (default to "driver")
+  const { showToast } = useToast();
 	const [tab, setTab] = useState("driver");
 
 	// Search state for driver & assistant panels
@@ -85,7 +87,7 @@ export default function Employees() {
 		e.preventDefault();
 		
 		if (!driverForm.name.trim()) {
-			alert("Please provide driver name");
+			showToast("Please provide driver name", { type: "warning" });
 			return;
 		}
 
@@ -119,11 +121,14 @@ export default function Employees() {
 				? `⚠ Email skipped (SMTP not configured)` 
 				: `⚠ Email not sent`;
 			
-			alert(`Driver added successfully!\n\nID: ${created.driver_id || '(see list)'}\nName: ${created.name || driverForm.name}\n\nLogin Credentials:\nUsername: ${credentials.user_name}\nPassword: ${credentials.password}\n\n${emailLine}\n\nPlease save these credentials securely.`);
+			showToast(
+				`Driver added successfully!\n\nID: ${created.driver_id || '(see list)'}\nName: ${created.name || driverForm.name}\n\nLogin Credentials:\nUsername: ${credentials.user_name}\nPassword: ${credentials.password}\n\n${emailLine}\n\nPlease save these credentials securely.`,
+				{ type: "success", duration: 7000 }
+			);
 			setDriverForm({ name: "", address: "", phone_no: "", email: "" });
 			fetchEmployees(); // Refresh the list
 		} catch (error) {
-			alert(`Error: ${error.message}`);
+			showToast(`Error: ${error.message}`, { type: "error" });
 		} finally {
 			setLoading(false);
 		}
@@ -133,7 +138,7 @@ export default function Employees() {
 		e.preventDefault();
 		
 		if (!assistantForm.name.trim()) {
-			alert("Please provide assistant name");
+			showToast("Please provide assistant name", { type: "warning" });
 			return;
 		}
 
@@ -167,11 +172,14 @@ export default function Employees() {
 				? `⚠ Email skipped (SMTP not configured)` 
 				: `⚠ Email not sent`;
 			
-			alert(`Assistant added successfully!\n\nID: ${created.assistant_id || '(see list)'}\nName: ${created.name || assistantForm.name}\n\nLogin Credentials:\nUsername: ${credentials.user_name}\nPassword: ${credentials.password}\n\n${emailLine}\n\nPlease save these credentials securely.`);
+			showToast(
+				`Assistant added successfully!\n\nID: ${created.assistant_id || '(see list)'}\nName: ${created.name || assistantForm.name}\n\nLogin Credentials:\nUsername: ${credentials.user_name}\nPassword: ${credentials.password}\n\n${emailLine}\n\nPlease save these credentials securely.`,
+				{ type: "success", duration: 7000 }
+			);
 			setAssistantForm({ name: "", address: "", phone_no: "", email: "" });
 			fetchEmployees(); // Refresh the list
 		} catch (error) {
-			alert(`Error: ${error.message}`);
+			showToast(`Error: ${error.message}`, { type: "error" });
 		} finally {
 			setLoading(false);
 		}
@@ -269,7 +277,7 @@ export default function Employees() {
 			}
 		} catch (error) {
 			console.error("Failed to update employee:", error);
-			alert(error.message || "Unable to update employee.");
+			showToast(error.message || "Unable to update employee.", { type: "error" });
 			setSavingId(null);
 			return;
 		}
@@ -314,7 +322,7 @@ export default function Employees() {
 			success = true;
 		} catch (error) {
 			console.error("Failed to delete employee:", error);
-			alert(error.message || "Unable to delete employee.");
+			showToast(error.message || "Unable to delete employee.", { type: "error" });
 		} finally {
 			setDeletingId(null);
 		}
@@ -547,3 +555,4 @@ export default function Employees() {
 		</div>
 	);
 }
+

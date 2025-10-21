@@ -62,14 +62,16 @@ import NeedHelp from './pages/Auth/NeedHelp.js';
 import EmployeePortalRouter from './pages/Portal/EmployeePortalRouter.js';
 import AdminDashboard from './pages/Portal/Admin_Page/Admin.js';
 import CustomerPage from './pages/Portal/CustomerPage.js';
+import { ToastProvider } from './components/ToastProvider';
 
 // --- Main App Component ---
 function App() {
   return (
-    <AuthProvider>
+    <ToastProvider>
+      <AuthProvider>
         <StoreProvider>
           <ThemeProvider>
-          <BrowserRouter>
+            <BrowserRouter>
             <Routes>
               <Route exact path="/" element={<Home/>}/>
               
@@ -151,11 +153,12 @@ function App() {
             {/* Legacy admin routes - keep for backward compatibility */}
             <Route path="/admin/signin" element={<EmployeeLogin/>}/>
             <Route path="/customer/signin" element={<CustomerLogin/>}/>
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
         </ThemeProvider>
       </StoreProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }
 

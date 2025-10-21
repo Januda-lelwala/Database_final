@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useToast } from "../../components/ToastProvider";
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
   
   // State management
   const [currentView, setCurrentView] = useState('overview');
@@ -248,7 +250,7 @@ const AdminDashboard = () => {
   );
 
   const handleAllocateOrder = (orderId) => {
-    alert(`Allocating order ${orderId} - This will open the allocation wizard`);
+    showToast(`Allocating order ${orderId} - This will open the allocation wizard`, { type: "info" });
     // In real implementation, this would open a modal for train/truck allocation
   };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-
+import { useToast } from '../../components/ToastProvider';
+import { useAuth } from "../../context/AuthContext";
 // Employee Portal Components
 import Admin from './Admin_Page/Admin';
 import DriverDashboard from './Driver_Page/DriverDashboard';
@@ -31,6 +31,7 @@ const getNonEmployeeRedirect = (user) => {
 
 function EmployeePortalRouter() {
   const { user, isEmployee, isAdmin, isDriver, isAssistant, loading, changePassword } = useAuth();
+  const { showToast } = useToast();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [passwordChangeError, setPasswordChangeError] = useState(null);
@@ -48,7 +49,7 @@ function EmployeePortalRouter() {
       setPasswordChangeError(null);
       await changePassword(passwordData);
       setShowPasswordModal(false);
-      alert('Password changed successfully! You can now access the system.');
+      showToast('Password changed successfully! You can now access the system.', { type: 'success' });
     } catch (error) {
       setPasswordChangeError(error.message || 'Failed to change password');
       throw error; // Re-throw so modal can show error

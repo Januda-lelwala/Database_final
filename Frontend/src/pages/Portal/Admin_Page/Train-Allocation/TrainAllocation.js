@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useToast } from "../../../../components/ToastProvider";
 import "./trainallocation.css";
 
 const API_BASE = "http://localhost:3000";
@@ -53,6 +54,7 @@ export default function TrainAllocation({
   onOrderPlaced,
   onTruckSuggested = () => {}
 }) {
+  const { showToast } = useToast();
   const [orders, setOrders] = useState([]);
   const [trips, setTrips] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -164,10 +166,10 @@ export default function TrainAllocation({
           task: truckTask
         });
       } else {
-        alert("Order assigned to train successfully.");
+        showToast("Order assigned to train successfully.", { type: "success" });
       }
     } catch (error) {
-      alert(error.message || "Unable to assign order. Please try again.");
+      showToast(error.message || "Unable to assign order. Please try again.", { type: "error" });
     } finally {
       setBusy(false);
     }

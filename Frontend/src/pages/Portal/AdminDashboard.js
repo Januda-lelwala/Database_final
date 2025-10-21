@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
+import { useToast } from "../../components/ToastProvider";
 import "./AdminDashboard.css";
 
 /** Utilities */
@@ -28,6 +29,7 @@ const download = (name, text) => {
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
 
   /** Views */
   const [currentView, setCurrentView] = useState("overview"); // overview | trains | trucks | reports | products | resources
@@ -311,7 +313,7 @@ const AdminDashboard = () => {
   const createTruckSchedule = async () => {
     const { route_id, truck_id, driver_id, assistant_id, start_time, end_time } = truckForm;
     if (!route_id || !truck_id || !driver_id || !assistant_id || !start_time || !end_time) {
-      alert("Please fill all schedule fields.");
+      showToast("Please fill all schedule fields.", { type: "warning" });
       return;
     }
     setBusy(true);
@@ -336,7 +338,7 @@ const AdminDashboard = () => {
     } finally {
       setBusy(false);
     }
-    alert("Truck schedule created and order is now fully assigned (demo).");
+    showToast("Truck schedule created and order is now fully assigned (demo).", { type: "success" });
     setAllocOpen(false);
     // refresh overview lists
     setPendingOrders((prev) => prev.filter((o) => o.order_id !== allocOrder.order_id));
@@ -840,7 +842,7 @@ const AdminDashboard = () => {
               setDrivers((d) => [driverForm, ...d]);
               setDriverForm({ driver_id: "", name: "", email: "", phone_no: "", license_number: "", vehicle_assigned: "", hire_date: "" });
               setSubmitting(null);
-              alert("Driver added");
+              showToast("Driver added", { type: "success" });
             }}
           >
             <label>
@@ -909,7 +911,7 @@ const AdminDashboard = () => {
               setAssistants((d) => [assistantForm, ...d]);
               setAssistantForm({ assistant_id: "", name: "", email: "", phone_no: "", department: "logistics", shift_schedule: "", hire_date: "" });
               setSubmitting(null);
-              alert("Assistant added");
+              showToast("Assistant added", { type: "success" });
             }}
           >
             <label>
@@ -984,7 +986,7 @@ const AdminDashboard = () => {
               setTrucks((d) => [payload, ...d]);
               setNewTruck({ truck_id: "", license_plate: "", capacity: "" });
               setSubmitting(null);
-              alert("Truck added");
+              showToast("Truck added", { type: "success" });
             }}
           >
             <label>
@@ -1038,7 +1040,7 @@ const AdminDashboard = () => {
               setTrains((d) => [payload, ...d]);
               setNewTrain({ train_id: "", capacity: "", notes: "" });
               setSubmitting(null);
-              alert("Train added");
+              showToast("Train added", { type: "success" });
             }}
           >
             <label>
@@ -1342,3 +1344,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
