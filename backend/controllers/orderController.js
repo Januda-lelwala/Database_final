@@ -63,6 +63,65 @@ const generateTrainTripId = async () => {
   return `TT${String(tripCount + 1).padStart(4, '0')}`;
 };
 
+const normalizeCityName = (city) => {
+  if (!city || typeof city !== 'string') return null;
+  const trimmed = city.trim();
+  return trimmed.length ? trimmed : null;
+};
+
+const findStoreByCity = async (city, transaction) => {
+  const normalized = normalizeCityName(city);
+  if (!normalized) return null;
+
+  return Store.findOne({
+    where: sequelize.where(
+      sequelize.fn('LOWER', sequelize.col('city')),
+      normalized.toLowerCase()
+    ),
+    transaction,
+    lock: transaction ? transaction.LOCK.SHARE : undefined
+  });
+};
+
+const buildStoreId = async (city, transaction) => {
+  const baseSlug = normalizeCityName(city)
+    ?.replace(/[^a-z0-9]+/gi, '_')
+    .replace(/_{2,}/g, '_')
+    .replace(/^_|_$/g, '')
+    .toUpperCase() || 'CITY';
+
+  const base = `ST_${baseSlug}`.slice(0, 30);
+  let candidate = base;
+  let counter = 1;
+
+  // ensure uniqueness against existing store ids
+  /* eslint-disable no-await-in-loop */
+  while (await Store.findByPk(candidate, { transaction })) {
+    candidate = `${base}_${counter++}`.slice(0, 40);
+  }
+  /* eslint-enable no-await-in-loop */
+
+  return candidate;
+};
+
+const ensureStoreForCity = async (city, transaction) => {
+  const normalized = normalizeCityName(city);
+  if (!normalized) return null;
+
+  const existing = await findStoreByCity(normalized, transaction);
+  if (existing) return existing;
+
+  const store_id = await buildStoreId(normalized, transaction);
+  return Store.create(
+    {
+      store_id,
+      name: `${normalized} Distribution Store`,
+      city: normalized
+    },
+    { transaction }
+  );
+};
+
 // Generate order ID
 const generateOrderId = async () => {
   const orderCount = await Order.count();
@@ -585,40 +644,29 @@ const assignOrderToTrain = async (req, res) => {
 
       const tripIdentifier = await generateTrainTripId();
 
-      const normalizedDestination = order.destination_city
-        ? order.destination_city.trim().toLowerCase()
-        : null;
+      const destinationCity = normalizeCityName(order.destination_city);
 
       let destinationStore = null;
 
-      if (normalizedDestination) {
-        destinationStore = await Store.findOne({
-          where: sequelize.where(
-            sequelize.fn('LOWER', sequelize.col('city')),
-            normalizedDestination
-          ),
-          transaction,
-          lock: transaction.LOCK.SHARE
-        });
+      if (destinationCity) {
+        destinationStore = await findStoreByCity(destinationCity, transaction);
       }
 
-      if (!destinationStore) {
-        const route = await TrainRoute.findByPk(routeIdToUse, {
-          transaction,
-          lock: transaction.LOCK.SHARE
-        });
+      const route = await TrainRoute.findByPk(routeIdToUse, {
+        transaction,
+        lock: transaction.LOCK.SHARE
+      });
 
-        if (route?.end_city) {
-          const normalizedEnd = route.end_city.trim().toLowerCase();
-          destinationStore = await Store.findOne({
-            where: sequelize.where(
-              sequelize.fn('LOWER', sequelize.col('city')),
-              normalizedEnd
-            ),
-            transaction,
-            lock: transaction.LOCK.SHARE
-          });
-        }
+      if (!destinationStore && route?.end_city) {
+        destinationStore = await findStoreByCity(route.end_city, transaction);
+      }
+
+      if (!destinationStore && destinationCity) {
+        destinationStore = await ensureStoreForCity(destinationCity, transaction);
+      }
+
+      if (!destinationStore && route?.end_city) {
+        destinationStore = await ensureStoreForCity(route.end_city, transaction);
       }
 
       if (!destinationStore) {
@@ -701,6 +749,26 @@ const assignOrderToTrain = async (req, res) => {
       await transaction.rollback();
     }
     console.error('[assignOrderToTrain] failed:', error);
+
+    const normalizedName = error?.name || '';
+    const loweredMessage = String(error?.message || '').toLowerCase();
+
+    if (normalizedName === 'SequelizeForeignKeyConstraintError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Unable to schedule the selected train because supporting records are missing (route or store). Verify the train route and destination store exist before assigning.',
+        error: error.message
+      });
+    }
+
+    if (normalizedName === 'SequelizeUniqueConstraintError' || loweredMessage.includes('duplicate entry')) {
+      return res.status(409).json({
+        success: false,
+        message: 'A train trip identifier collision occurred while assigning this order. Please retry the assignment.',
+        error: error.message
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: 'Server error while assigning order to train',
@@ -720,3 +788,4 @@ module.exports = {
   , cancelOrder,
   assignOrderToTrain
 };
+

@@ -1,5 +1,5 @@
 // src/components/Cards.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Button, InputGroup, Form } from "react-bootstrap";
 
 export default function Cards({
@@ -13,24 +13,45 @@ export default function Cards({
   initialQty = 1,
   price,
   stock,
+  reserved = 0,
   embedded = false,     // when true, render minimal controls only (for embedding in parent cards)
 }) {
-  const [qty, setQty] = useState(
-    Math.min(Math.max(initialQty, min), max)
-  );
+  const numericMax = Number.isFinite(max) ? max : 0;
+  const effectiveMax = Math.max(0, numericMax);
+  const effectiveMin = effectiveMax > 0 ? min : 0;
 
-  const dec = () => setQty(q => Math.max(q - 1, min));
-  const inc = () => setQty(q => Math.min(q + 1, max));
+  const [qty, setQty] = useState(() => {
+    if (effectiveMax === 0) return effectiveMin;
+    return Math.min(Math.max(initialQty, effectiveMin), effectiveMax);
+  });
+
+  useEffect(() => {
+    setQty((current) => {
+      if (effectiveMax === 0) return effectiveMin;
+      if (current > effectiveMax) return effectiveMax;
+      if (current < effectiveMin) return effectiveMin;
+      return current;
+    });
+  }, [effectiveMin, effectiveMax]);
+
+  const dec = () => setQty(q => Math.max(q - 1, effectiveMin));
+  const inc = () => setQty(q => Math.min(q + 1, effectiveMax));
 
   const onQtyInput = (e) => {
     const v = e.target.value.replace(/\D/g, ""); // digits only
     const n = v === "" ? "" : Number(v);
-    if (v === "") setQty(min);
-    else setQty(Math.min(Math.max(n, min), max));
+    if (v === "") {
+      setQty(effectiveMin);
+    } else {
+      setQty(() => {
+        if (effectiveMax === 0) return effectiveMin;
+        return Math.min(Math.max(n, effectiveMin), effectiveMax);
+      });
+    }
   };
 
   const handleAdd = () => {
-    if (typeof onAdd === "function") onAdd(qty);
+    if (typeof onAdd === "function" && effectiveMax > 0) onAdd(qty);
   };
 
   return (
@@ -73,7 +94,7 @@ export default function Cards({
           <Button
             variant="outline-primary"
             onClick={dec}
-            disabled={qty <= min}
+            disabled={qty <= effectiveMin || effectiveMax === 0}
             aria-label="Decrease quantity"
             style={cardStyles.quantityButton}
           >
@@ -86,12 +107,13 @@ export default function Cards({
             pattern="[0-9]*"
             className="text-center"
             aria-label="Quantity"
+            disabled={effectiveMax === 0}
             style={cardStyles.quantityInput}
           />
           <Button
             variant="outline-primary"
             onClick={inc}
-            disabled={qty >= max}
+            disabled={qty >= effectiveMax || effectiveMax === 0}
             aria-label="Increase quantity"
             style={cardStyles.quantityButton}
           >
@@ -104,14 +126,15 @@ export default function Cards({
             variant="primary" 
             onClick={handleAdd}
             style={cardStyles.addButton}
-            disabled={!stock || stock === 0}
+            disabled={!stock || stock === 0 || effectiveMax === 0}
           >
-            {!stock || stock === 0 ? 'Out of Stock' : buttonText}
+            {!stock || stock === 0 ? 'Out of Stock' : (effectiveMax === 0 ? 'Max Reached' : buttonText)}
           </Button>
         </div>
 
         <div style={cardStyles.limits}>
-          Min {min} • Max {max}
+          <span>Remaining {effectiveMax}</span>
+          {reserved > 0 && <span> (In Cart {reserved})</span>}
         </div>
       </Card.Body>
     </Card>
@@ -230,3 +253,4 @@ const cardStyles = {
     fontWeight: '500',
   },
 };
+

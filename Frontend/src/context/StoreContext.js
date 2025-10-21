@@ -232,12 +232,32 @@ export const StoreProvider = ({ children }) => {
 
   // Cart helpers
   const addToCart = useCallback((id, qty = 1) => {
+    const requested = Number.isFinite(qty) ? Math.floor(qty) : 0;
+    if (requested <= 0) {
+      return;
+    }
+
     setCart((prev) => {
-      const found = prev.find((i) => i.id === id);
-      if (found) return prev.map((i) => (i.id === id ? { ...i, qty: i.qty + qty } : i));
-      return [...prev, { id, qty }];
+      const product = products.find((p) => p.id === id);
+      const stock = Number.isFinite(product?.stock) ? product.stock : Infinity;
+      const existing = prev.find((i) => i.id === id);
+      const currentQty = existing?.qty ?? 0;
+      const remaining = stock === Infinity ? Infinity : Math.max(0, stock - currentQty);
+      const allowed = stock === Infinity ? requested : Math.min(requested, remaining);
+
+      if (allowed <= 0) {
+        return prev;
+      }
+
+      if (existing) {
+        return prev.map((i) =>
+          i.id === id ? { ...i, qty: currentQty + allowed } : i
+        );
+      }
+
+      return [...prev, { id, qty: allowed }];
     });
-  }, []);
+  }, [products]);
   
   const removeFromCart = useCallback((id) => setCart((prev) => prev.filter((i) => i.id !== id)), []);
   const clearCart = useCallback(() => setCart([]), []);

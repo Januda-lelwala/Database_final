@@ -146,10 +146,21 @@ export default function Product() {
   const isInCart = (id) => cart.some((i) => i.id === id);
 
   function handleAdd(product, qty) {
-    addToCart(product.id, qty);
-    setAddedItems(prev => new Set([...prev, product.id]));
+    const existing = cart.find((i) => i.id === product.id);
+    const currentQty = existing?.qty ?? 0;
+    const stockValue = Number.isFinite(product.stock) ? Math.max(0, Math.floor(product.stock)) : 0;
+    const remaining = Math.max(0, stockValue - currentQty);
+    const requested = Number.isFinite(qty) ? Math.floor(qty) : 0;
+    const allowed = Math.max(0, Math.min(requested, remaining));
+
+    if (allowed <= 0) {
+      return;
+    }
+
+    addToCart(product.id, allowed);
+    setAddedItems((prev) => new Set([...prev, product.id]));
     setTimeout(() => {
-      setAddedItems(prev => {
+      setAddedItems((prev) => {
         const next = new Set(prev);
         next.delete(product.id);
         return next;
@@ -278,8 +289,15 @@ export default function Product() {
           <>
           <div className="products-content">
           <div className="products-grid">
-            {pageItems.map((p) => (
-              <div key={p.id} className="product-card">
+            {pageItems.map((p) => {
+              const cartEntry = cart.find((item) => item.id === p.id);
+              const inCartQty = cartEntry?.qty ?? 0;
+              const totalStock = Number.isFinite(p.stock) ? Math.max(0, Math.floor(p.stock)) : 0;
+              const remaining = Math.max(0, totalStock - inCartQty);
+              const initialQty = remaining > 0 ? 1 : 0;
+
+              return (
+                <div key={p.id} className="product-card">
                 <div className="product-card__media">
                   <img
                     className="product-card__img"
@@ -299,8 +317,10 @@ export default function Product() {
                       embedded
                       price={p.price}
                       stock={p.stock}
-                      max={Math.min(99, p.stock)}
-                      initialQty={1}
+                      reserved={inCartQty}
+                      max={remaining}
+                      min={remaining > 0 ? 1 : 0}
+                      initialQty={initialQty}
                       onAdd={(qty) => handleAdd(p, qty)}
                       buttonText={addedItems.has(p.id) ? "Added" : "Add to Cart"}
                     />
@@ -309,8 +329,9 @@ export default function Product() {
                     )}
                   </div>
                 </div>
-              </div>
-            ))}
+                </div>
+              );
+            })}
             {filtered.length === 0 && !isLoading && (
               <div className="products-empty">No products found. Try adjusting filters.</div>
             )}
