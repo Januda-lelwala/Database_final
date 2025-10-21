@@ -2,6 +2,7 @@
 const cancelOrder = async (req, res) => {
   try {
     await ensureOrderDeliveryDateColumn();
+    await ensureOrderStatusFunction();
     const { id } = req.params;
     const { reason } = req.body;
 
@@ -47,7 +48,7 @@ const { sequelize } = db;
 const ensureNumber = (value) => Number(value || 0);
 const { findRouteByDestination } = require('../utils/truckRouteConfig');
 const { addOrUpdateTask } = require('../utils/truckTaskStore');
-const { ensureOrderDeliveryDateColumn } = require('../utils/schemaHelper');
+const { ensureOrderDeliveryDateColumn, ensureOrderStatusFunction } = require('../utils/schemaHelper');
 
 const calculateRequiredSpace = (orderInstance) => {
   if (!orderInstance?.orderItems) return 0;
@@ -338,6 +339,7 @@ const createOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
   try {
     await ensureOrderDeliveryDateColumn();
+    await ensureOrderStatusFunction();
     const { id } = req.params;
     const { destination_city, destination_address, delivery_date, status } = req.body;
 
@@ -466,6 +468,7 @@ const getOrderItems = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     await ensureOrderDeliveryDateColumn();
+    await ensureOrderStatusFunction();
     const { id } = req.params;
     const { status } = req.body;
 
@@ -512,6 +515,7 @@ const assignOrderToTrain = async (req, res) => {
 
   try {
     await ensureOrderDeliveryDateColumn();
+    await ensureOrderStatusFunction();
     const { id } = req.params;
     const { trip_id, train_id, route_id } = req.body;
 

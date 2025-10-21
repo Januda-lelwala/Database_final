@@ -664,4 +664,3 @@ END;
 //
 DELIMITER ;
 
--- CALL sp_seed_orders_40();

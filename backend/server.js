@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const { connectDB } = require('./config/database');
 const db = require('./models');
 const { ensureTruckRoutes } = require('./utils/truckRouteSeeder');
+const { ensureOrderStatusFunction } = require('./utils/schemaHelper');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -30,7 +31,12 @@ const adminRoutes = require('./routes/adminRoutes');
 const app = express();
 
 // Database connection
-connectDB().then(() => ensureTruckRoutes()).catch((error) => {
+connectDB()
+  .then(async () => {
+    await ensureOrderStatusFunction();
+    await ensureTruckRoutes();
+  })
+  .catch((error) => {
   console.error('[Startup] Failed while ensuring truck routes:', error.message);
 });
 

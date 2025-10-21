@@ -22,15 +22,69 @@ export default function CheckoutReview() {
     setOrderSuccess,
   } = useCheckout();
 
+  const resolveUnitPrice = (product) => {
+    if (!product) return 0;
+    const candidates = [
+      product.price,
+      product.unit_price,
+      product.unitPrice,
+      product.sale_price
+    ];
+    for (const candidate of candidates) {
+      if (candidate === undefined || candidate === null) continue;
+      const numeric = Number(candidate);
+      if (Number.isFinite(numeric)) {
+        return numeric;
+      }
+    }
+    return 0;
+  };
+
+  const resolveSpacePerUnit = (product) => {
+    if (!product) return 0;
+    const candidates = [
+      product.space_per_unit,
+      product.space_per_item,
+      product.spaceConsumption,
+      product.space_consumption,
+      product.space
+    ];
+    for (const candidate of candidates) {
+      if (candidate === undefined || candidate === null) continue;
+      const numeric = Number(candidate);
+      if (Number.isFinite(numeric)) {
+        return numeric;
+      }
+    }
+    return 0;
+  };
+
   const items = cart.map((ci) => {
-    const p = products.find((p) => p.id === ci.id || p.product_id === ci.id);
-    return { ...p, qty: ci.qty, lineTotal: ci.qty * p.price, space: p.space ?? 0 };
+    const product = products.find(
+      (p) => p?.id === ci.id || p?.product_id === ci.id || p?.productId === ci.id
+    ) || {};
+    const unitPrice = resolveUnitPrice(product);
+    const spacePerUnit = resolveSpacePerUnit(product);
+    return {
+      ...product,
+      qty: ci.qty,
+      lineTotal: unitPrice * ci.qty,
+      spacePerUnit
+    };
   });
-  const subtotal = items.reduce((s, i) => s + i.lineTotal, 0);
-    const shipping = 0; // Free delivery via rail distribution system
+  const subtotal = items.reduce((sum, item) => {
+    return sum + (Number.isFinite(item.lineTotal) ? item.lineTotal : 0);
+  }, 0);
+  const shipping = 0; // Free delivery via rail distribution system
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
-  const totalSpace = items.reduce((s, i) => s + (i.space * i.qty), 0);
+  const totalSpace = items.reduce((sum, item) => {
+    const perUnit = Number.isFinite(item.spacePerUnit) ? item.spacePerUnit : 0;
+    return sum + perUnit * item.qty;
+  }, 0);
+  const formattedTotalSpace = Number.isFinite(totalSpace)
+    ? totalSpace.toFixed(2)
+    : '0.00';
 
   const placeOrder = async () => {
     if (!user) {
@@ -99,7 +153,7 @@ export default function CheckoutReview() {
       <div style={styles.line}><span>Subtotal</span><span className="cc-total-shimmer">${subtotal.toFixed(2)}</span></div>
     <div style={styles.line}><span>Delivery (Train Route)</span><span className="cc-total-shimmer">FREE</span></div>
       <div style={styles.line}><span>Tax</span><span className="cc-total-shimmer">${tax.toFixed(2)}</span></div>
-      <div style={styles.line}><span>Computed Space</span><span>{totalSpace} units</span></div>
+      <div style={styles.line}><span>Computed Space</span><span>{formattedTotalSpace} units</span></div>
       <div style={styles.divider} />
       <div style={{ ...styles.line, fontWeight: 700 }}><span>Total</span><span>${total.toFixed(2)}</span></div>
       {error && <div style={styles.error}>{error}</div>}

@@ -374,7 +374,27 @@ const CustomerPage = () => {
                     unit_price: it.unit_price
                   }))
                 : [],
-            total_space: o.required_space || o.total_space || 0,
+            total_space: (() => {
+              if (Number.isFinite(o.required_space)) return o.required_space;
+              if (Number.isFinite(o.total_space)) return o.total_space;
+              if (Array.isArray(o.orderItems)) {
+                return o.orderItems.reduce((sum, it) => {
+                  const perUnit = Number(
+                    it.product?.space_consumption ??
+                    it.space_consumption ??
+                    it.spaceConsumption ??
+                    it.space_per_unit ??
+                    it.space
+                  );
+                  const qty = Number(it.quantity);
+                  if (Number.isFinite(perUnit) && Number.isFinite(qty)) {
+                    return sum + perUnit * qty;
+                  }
+                  return sum;
+                }, 0);
+              }
+              return 0;
+            })(),
             total_value: (() => {
               if (typeof o.total_amount === 'number') return o.total_amount;
               if (typeof o.total_value === 'number') return o.total_value;
@@ -820,7 +840,27 @@ const CustomerPage = () => {
               unit_price: it.unit_price
             }))
           : Array.isArray(o.items) ? o.items : [],
-        total_space: o.required_space || o.total_space || 0,
+        total_space: (() => {
+          if (Number.isFinite(o.required_space)) return o.required_space;
+          if (Number.isFinite(o.total_space)) return o.total_space;
+          if (Array.isArray(o.orderItems)) {
+            return o.orderItems.reduce((sum, it) => {
+              const perUnit = Number(
+                it.product?.space_consumption ??
+                it.space_consumption ??
+                it.spaceConsumption ??
+                it.space_per_unit ??
+                it.space
+              );
+              const qty = Number(it.quantity);
+              if (Number.isFinite(perUnit) && Number.isFinite(qty)) {
+                return sum + perUnit * qty;
+              }
+              return sum;
+            }, 0);
+          }
+          return 0;
+        })(),
         total_value: (() => {
           if (typeof o.total_amount === 'number') return o.total_amount;
           if (typeof o.total_value === 'number') return o.total_value;

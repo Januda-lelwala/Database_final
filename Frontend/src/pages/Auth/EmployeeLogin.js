@@ -131,7 +131,7 @@ const EmployeeLogin = () => {
               />
                 {activeTab === 'admin' && (
                   <small style={{ color: '#666', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
-                    Use your assigned Admin ID (format: ADM001, ADM002, etc.)
+                    
                   </small>
                 )}
             </div>

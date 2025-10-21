@@ -56,5 +56,34 @@
     "order_date": "2025-10-19T06:08:18.000Z",
     "customer_name": "Dinuka Kavinda",
     "updated_at": "2025-10-20T13:01:57.061Z"
+  },
+  {
+    "id": "658f1e48-4dbb-4938-be0d-34bb24e098af",
+    "status": "pending",
+    "created_at": "2025-10-21T05:05:09.271Z",
+    "order_id": "ORD016",
+    "destination": "Koggala",
+    "first_city": "Galle",
+    "train_trip_id": "TT0002",
+    "truck_route_id": "TR_GAL_COAST",
+    "store_id": "ST_GAL",
+    "coverage": [
+      "Hikkaduwa",
+      "Ambalangoda",
+      "Unawatuna",
+      "Ahangama",
+      "Koggala",
+      "Habaraduwa",
+      "Baddegama",
+      "Batapola",
+      "Karapitiya",
+      "Talpe"
+    ],
+    "max_minutes": 120,
+    "required_space": 3.3,
+    "order_date": "2025-10-21T04:03:16.000Z",
+    "delivery_date": "2025-10-29T00:00:00.000Z",
+    "customer_name": "Dinuka Kavinda",
+    "updated_at": "2025-10-21T05:05:09.271Z"
   }
 ]

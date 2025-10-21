@@ -319,18 +319,24 @@ const AdminDashboard = () => {
     setBusy(true);
     try {
       // Real API that calls sp_create_truck_schedule
+      const schedulePayload = {
+        truck_schedule_id: crypto.randomUUID?.() || `TS_${Date.now()}`,
+        route_id,
+        truck_id,
+        driver_id,
+        assistant_id,
+        start_time,
+        end_time,
+      };
+
+      if (allocOrder?.order_id) {
+        schedulePayload.order_id = allocOrder.order_id;
+      }
+
       const res = await fetch("http://localhost:3000/api/truck-schedule", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...tokenHeader },
-        body: JSON.stringify({
-          truck_schedule_id: crypto.randomUUID?.() || `TS_${Date.now()}`,
-          route_id,
-          truck_id,
-          driver_id,
-          assistant_id,
-          start_time,
-          end_time,
-        }),
+        body: JSON.stringify(schedulePayload),
       });
       if (!res.ok) throw new Error("fallback");
     } catch {

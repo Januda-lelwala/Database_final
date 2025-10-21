@@ -10,6 +10,7 @@ const seedProducts = () => [
     price: 3.5, 
     category: 'Rail Logistics', 
     stock: 100,
+    space_consumption: 0.3,
     image: '/images/shipping-box-small.svg',
     description: 'Compact containers optimized for rail cargo handling. Stackable design for efficient train car loading.'
   },
@@ -19,6 +20,7 @@ const seedProducts = () => [
     price: 6.9, 
     category: 'Road Logistics', 
     stock: 50,
+    space_consumption: 0.5,
     image: '/images/shipping-box-medium.svg',
     description: 'Truck-optimized packaging for last-mile delivery. Enhanced protection for road transportation.'
   },
@@ -28,6 +30,7 @@ const seedProducts = () => [
     price: 12.0, 
     category: 'Supply Chain Securing', 
     stock: 40,
+    space_consumption: 0.8,
     image: '/images/stretch-wrap.svg',
     description: 'Heavy-duty wrapping for rail and road transitions. Weather-resistant for outdoor rail yards.'
   },
@@ -37,6 +40,7 @@ const seedProducts = () => [
     price: 2.2, 
     category: 'Distribution Supplies', 
     stock: 200,
+    space_consumption: 0.2,
     image: '/images/packing-tape.svg',
     description: 'High-adhesion tape for multi-modal transport. Withstands rail vibrations and road conditions.'
   },
@@ -46,6 +50,7 @@ const seedProducts = () => [
     price: 9.9, 
     category: 'Supply Chain Securing', 
     stock: 30,
+    space_consumption: 0.6,
     image: '/images/bubble-wrap.svg',
     description: 'Advanced cushioning for rail and road shock absorption. Maintains integrity across transport modes.'
   },
@@ -55,6 +60,7 @@ const seedProducts = () => [
     price: 8.5, 
     category: 'Rail Logistics', 
     stock: 75,
+    space_consumption: 1.2,
     image: '/images/shipping-box-large.svg',
     description: 'Industrial containers for rail freight. Reinforced for long-distance rail transport operations.'
   },
@@ -64,6 +70,7 @@ const seedProducts = () => [
     price: 15.99, 
     category: 'Supply Chain Securing', 
     stock: 25,
+    space_consumption: 0.4,
     image: '/images/fragile-packaging.svg',
     description: 'Specialized protection for delicate items during rail and road transitions.'
   },
@@ -73,6 +80,7 @@ const seedProducts = () => [
     price: 4.75, 
     category: 'Distribution Supplies', 
     stock: 150,
+    space_consumption: 0.15,
     image: '/images/eco-mailer-bags.svg',
     description: 'Eco-friendly mailers for sustainable supply chain distribution networks.'
   },
@@ -82,6 +90,7 @@ const seedProducts = () => [
     price: 7.25, 
     category: 'Supply Chain Securing', 
     stock: 60,
+    space_consumption: 0.45,
     image: '/images/void-fill.svg',
     description: 'Advanced void fill for multi-modal transport stabilization across rail and road networks.'
   },
@@ -91,6 +100,7 @@ const seedProducts = () => [
     price: 12.5, 
     category: 'Distribution Supplies', 
     stock: 35,
+    space_consumption: 0.7,
     image: '/images/custom-branded-boxes.svg',
     description: 'Custom branded packaging for supply chain visibility across rail and road distribution.'
   },
@@ -128,15 +138,22 @@ export const StoreProvider = ({ children }) => {
   useEffect(() => {
     let didCancel = false;
 
-    const mapProduct = (p, idx) => ({
-      id: p.product_id ?? p.id ?? p.productId ?? p.productID ?? `TMP_${idx}`,
-      title: p.product_name ?? p.title ?? p.name ?? 'Untitled Product',
-      price: typeof p.price === 'number' ? p.price : Number(p.price) || 0,
-      category: p.category || 'General',
-      stock: p.available_quantity ?? p.stock ?? 0,
-  image: p.image || null,
-      description: p.description || ''
-    });
+    const mapProduct = (p, idx) => {
+      const rawSpace = Number(p.space_consumption ?? p.spaceConsumption ?? p.space ?? p.space_per_unit ?? p.spacePerUnit);
+      const spaceConsumption = Number.isFinite(rawSpace) ? rawSpace : 0;
+
+      return {
+        id: p.product_id ?? p.id ?? p.productId ?? p.productID ?? `TMP_${idx}`,
+        title: p.product_name ?? p.title ?? p.name ?? 'Untitled Product',
+        price: typeof p.price === 'number' ? p.price : Number(p.price) || 0,
+        category: p.category || 'General',
+        stock: p.available_quantity ?? p.stock ?? 0,
+        image: p.image || null,
+        description: p.description || '',
+        space_consumption: spaceConsumption,
+        space: spaceConsumption
+      };
+    };
 
     const fetchProducts = async () => {
       console.log('🔍 StoreContext: Fetching products from backend...');
@@ -213,15 +230,21 @@ export const StoreProvider = ({ children }) => {
         incoming = responseData.products;
       }
       
-      const mapped = incoming.map((p, i) => ({
-        id: p.product_id ?? p.id ?? p.productId ?? p.productID ?? `TMP_${i}`,
-        title: p.product_name ?? p.title ?? p.name ?? 'Untitled Product',
-        price: typeof p.price === 'number' ? p.price : Number(p.price) || 0,
-        category: p.category || 'General',
-        stock: p.available_quantity ?? p.stock ?? 0,
-  image: p.image || null,
-        description: p.description || ''
-      }));
+      const mapped = incoming.map((p, i) => {
+        const rawSpace = Number(p.space_consumption ?? p.spaceConsumption ?? p.space ?? p.space_per_unit ?? p.spacePerUnit);
+        const spaceConsumption = Number.isFinite(rawSpace) ? rawSpace : 0;
+        return {
+          id: p.product_id ?? p.id ?? p.productId ?? p.productID ?? `TMP_${i}`,
+          title: p.product_name ?? p.title ?? p.name ?? 'Untitled Product',
+          price: typeof p.price === 'number' ? p.price : Number(p.price) || 0,
+          category: p.category || 'General',
+          stock: p.available_quantity ?? p.stock ?? 0,
+          image: p.image || null,
+          description: p.description || '',
+          space_consumption: spaceConsumption,
+          space: spaceConsumption
+        };
+      });
       setProducts(mapped);
       return mapped;
     } catch (err) {
