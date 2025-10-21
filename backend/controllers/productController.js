@@ -1,10 +1,16 @@
 const db = require('../models');
 const { Product, OrderItem } = db;
 
-// Generate product ID
+// Generate product ID based on highest existing numeric suffix to avoid duplicates when rows are deleted.
 const generateProductId = async () => {
-  const productCount = await Product.count();
-  return `PROD${String(productCount + 1).padStart(3, '0')}`;
+  const lastId = await Product.max('product_id');
+  if (!lastId) {
+    return 'PROD001';
+  }
+
+  const numeric = parseInt(String(lastId).replace(/\D/g, ''), 10);
+  const nextNumber = Number.isFinite(numeric) ? numeric + 1 : 1;
+  return `PROD${String(nextNumber).padStart(3, '0')}`;
 };
 
 // Get all products
@@ -80,6 +86,15 @@ const createProduct = async (req, res) => {
       data: { product }
     });
   } catch (error) {
+    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({
+        success: false,
+        message: error.errors?.[0]?.message || 'Invalid product payload',
+        error: error.message
+      });
+    }
+
+    console.error('Error creating product:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while creating product',

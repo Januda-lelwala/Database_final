@@ -1,5 +1,6 @@
 // src/pages/Portal/Admin_Page/Products.js
 import React, { useEffect, useMemo, useState } from "react";
+import { useToast } from "../../../../components/ToastProvider";
 import "./products.css";
 
 const tokenHeader = { Authorization: `Bearer ${localStorage.getItem("authToken") || "demo"}` };
@@ -10,7 +11,17 @@ const fmtMoney = (n) =>
     maximumFractionDigits: 0,
   }).format(Number(n || 0));
 
+const makeEmptyForm = () => ({
+  name: "",
+  description: "",
+  price: "",
+  space_consumption: "",
+  category: "",
+  available_quantity: ""
+});
+
 export default function Products() {
+  const { showToast } = useToast();
   const [products, setProducts] = useState([]);
   const [adding, setAdding] = useState(false);
 
@@ -19,15 +30,7 @@ export default function Products() {
   const [sort, setSort] = useState({ key: "product_id", dir: "asc" }); // asc | desc
 
   // Add form (top panel)
-  const [form, setForm] = useState({
-    product_id: "",
-    name: "",
-    description: "",
-    price: "",
-    space_consumption: "",
-    category: "",
-    available_quantity: "",
-  });
+  const [form, setForm] = useState(makeEmptyForm);
 
   // Inline edit state
   const [editingId, setEditingId] = useState(null);
@@ -87,11 +90,33 @@ export default function Products() {
   const add = async (e) => {
     e.preventDefault();
     setAdding(true);
+
+    const priceValue = Number(form.price);
+    if (!Number.isFinite(priceValue) || priceValue < 0) {
+      showToast("Enter a valid non-negative price.", { type: "warning" });
+      setAdding(false);
+      return;
+    }
+
+    const spaceValue = Number(form.space_consumption);
+    if (!Number.isFinite(spaceValue) || spaceValue < 0.0001) {
+      showToast("Space consumption must be at least 0.0001.", { type: "warning" });
+      setAdding(false);
+      return;
+    }
+
+    const quantityValue = Number(form.available_quantity || 0);
+    if (!Number.isFinite(quantityValue) || quantityValue < 0) {
+      showToast("Available quantity must be zero or greater.", { type: "warning" });
+      setAdding(false);
+      return;
+    }
+
     const payload = {
       ...form,
-      price: Number(form.price || 0),
-      space_consumption: Number(form.space_consumption || 0),
-      available_quantity: Number(form.available_quantity || 0),
+      price: priceValue,
+      space_consumption: spaceValue,
+      available_quantity: quantityValue,
     };
     try {
       const r = await fetch("http://localhost:3000/api/products", {
@@ -99,24 +124,25 @@ export default function Products() {
         headers: { "Content-Type": "application/json", ...tokenHeader },
         body: JSON.stringify(payload),
       });
-      if (!r.ok) throw new Error();
-      const response = await r.json();
+      const response = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        const message =
+          response?.message ||
+          response?.errors?.[0]?.msg ||
+          "Failed to create product.";
+        throw new Error(message);
+      }
       const added = response?.data?.product || response?.product || response;
       setProducts((p) => [added, ...p]);
-    } catch {
-      setProducts((p) => [payload, ...p]); // demo fallback
+      showToast("Product created successfully.", { type: "success" });
+      setForm(makeEmptyForm());
+    } catch (error) {
+      console.error("Failed to create product:", error);
+      const message = error?.message || "Unable to create product. Check your connection or permissions.";
+      showToast(message, { type: "error" });
     } finally {
       setAdding(false);
     }
-    setForm({
-      product_id: "",
-      name: "",
-      description: "",
-      price: "",
-      space_consumption: "",
-      category: "",
-      available_quantity: "",
-    });
   };
 
   /** Start editing a row */
@@ -277,14 +303,6 @@ export default function Products() {
           <h3>Add Product</h3>
           <form className="grid" onSubmit={add}>
             <label>
-              <span>Product ID</span>
-              <input
-                required
-                value={form.product_id}
-                onChange={(e) => setForm((f) => ({ ...f, product_id: e.target.value }))}
-              />
-            </label>
-            <label>
               <span>Name</span>
               <input
                 required
@@ -316,7 +334,7 @@ export default function Products() {
                 required
                 type="number"
                 step="0.0001"
-                min="0"
+                min="0.0001"
                 value={form.space_consumption}
                 onChange={(e) => setForm((f) => ({ ...f, space_consumption: e.target.value }))}
               />

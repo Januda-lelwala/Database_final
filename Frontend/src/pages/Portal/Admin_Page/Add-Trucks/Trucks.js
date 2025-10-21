@@ -8,7 +8,7 @@ export default function Trucks() {
   const [adding, setAdding] = useState(false);
 
   // Add form
-  const [form, setForm] = useState({ truck_id: "", license_plate: "", capacity: "" });
+  const [form, setForm] = useState({ license_plate: "", capacity: "" });
 
   // Inline edit state
   const [editingId, setEditingId] = useState(null);
@@ -78,11 +78,11 @@ export default function Trucks() {
       const added = response?.data?.truck || response?.truck || response;
       setTrucks((t) => [added, ...t]);
     } catch {
-      setTrucks((t) => [payload, ...t]); // demo fallback
+      setTrucks((t) => [{ ...payload, truck_id: `TEMP-${Date.now()}` }, ...t]); // demo fallback
     } finally {
       setAdding(false);
     }
-    setForm({ truck_id: "", license_plate: "", capacity: "" });
+    setForm({ license_plate: "", capacity: "" });
   };
 
   /** Start editing a row */
@@ -218,14 +218,6 @@ export default function Trucks() {
         <div className="panel">
           <h3>Add Truck</h3>
           <form className="grid" onSubmit={add}>
-            <label>
-              <span>Truck ID</span>
-              <input
-                required
-                value={form.truck_id}
-                onChange={(e) => setForm((f) => ({ ...f, truck_id: e.target.value }))}
-              />
-            </label>
             <label>
               <span>License Plate</span>
               <input

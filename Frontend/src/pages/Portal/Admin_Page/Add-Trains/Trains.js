@@ -77,7 +77,7 @@ export default function Trains() {
   };
 
   // Add form (keep all existing necessary components)
-  const [form, setForm] = useState({ train_id: "", capacity: "", notes: "", begin_time: "" });
+  const [form, setForm] = useState({ capacity: "", notes: "", begin_time: "" });
   const [route, setRoute] = useState({ route_id: "", start_city: "", end_city: "", destinations: "" });
   const [suggesting, setSuggesting] = useState(false);
 
@@ -143,41 +143,46 @@ export default function Trains() {
     }
 
     // Merge all fields for backend
-    const payload = {
-      train_id: form.train_id.trim(),
-      capacity: Number(form.capacity || 0),
-      notes: form.notes?.trim() || "",
-      begin_time: form.begin_time || null,
-      route_id: route.route_id.trim() || `${form.train_id.trim()}-R`,
-      start_city: route.start_city.trim(),
-      end_city: endCity,
-      destinations: destinationsArr.join(", "),
-    };
-
-    if (!payload.train_id) return alert("Train ID is required.");
-    if (!payload.start_city || !payload.end_city) {
+    const startCity = route.start_city.trim();
+    const endCityTrimmed = endCity;
+    if (!startCity || !endCityTrimmed) {
       return alert("Start and End city are required for the route.");
     }
 
-      try {
-        const r = await fetch("http://localhost:3000/api/trains", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", ...tokenHeader },
-          body: JSON.stringify(payload),
-        });
-        const body = await r.json().catch(() => ({}));
-        if (!r.ok) {
-          throw new Error(body?.message || "Train + Route create failed");
-        }
-        const created = body?.data?.train || body?.train || body || payload;
+    const slug = (value) =>
+      value.replace(/[^0-9a-z]/gi, "").toUpperCase().slice(0, 3) || "GEN";
+    const autoRouteId = `RT-${slug(startCity)}-${slug(endCityTrimmed)}-${Date.now()}`;
+    const routeId = route.route_id.trim() || autoRouteId;
 
-        setTrains((t) => [created, ...t]);
-        setForm({ train_id: "", capacity: "", notes: "", begin_time: "" });
-        setRoute({ route_id: "", start_city: "", end_city: "", destinations: "" });
-        alert("Train + Route added");
-      } catch (err) {
-        console.error(err);
-      setTrains((t) => [payload, ...t]); // optimistic fallback
+    const payload = {
+      capacity: Number(form.capacity || 0),
+      notes: form.notes?.trim() || "",
+      begin_time: form.begin_time || null,
+      route_id: routeId,
+      start_city: startCity,
+      end_city: endCityTrimmed,
+      destinations: destinationsArr.join(", "),
+    };
+
+    try {
+      const r = await fetch("http://localhost:3000/api/trains", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...tokenHeader },
+        body: JSON.stringify(payload),
+      });
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        throw new Error(body?.message || "Train + Route create failed");
+      }
+      const created = body?.data?.train || body?.train || body || payload;
+
+      setTrains((t) => [created, ...t]);
+      setForm({ capacity: "", notes: "", begin_time: "" });
+      setRoute({ route_id: "", start_city: "", end_city: "", destinations: "" });
+      alert("Train + Route added");
+    } catch (err) {
+      console.error(err);
+      setTrains((t) => [{ ...payload, train_id: `TEMP-${Date.now()}` }, ...t]); // optimistic fallback
       alert("Saved locally. Check backend endpoints if needed.");
     }
   };
@@ -358,15 +363,6 @@ export default function Trains() {
         <div className="panel">
           <h3>Add Train + Route</h3>
           <form className="grid" onSubmit={add}>
-            {/* TRAIN */}
-            <label>
-              <span>Train ID</span>
-              <input
-                required
-                value={form.train_id}
-                onChange={(e) => setForm((f) => ({ ...f, train_id: e.target.value }))}
-              />
-            </label>
             <label>
               <span>Capacity (u)</span>
               <input
