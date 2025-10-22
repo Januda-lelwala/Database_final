@@ -323,7 +323,8 @@ const CustomerPage = () => {
       const s = (status || '').toLowerCase();
       if (s.includes('delivered')) return 100;
       if (s.includes('in_transit') || s.includes('in transit')) return 75;
-      if (s.includes('scheduled') || s.includes('confirmed')) return 50;
+      if (s.includes('scheduled')) return 75;
+      if (s.includes('confirmed')) return 50;
       if (s.includes('pending') || s.includes('processing')) return 25;
       if (s.includes('cancel')) return 0;
       return 10;
@@ -348,7 +349,7 @@ const CustomerPage = () => {
           const statusMap = {
             pending: 'Processing',
             confirmed: 'Processing',
-            scheduled: 'Scheduled',
+            scheduled: 'Last-Mile Delivery',
             in_transit: 'In Transit',
             delivered: 'Delivered',
             cancelled: 'Cancelled'
@@ -804,7 +805,8 @@ const CustomerPage = () => {
       const s = (status || '').toLowerCase();
       if (s.includes('delivered')) return 100;
       if (s.includes('in_transit') || s.includes('in transit')) return 75;
-      if (s.includes('scheduled') || s.includes('confirmed')) return 50;
+      if (s.includes('scheduled')) return 75;
+      if (s.includes('confirmed')) return 50;
       if (s.includes('pending') || s.includes('processing')) return 25;
       if (s.includes('cancel')) return 0;
       return 10;
@@ -816,7 +818,7 @@ const CustomerPage = () => {
       const statusMap = {
         pending: 'Processing',
         confirmed: 'Processing',
-        scheduled: 'Scheduled',
+        scheduled: 'Last-Mile Delivery',
         in_transit: 'In Transit',
         delivered: 'Delivered',
         cancelled: 'Cancelled'
@@ -946,6 +948,12 @@ const CustomerPage = () => {
                   );
                 }
 
+                const statusLower = (order.status || '').toLowerCase();
+                const processingStepActive =
+                  order.progress >= 25 && statusLower !== 'last-mile delivery';
+                const lastMileStepActive =
+                  statusLower === 'last-mile delivery' || order.progress >= 75;
+
                 return (
                   <div style={styles.trackingDetails}>
                     <div style={styles.trackingHeader}>
@@ -967,7 +975,7 @@ const CustomerPage = () => {
                       <div style={styles.timelineStep}>
                         <div style={{
                           ...styles.timelineDot,
-                          ...(order.progress >= 25 ? styles.timelineDotActive : {})
+                          ...(processingStepActive ? styles.timelineDotActive : {})
                         }}></div>
                         <div style={styles.timelineContent}>
                           <strong>Processing</strong>
@@ -992,7 +1000,7 @@ const CustomerPage = () => {
                       <div style={styles.timelineStep}>
                         <div style={{
                           ...styles.timelineDot,
-                          ...(order.progress >= 75 ? styles.timelineDotActive : {})
+                          ...(lastMileStepActive ? styles.timelineDotActive : {})
                         }}></div>
                         <div style={styles.timelineContent}>
                           <strong>Last-Mile Delivery</strong>

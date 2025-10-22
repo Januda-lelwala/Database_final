@@ -173,7 +173,7 @@ export default function Employees() {
 				: `⚠ Email not sent`;
 			
 			showToast(
-				`Assistant added successfully!\n\nID: ${created.assistant_id || '(see list)'}\nName: ${created.name || assistantForm.name}\n\nLogin Credentials:\nUsername: ${credentials.user_name}\nPassword: ${credentials.password}\n\n${emailLine}\n\nPlease save these credentials securely.`,
+				`Assistant added successfully!\n\nID: ${created.assistant_id || '(see list)'}\nName: ${created.name || assistantForm.name}\n\n${emailLine}\n\nPlease save these credentials securely.`,
 				{ type: "success", duration: 7000 }
 			);
 			setAssistantForm({ name: "", address: "", phone_no: "", email: "" });
