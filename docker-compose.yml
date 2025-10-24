@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kandypack_api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # Database
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: kandypack
+      DB_USER: root
+      DB_PASSWORD: password
+      # JWT
+      JWT_SECRET: kandypack_super_secret_key_2024_production_grade_jwt_token_secret
+      JWT_EXPIRE: 7d
+      # CORS (adjust for your deployed frontend domain when needed)
+      CORS_ORIGINS: http://localhost:3002
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:3000/api
+    container_name: kandypack_frontend
+    depends_on:
+      - api
+    ports:
+      - "3002:80"
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: kandypack_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: kandypack
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Initialize schema and procedures on first run
+      - ./backend/database/kandypack_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./backend/database/procedures.sql:/docker-entrypoint-initdb.d/02_procedures.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ppassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
