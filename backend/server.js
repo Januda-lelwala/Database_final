@@ -41,19 +41,27 @@ connectDB()
 });
 
 // CORS configuration - MUST come before rate limiter and routes
-const allowedOriginRegex = /^https?:\/\/(localhost|127\.0\.0\.1):30(00|01)$/i;
+const allowedOriginRegex = /^https?:\/\/(localhost|127\.0\.0\.1):30(01|02)$/i;
+// Read additional allowed origins from env (comma-separated)
+const envOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+const allowedOriginsSet = new Set(envOrigins);
+
 app.use((req, _res, next) => {
-  // Minimal debug log for origin
   if (req.headers.origin) {
-    console.log('[CORS] Origin:', req.headers.origin, '->', allowedOriginRegex.test(req.headers.origin) ? 'allowed' : 'blocked');
+    const origin = req.headers.origin;
+    const isAllowed = allowedOriginsSet.has(origin) || allowedOriginRegex.test(origin);
+    console.log('[CORS] Origin:', origin, '->', isAllowed ? 'allowed' : 'blocked');
   }
   next();
 });
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests from our dev frontends only; reflect actual origin
-    if (origin && allowedOriginRegex.test(origin)) {
+    // Allow requests from configured origins or localhost dev ports
+    if (origin && (allowedOriginsSet.has(origin) || allowedOriginRegex.test(origin))) {
       return callback(null, true);
     }
     // For non-browser clients (no Origin), do not set CORS headers
